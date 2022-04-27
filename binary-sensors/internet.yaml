@@ -1,0 +1,20 @@
+  - platform: ping
+    host: 192.168.1.1
+    name: gateway
+    count: 5
+    scan_interval: 60
+  - platform: ping
+    host: google.com
+    count: 5
+    scan_interval: 60
+    name: google
+  - platform: ping
+    host: ya.ru
+    count: 5
+    scan_interval: 60
+    name: yandex
+  - platform: template
+    sensors:
+      internet:
+        value_template: "{{ states('binary_sensor.google') == 'on' or states('binary_sensor.yandex') == 'on' }}"
+        device_class: connectivity

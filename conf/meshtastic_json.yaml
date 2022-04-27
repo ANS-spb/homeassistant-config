@@ -1,0 +1,135 @@
+rest:
+  - resource: http://192.168.1.28/json/report
+    scan_interval: 60
+    sensor:
+      - name: "Meshtastic Airtime"
+        json_attributes_path: "$.data.airtime"
+        value_template: "{{ value_json.status }}"
+        json_attributes:
+          - "tx_log"
+          - "rx_log"
+          - "rx_all_log"
+          - "channel_utilization"
+          - "utilization_tx"
+          - "seconds_since_boot"
+      - name: "Meshtastic Connection"
+        json_attributes_path: "$.data.wifi"
+        value_template: "{{ value_json.status }}"
+        json_attributes:
+          - "rssi"
+          - "ip"
+      - name: "Meshtastic Power"
+        json_attributes_path: "$.data.power"
+        value_template: "{{ value_json.status }}"
+        json_attributes:
+          - "battery_percent"
+          - "battery_voltage_mv"
+          - "has_battery"
+          - "has_usb"
+          - "is_charging"
+      - name: "Meshtastic Device"
+        json_attributes_path: "$.data.device"
+        value_template: "{{ value_json.status }}"
+        json_attributes:
+          - "reboot_counter"
+      - name: "Meshtastic Radio"
+        json_attributes_path: "$.data.radio"
+        value_template: "{{ value_json.status }}"
+        json_attributes:
+          - "frequecy"
+          - "lora_channel"
+
+sensor:    
+  - platform: template
+    sensors:
+      meshtastic_channel_utilization:
+        friendly_name: Meshtastic channel utilization
+        value_template: "{{ state_attr('sensor.meshtastic_airtime', 'channel_utilization') }}"
+        icon_template: mdi:access-point
+        unit_of_measurement: "%"
+  - platform: template
+    sensors:
+      meshtastic_utilization_tx:
+        friendly_name: Meshtastic TX utilization
+        value_template: "{{ state_attr('sensor.meshtastic_airtime', 'utilization_tx') }}"
+        icon_template: mdi:access-point
+        unit_of_measurement: "%"
+  - platform: template
+    sensors:
+      meshtastic_uptime:
+        friendly_name: Meshtastic uptime
+        value_template: "{{ state_attr('sensor.meshtastic_airtime', 'seconds_since_boot') }}"
+        icon_template: mdi:access-point
+        unit_of_measurement: "s"
+  - platform: template
+    sensors:  
+      meshtastic_uptime_friendly:
+        friendly_name: 'Meshtastic uptime'
+        icon_template: mdi:access-point
+        value_template: >- 
+          {% set time = (states.sensor.meshtastic_uptime.state) | int(0) %}
+          {% set minutes = ((time % 3600) / 60) | int(0) %}
+          {% set hours = ((time % 86400) / 3600) | int(0) %}
+          {% set days = (time / 86400) | int(0) %}
+        
+          {%- if time < 60 -%}
+            Less than a minute
+            {%- else -%}
+            {%- if days > 0 -%}
+              {{ days }}d
+            {%- endif -%}
+            {%- if hours > 0 -%}
+              {%- if days > 0 -%}
+                {{ ' ' }}
+              {%- endif -%}
+              {{ hours }}h
+            {%- endif -%}
+            {%- if minutes > 0 -%}
+              {%- if days > 0 or hours > 0 -%}
+                {{ ' ' }}
+              {%- endif -%}
+              {{ minutes }}m
+            {%- endif -%}
+          {%- endif -%}
+  - platform: template
+    sensors:
+      meshtastic_wifi_rssi:
+        friendly_name: Meshtastic WiFi RSSI
+        value_template: "{{ state_attr('sensor.meshtastic_connection', 'rssi') }}"
+        icon_template: mdi:access-point
+        unit_of_measurement: "dBi"
+  - platform: template
+    sensors:
+      meshtastic_wifi_ip:
+        friendly_name: Meshtastic WiFi IP address
+        value_template: "{{ state_attr('sensor.meshtastic_connection', 'ip') }}"
+        icon_template: mdi:access-point
+  - platform: template
+    sensors:
+      meshtastic_battery:
+        friendly_name: Meshtastic battery
+        value_template: "{{ state_attr('sensor.meshtastic_power', 'battery_percent') }}"
+        device_class: battery
+        unit_of_measurement: "%"
+  - platform: template
+    sensors:
+      meshtastic_voltage:
+        friendly_name: Meshtastic voltage
+        value_template: "{{ state_attr('sensor.meshtastic_power', 'battery_voltage_mv') | float(0) * 0.001}}"
+        icon_template: mdi:battery
+        unit_of_measurement: "V"
+  - platform: template
+    sensors:
+      meshtastic_reboot_counter:
+        friendly_name: Meshtastic reboot counter
+        value_template: "{{ state_attr('sensor.meshtastic_device', 'reboot_counter') }}"
+        icon_template: mdi:access-point
+        unit_of_measurement: "times"
+  - platform: template
+    sensors:
+      meshtastic_frequency:
+        friendly_name: Meshtastic radio frequency
+        value_template: "{{ state_attr('sensor.meshtastic_radio', 'frequecy') }}"
+        icon_template: mdi:access-point
+        unit_of_measurement: "MHz"
+

@@ -1,0 +1,11 @@
+#Тарифы на электроэнергию
+- platform: template
+  sensors:   
+    current_price:
+        friendly_name: "Текущий тариф на э/э"
+        unit_of_measurement: "RUB/kWh"
+        value_template: >-
+            {% if now().hour >= 7
+                and now().hour < 23 %} 4.28
+            {% else %} 2.36
+            {% endif %}

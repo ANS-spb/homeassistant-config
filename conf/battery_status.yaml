@@ -1,0 +1,55 @@
+input_number:
+  # Battery status:
+  scale_minimal_battery:
+    name: Уровень заряда
+    min: 5
+    max: 30
+    step: 5
+    mode: slider
+    unit_of_measurement: "%"
+    icon: mdi:battery-alert
+
+automation:
+  # Battery status
+  - id: alarm_battery
+    alias: Alarm battery
+    initial_state: true
+    trigger:
+      - platform: time
+        at: "20:30:00"
+    condition:
+      - condition: template
+        value_template: >
+          {% macro battery_level() %}
+          {%- set threshold = states.input_number.scale_minimal_battery.state | int(0) -%}
+          {% set domains = ['light', 'switch', 'sensor', 'binary_sensor', 'lock'] %}
+          {% for domain in domains -%}
+          {% for item in states[domain] if ((item.attributes.battery_level is defined and item.attributes['battery_level'] | int(0) < threshold) or ("battery" in item.name | lower and ((item.state | int(0) < threshold and item.state | int(0) != 0) or item.state | lower == "low" or item.state | lower == "unknown"))) -%}
+          {% if (item.attributes.battery_level is defined and item.attributes['battery_level'] | int(0) < threshold) -%}
+          {{ item.name }} ({{ item.attributes['battery_level'] }}){%- if not loop.last %}, {% endif -%}{% endif -%}
+          {% if "battery" in item.name | lower and ((item.state | int(0) < threshold and item.state | int(0) != 0) or item.state | lower == "low" or item.state | lower == "unknown") -%}
+          {{ item.name }} ({{ item.state }}){% if not loop.last %}, {%- endif %} {% endif -%}
+          {% endfor %}
+          {%- endfor %}
+          {% endmacro %}
+          {{ battery_level() | trim != "" }}
+    action:
+      - service: notify.mobile_app_iphone_ans
+        data:
+          title: "Обнаружена низкая емкость заряда на устройствах:"
+          message: >
+            {{'\u267B\uFE0F'}} {% macro battery_level() %}
+            {%- set threshold = states.input_number.scale_minimal_battery.state | int(0) -%}
+            {%- set domains = ['light', 'switch', 'sensor', 'binary_sensor', 'lock'] -%}
+            {%- for domain in domains -%}
+            {%- for item in states[domain] if ((item.attributes.battery_level is defined and item.attributes['battery_level'] | int(0) < threshold) or ("battery" in item.name | lower and ((item.state | int(0) < threshold and item.state | int(0) != 0) or item.state | lower == "low" or item.state | lower == "unknown"))) -%}
+            {%- if not "umidit" in item.name | lower and not "press" in item.name | lower -%}
+            {%- if (item.attributes.battery_level is defined and item.attributes['battery_level'] | int(0) < threshold) -%}
+            {{ item.name }} - {{ item.attributes['battery_level'] }}%{%- if not loop.last %},{% endif -%}{% endif -%}
+            {%- if "battery" in item.name | lower and ((item.state | int(0) < threshold and item.state|int(0) != 0) or item.state | lower == "low" or item.state | lower == "unknown") -%}
+            {{ item.name }} ({{ item.state }}){% if not loop.last %},{%- endif %} {% endif -%}
+            {%- endif -%}
+            {%- endfor %}
+            {%- endfor -%}
+            {%- endmacro -%}
+            {{ battery_level().split(',') | unique | join (', ') }}

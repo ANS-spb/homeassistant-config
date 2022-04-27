@@ -1,0 +1,11 @@
+- sensor.cpu_temp
+- sensor.memory_use_percent
+- sensor.ble_temperature_datchik_na_kukhne
+- sensor.ble_humidity_datchik_na_kukhne
+- sensor.outside_temperature_min_value
+- sensor.cgllc_cgdn1_42a2_pm10_density
+- sensor.cgllc_cgdn1_42a2_pm25_density
+- sensor.cgllc_cgdn1_42a2_co2_density
+- sensor.pressure_average
+- sensor.geiger_dr
+- sensor.geiger_counter_radioactive_events_per_minute

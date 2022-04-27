@@ -1,0 +1,41 @@
+# Time and date
+- platform: time_date
+
+# System monitor
+- platform: systemmonitor
+  resources:
+    - type: memory_use_percent
+    - type: processor_use
+    - type: last_boot
+- platform: systemmonitor
+  resources:
+    - type: disk_use_percent
+      arg: /
+
+# InfluxDB size
+- platform: influxdb
+  host: localhost
+  port: 8086
+  username: homeassistant
+  password: homeassistant
+  database: homeassistant
+  queries:
+    - name: InfluxDB Size
+      unit_of_measurement: MB
+      value_template: "{{ (value | float(0) / 1024 /1024) | round(0, 'common') }}"
+      group_function: sum
+      measurement: '"monitor"."shard"'
+      database: _internal
+      where: 'time > now() - 1m AND "database"=''homeassistant'''
+      field: diskBytes
+
+# Uptime
+- platform: uptime
+
+# CPU Temp
+- platform: command_line
+  name: CPU Temp
+  command: "cat /sys/class/thermal/thermal_zone3/temp"
+  unit_of_measurement: "°C"
+  value_template: '{{ value | multiply(0.001) | round(2)  }}'
+

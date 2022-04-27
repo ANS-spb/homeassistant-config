@@ -1,0 +1,30 @@
+- platform: template
+  sensors:
+    adaptive_brt:
+      friendly_name: "Адаптивная яркость"
+      unit_of_measurement: '%'
+      value_template: "{{ state_attr('switch.adaptive_lighting_room', 'brightness_pct') }}"
+    adaptive_ct:
+      friendly_name: "Адаптивная температура"
+      unit_of_measurement: 'K'
+      value_template: "{{ state_attr('switch.adaptive_lighting_room', 'color_temp_kelvin') }}"
+    daytime:
+      friendly_name: "Дневное время"
+      value_template: >
+        {% set state = states.sensor.time.state %}
+        {% if states.binary_sensor.workday_sensor.state %}
+          {% set morning = states.input_datetime.wakeup_time.state [0:5] %}
+        {% else %}
+          {% set morning = '12:00' %}
+        {% endif %}
+        {% set evening = states.input_datetime.sleep_time.state [0:5] %}
+        {% if morning < state < evening %}
+          on
+        {% else %}
+          off
+        {% endif %}
+    mini_graph_day_pct:
+      friendly_name: "День-ночь (Процент)"
+      value_template: "{{ 100 if is_state('sun.sun', 'above_horizon') else 0 }}"
+      availability_template: "{{ states('sun.sun') not in ['unknown', 'unavailable'] }}"
+      icon_template: mdi:theme-light-dark

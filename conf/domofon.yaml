@@ -1,0 +1,15 @@
+## generic camera is deprecated
+#camera:
+#  - platform: generic
+#    name: domru_domofon_657617
+#    still_image_url: http://192.168.1.252:10080/api/camera/snapshot/780900131155/657617
+#    stream_source: http://192.168.1.252:10080/api/camera/stream/780900131155/657617
+
+rest_command:
+  domru_open_door_657617:
+    url: http://192.168.1.252:10080/api/open/780900131155/657617
+
+script:
+  domru_open_door_657617:
+    sequence:
+      - service: rest_command.domru_open_door_657617

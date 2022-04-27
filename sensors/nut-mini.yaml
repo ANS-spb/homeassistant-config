@@ -1,0 +1,6 @@
+# Nut mini tracker battery
+- platform: mqtt
+  state_topic: "nut/battery"
+  device_class: battery
+  name: nut_battery
+  unit_of_measurement: "%"
