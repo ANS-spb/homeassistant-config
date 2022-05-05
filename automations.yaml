@@ -160,7 +160,7 @@
   trigger:
   - platform: numeric_state
     entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
-    below: '4'
+    below: '5'
   condition:
   - condition: and
     conditions:
@@ -1213,41 +1213,36 @@
   trigger:
   - platform: numeric_state
     entity_id: sensor.radiacode
-    above: '30'
+    above: '0.5'
   - platform: numeric_state
     entity_id: sensor.radiacode
-    above: '50'
+    above: '1'
   - platform: numeric_state
-    entity_id: sensor.radiacode
-    above: '100'
+    entity_id: sensor.geiger_dr
+    above: '0.5'
+  - platform: numeric_state
+    entity_id: sensor.geiger_dr
+    above: '1'
   condition: []
   action:
-  - service: notify.mobile_app_iphone_ans
-    data:
-      title: ☢️ Радиационный мониторинг
-      message: "Обнаружено превышение порога радиационного фона. Мощность дозы: {{\
-        \ states('sensor.radiacode') }} {{ state_attr('sensor.radiacode', 'unit_of_measurement')\
-        \ }} при среднем {{ states('sensor.radiacode_dr_mean_value') }} {{ state_attr('sensor.radiacode_dr_mean_value',\
-        \ 'unit_of_measurement') }}. \nСкорость счёта: {{ states('sensor.radiacode_cr')\
-        \ }} CPS  при среднем {{ states('sensor.radiacode_cr_mean_value') }} CPS."
   - service: notify.telegram
     data:
       title: ☢️ *Радиационный мониторинг*
       message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:\
-        \ *{{ states('sensor.radiacode') }} {{ state_attr('sensor.radiacode', 'unit_of_measurement')\
-        \ }}* при среднем значении за 24 часа {{ states('sensor.radiacode_dr_mean_value')\
-        \ }} {{ state_attr('sensor.radiacode_dr_mean_value', 'unit_of_measurement')\
-        \ }}. \nСкорость счёта: {{ states('sensor.radiacode_cr') }} CPS  при среднем\
-        \ значении за 24 часа {{ states('sensor.radiacode_cr_mean_value') }} CPS."
-  - service: notify.telegram
+        \ *{{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n\
+        }}* \nОбнаружено устройством {{ states[trigger.entity_id.split(\".\")[0]][\n\
+        trigger.entity_id.split(\".\")[1]].name }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value')\
+        \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
+        \ }}. \n"
+  - service: notify.mobile_app_iphone_ans
     data:
-      title: ☢️ *Радиационный мониторинг TEST*
+      title: ☢️ Радиационный мониторинг
       message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:\
-        \ *{{ trigger.to_state.state }}  {{ trigger.to_state.attributes.unit_of_measurement\
-        \ }}* при среднем значении за 24 часа {{ states('sensor.radiacode_dr_mean_value')\
-        \ }} {{ state_attr('sensor.radiacode_dr_mean_value', 'unit_of_measurement')\
-        \ }}. \nСкорость счёта: {{ states('sensor.radiacode_cr') }} CPS  при среднем\
-        \ значении за 24 часа {{ states('sensor.radiacode_cr_mean_value') }} CPS."
+        \ {{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n\
+        }}\nОбнаружено устройством {{ states[trigger.entity_id.split(\".\")[0]][\n\
+        trigger.entity_id.split(\".\")[1]].name }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value')\
+        \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
+        \ }}. \n"
   mode: single
 - id: '1647947761669'
   alias: Radiacode отвалился, прислать в телегу
@@ -1311,7 +1306,7 @@
   description: ''
   trigger:
   - platform: time_pattern
-    minutes: /1
+    minutes: /2
   - platform: state
     entity_id: device_tracker.ble_tracker_radiacode
     to: home
@@ -1353,27 +1348,6 @@
       milliseconds: 0
   - service: shell_command.radiacode_start
     data: {}
-  - wait_for_trigger:
-    - platform: state
-      entity_id: sensor.radiacode
-      for:
-        hours: 0
-        minutes: 0
-        seconds: 0
-    continue_on_timeout: false
-    timeout: 00:02:00
-  - service: notify.telegram
-    data:
-      title: ☢️ *Радиационный мониторинг*
-      message: 'Дозиметр отвалился, обработчик был перезапущен.
-
-        Значение радиационного фона на текущий момент: *{{ states(''sensor.radiacode'')
-        }} {{ state_attr(''sensor.radiacode'', ''unit_of_measurement'') }}* при среднем
-        значении {{ states(''sensor.radiacode_dr_mean_value'') }} {{ state_attr(''sensor.radiacode_dr_mean_value'',
-        ''unit_of_measurement'') }}.
-
-        Обновление данных было {{ relative_time(states.sensor.radiacode.last_updated)
-        }} назад.'
   mode: single
 - id: '1648396428257'
   alias: Radiacode - информация по запросу в Telegram
@@ -1392,30 +1366,19 @@
   - service: telegram_bot.send_message
     data:
       title: ☢️ *Радиационный мониторинг*
-      message: 'Значение радиационного фона на текущий момент: *{{
-
-        states(''sensor.radiacode'') }} {{ state_attr(''sensor.radiacode'',
-
-        ''unit_of_measurement'') }}* при среднем значении {{
-
-        states(''sensor.radiacode_dr_mean_value'') }} {{
-
-        state_attr(''sensor.radiacode_dr_mean_value'', ''unit_of_measurement'') }}.
-
-
-        Скорость счёта: {{ states(''sensor.radiacode_cr'') }} CPS при среднем значении
-        {{ states(''sensor.radiacode_cr_mean_value'') }} CPS.
-
-
-        Обновление данных было {{
-
-        relative_time(states.sensor.radiacode.last_updated) }} назад.
-
-        '
+      message: "Значение радиационного фона на текущий момент: \n\nСтационарный пост:\
+        \ *{{ states('sensor.geiger_dr') }} {{\nstate_attr('sensor.geiger_dr', 'unit_of_measurement')\
+        \ }}* при среднем {{\nstates('sensor.geiger_dr_mean_value') }} {{\nstate_attr('sensor.geiger_dr_mean_value',\
+        \ 'unit_of_measurement') }}.\nОбновление данных СП было {{relative_time(states.sensor.geiger_dr.last_updated)\
+        \ }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\nRadiacode:\
+        \ *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')\
+        \ }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',\
+        \ 'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')\
+        \ }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\
+        Обновление данных ПП было {{relative_time(states.sensor.radiacode.last_updated)\
+        \ }}\nназад.\n{% else %}\nСенсор Radiacode недоступен.\n{% endif %}\n"
       target: '{{ trigger.event.data.user_id }}'
       parse_mode: markdown
       disable_notification: true
       message_tag: msg_to_edit
-      inline_keyboard:
-      - 🔙 Основное меню:/back
   mode: single

@@ -5,22 +5,16 @@
       icon_template: mdi:radioactive
       unit_of_measurement: 'μSv/h'
       value_template: "{{ states('sensor.radiacode') }}"
-- platform: template
-  sensors:
     radiacode_cr:
       friendly_name: "Radiacode count rate"
       icon_template: mdi:radioactive
       unit_of_measurement: 'CPS'
       value_template: "{{ state_attr('sensor.radiacode', 'cps') }}"
-- platform: template
-  sensors:
     radiacode_work_cr:
       friendly_name: "Radiacode (work) count rate"
       icon_template: mdi:radioactive
       unit_of_measurement: 'CPS'
       value_template: "{{ state_attr('sensor.radiacode_work', 'cps') }}"
-- platform: template
-  sensors:
     geiger_dr:
       friendly_name: "Gerger counter dose rate"
       icon_template: mdi:radioactive
