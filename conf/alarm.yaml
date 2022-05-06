@@ -17,7 +17,7 @@ input_datetime:
     name: "Время пробуждения"
     has_time: true
     has_date: false
-  #    initial: "06:40"
+    #initial: "06:40"
   wakeup_weekend_time:
     name: "Время пробуждения по выходным"
     has_time: true
@@ -26,7 +26,7 @@ input_datetime:
     name: "Время ложиться спать"
     has_time: true
     has_date: false
-    initial: "23:30"
+    #initial: "23:30"
 automation:
   - id: light_wakeup
     alias: Световой будильник

@@ -1,20 +1,5 @@
 - platform: template
   sensors:
-    radiacode_dr:
-      friendly_name: "Radiacode dose rate"
-      icon_template: mdi:radioactive
-      unit_of_measurement: 'μSv/h'
-      value_template: "{{ states('sensor.radiacode') }}"
-    radiacode_cr:
-      friendly_name: "Radiacode count rate"
-      icon_template: mdi:radioactive
-      unit_of_measurement: 'CPS'
-      value_template: "{{ state_attr('sensor.radiacode', 'cps') }}"
-    radiacode_work_cr:
-      friendly_name: "Radiacode (work) count rate"
-      icon_template: mdi:radioactive
-      unit_of_measurement: 'CPS'
-      value_template: "{{ state_attr('sensor.radiacode_work', 'cps') }}"
     geiger_dr:
       friendly_name: "Gerger counter dose rate"
       icon_template: mdi:radioactive
@@ -22,32 +7,47 @@
       value_template: |
         {% set drmr = states('sensor.geiger_counter_radiation_dose_per_hour') | float(0) / 114 %}
         {{ drmr | round(2) }}
+#    radiacode_dr:
+#      friendly_name: "Radiacode dose rate"
+#      icon_template: mdi:radioactive
+#      unit_of_measurement: 'μSv/h'
+#      value_template: "{{ states('sensor.radiacode') }}"
+#    radiacode_cr:
+#      friendly_name: "Radiacode count rate"
+#      icon_template: mdi:radioactive
+#      unit_of_measurement: 'CPS'
+#      value_template: "{{ state_attr('sensor.radiacode', 'cps') }}"
+#    radiacode_work_cr:
+#      friendly_name: "Radiacode (work) count rate"
+#      icon_template: mdi:radioactive
+#      unit_of_measurement: 'CPS'
+#      value_template: "{{ state_attr('sensor.radiacode_work', 'cps') }}"
 
 - platform: statistics
   name: radiacode_dr_mean_value
-  entity_id: sensor.radiacode_dr
-  sampling_size: 100000
+  entity_id: sensor.radiacode_dose_rate
+  sampling_size: 1500
   state_characteristic: mean
   max_age:
     hours: 24
 - platform: statistics
   name: radiacode_cr_mean_value
-  entity_id: sensor.radiacode_cr
-  sampling_size: 100000
+  entity_id: sensor.radiacode_count_rate
+  sampling_size: 1500
   state_characteristic: mean
   max_age:
     hours: 24
 - platform: statistics
   name: geiger_dr_mean_value
   entity_id: sensor.geiger_dr
-  sampling_size: 100000
+  sampling_size: 1500
   state_characteristic: mean
   max_age:
     hours: 24
 - platform: statistics
   name: geiger_cr_mean_value
   entity_id: sensor.geiger_counter_radioactive_events_per_minute
-  sampling_size: 100000
+  sampling_size: 1500
   state_characteristic: mean
   max_age:
     hours: 24

@@ -1,76 +1,80 @@
 # Автоматизация света на кухне
-- alias: Turn ON light kitchen (motion on)
+- alias: Turn ON kitchen lights (motion on)
   id: turn_kitchen_on
   trigger:
     - platform: state
-      entity_id: binary_sensor.dd_na_kukhne_occupancy
-      to: 'on'
-    - platform: state
-      entity_id: binary_sensor.ble_dd_motion
-      to: 'on'
+      entity_id:
+        - binary_sensor.dd_na_kukhne_occupancy
+        - binary_sensor.ble_dd_motion
+      to: "on"
+  #    - platform: state
+  #      entity_id: binary_sensor.ble_dd_motion
+  #      to: 'on'
   condition:
     - condition: state
       entity_id: timer.dvizhenie_na_kukhne
-      state: 'idle'
+      state: "idle"
     - condition: template
       value_template: >-
-              {{ states.light.kukhnia_hue.state == 'off' and
-              states.light.kukhnia_potolok.state == 'off' and
-              states.light.dimmable_light_2.state == 'off' }}
+        {{ states.light.kukhnia_hue.state == 'off' and
+        states.light.kukhnia_potolok.state == 'off' and
+        states.light.dimmable_light_2.state == 'off' }}
     - condition: numeric_state
       entity_id: sensor.osveshchionnost_na_kukhne_illuminance_lux
-      below: '3'
+      below: "3"
   action:
-    - service: light.turn_on
-      data:
-        brightness: 1
-      target:
-        entity_id: light.kukhnia_potolok
-    - service: timer.start
-      entity_id: timer.dvizhenie_na_kukhne
-#    - service: notify.telegram
-#      data:
-#        message: "Свет на кухне. Время включения: {{ states('sensor.time') }}"        
-        
+    - parallel:
+        - service: light.turn_on
+          data:
+            brightness: 1
+          target:
+            entity_id: light.kukhnia_potolok
+        - service: timer.start
+          entity_id: timer.dvizhenie_na_kukhne
+#      - service: notify.telegram
+#        data:
+#          message: "Свет на кухне. Время включения: {{ states('sensor.time') }}"
+
 - alias: Turn OFF (LT) Timer On
   id: turn_kitchen_off_timer_on
   trigger:
     - platform: event
       event_type: timer.finished
-      event_data: 
+      event_data:
         entity_id: timer.dvizhenie_na_kukhne
   condition:
     condition: or
     conditions:
-        - condition: state
-          entity_id: binary_sensor.dd_na_kukhne_occupancy
-          state: 'on'
-        - condition: state
-          entity_id: binary_sensor.ble_dd_motion
-          state: 'on'
+      - condition: state
+        entity_id: binary_sensor.dd_na_kukhne_occupancy
+        state: "on"
+      - condition: state
+        entity_id: binary_sensor.ble_dd_motion
+        state: "on"
   action:
-    - service: timer.start
-      entity_id: timer.dvizhenie_na_kukhne 
-#    - service: notify.telegram
-#      data:
-#        message: "Свет на кухне. Время продления: {{ states('sensor.time') }}"  
+    - parallel:
+        - service: timer.start
+          entity_id: timer.dvizhenie_na_kukhne
+#      - service: notify.telegram
+#        data:
+#          message: "Свет на кухне. Время продления: {{ states('sensor.time') }}"
 
 - alias: Turn OFF (LT) Timer Off
   id: turn_kitchen_off_timer_off
   trigger:
     - platform: event
       event_type: timer.finished
-      event_data: 
+      event_data:
         entity_id: timer.dvizhenie_na_kukhne
   condition:
     condition: and
     conditions:
       - condition: state
         entity_id: binary_sensor.dd_na_kukhne_occupancy
-        state: 'off'
+        state: "off"
       - condition: state
         entity_id: binary_sensor.ble_dd_motion
-        state: 'off'
+        state: "off"
       - condition: or
         conditions:
           - condition: template
@@ -79,15 +83,15 @@
               states.automation.turn_on_light_kitchen_motion_on.context.id and
               states.light.kukhnia_potolok.state == 'on' and
               states.light.dimmable_light_2.state == 'off' and
-              state_attr('light.kukhnia_potolok', 'brightness') | float == 1 }}
+              state_attr('light.kukhnia_potolok', 'brightness') | float(0) == 1 }}
           - condition: template
             value_template: >-
               {{ states.light.kukhnia_potolok.context.id ==
               states.automation.turn_off_lt_timer_on.context.id and
               states.light.kukhnia_potolok.state == 'on' and
               states.light.dimmable_light_2.state == 'off' and
-              state_attr('light.kukhnia_potolok', 'brightness') | float == 1 }}
+              state_attr('light.kukhnia_potolok', 'brightness') | float(0) == 1 }}
   action:
     - service: light.turn_off
-      data: 
+      data:
         entity_id: light.kukhnia_potolok

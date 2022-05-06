@@ -5,6 +5,6 @@ telegram_bot:
       - !secret telegram_bot_allowed_chat_id1
 
 notify:
-- name: telegram  # можете указать своё имя notify
+- name: telegram
   platform: telegram
   chat_id: !secret telegram_bot_allowed_chat_id1

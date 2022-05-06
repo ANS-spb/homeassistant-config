@@ -16,7 +16,7 @@
 - platform: statistics
   name: outside_temperature_min_value
   entity_id: sensor.openweathermap_temperature
-  sampling_size: 6000
+  sampling_size: 1500
   state_characteristic: value_min
   max_age:
     hours: 24
@@ -34,7 +34,7 @@
   state_characteristic: change
   max_age:
     hours: 3
-  sampling_size: 10800
+  sampling_size: 200
 
 - platform: statistics
   entity_id: sensor.pressure_average
@@ -42,4 +42,4 @@
   state_characteristic: change
   max_age:
     hours: 6
-  sampling_size: 21600
+  sampling_size: 200

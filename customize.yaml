@@ -1,17 +1,3 @@
-#binary_sensor.0x158d0003c747a9_contact:
-#  device_class: window
-#binary_sensor.0x158d0003c74920_contact:
-#  device_class: window
-#binary_sensor.nut_b2m:
-#  device_class: presence
-#binary_sensor.lumi_lumi_sensor_magnet_on_off:
-#  device_class: window
-#binary_sensor.lumi_lumi_sensor_magnet_2049c703_on_off:
-#  device_class: window
-#light.liustra:
-#  icon: mdi:ceiling-light
-#switch.lumi_lumi_plug_maeu01_on_off:
-#  device_class: outlet
 binary_sensor.okno_na_kukhne_contact:
   device_class: window
 binary_sensor.okno_v_komnate_contact:
