@@ -248,7 +248,8 @@
       transition: 10
       dynamic: true
     target:
-      entity_id: scene.spalnia_galaktika
+      entity_id: '{{[''scene.spalnia_galaktika'',''scene.spalnia_svet_zvezd'',''scene.spalnia_tumannost'']
+        | random }}'
   - delay:
       hours: 0
       minutes: 0
@@ -345,28 +346,6 @@
       entity_id: light.living_room
       domain: light
       brightness_pct: 1
-  mode: single
-- id: '1607720785311'
-  alias: ДД управляет эффектами гирлянды
-  description: ''
-  trigger:
-  - type: motion
-    platform: device
-    device_id: a5208bc37a55e0bc1a95e66785a19fb6
-    entity_id: binary_sensor.dd_na_kukhne_occupancy
-    domain: binary_sensor
-  condition:
-  - condition: device
-    type: is_on
-    device_id: d9631ea87a6b46b5e7e5fadb00518bb8
-    entity_id: light.wled
-    domain: light
-  - condition: state
-    entity_id: input_boolean.manual_effects_on
-    state: 'on'
-  action:
-  - service: script.wled_random_effect
-    data: {}
   mode: single
 - id: '1608399857199'
   alias: 'Adaptive lighting: reset manual_control after 1 hour'

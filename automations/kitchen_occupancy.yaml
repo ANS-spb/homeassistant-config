@@ -95,3 +95,18 @@
     - service: light.turn_off
       data:
         entity_id: light.kukhnia_potolok
+
+- alias: Turn OFF (Hue) Timer Cancel
+  id: turn_kitchen_off_timer_cancel
+  trigger:
+    - device_id: ea28b7c45cdbd3c8d68374d447b6b3ac
+      domain: hue
+      platform: device
+      type: initial_press
+      subtype: 4
+      unique_id: eab0a07c-82b1-4542-8b4d-0301a5422ed6
+  action:
+    - service: timer.cancel
+      target:
+        entity_id: timer.dvizhenie_na_kukhne
+  mode: single

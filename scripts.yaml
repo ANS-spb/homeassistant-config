@@ -8,7 +8,9 @@
         transition: 10
         dynamic: true
       target:
-        entity_id: scene.spalnia_tuman_na_ozere
+        entity_id: '{{ [''scene.spalnia_tuman_na_ozere'',''scene.spalnia_otdykh_na_zakate'',''scene.spalnia_gornyi_briz'',
+          ''scene.spalnia_zakat_v_savanne'',''scene.spalnia_under_the_tree''] | random
+          }}'
     - data:
         effect: Stop
         transition: 10
@@ -168,64 +170,6 @@ azur_on:
     entity_id: switch.azur_cd_source
   mode: single
   icon: mdi:audio-video
-lights_of_jol:
-  alias: Lights of Jol
-  sequence:
-  - service: adaptive_lighting.set_manual_control
-    entity_id: switch.adaptive_lighting_room
-    data:
-      entity_id: switch.adaptive_lighting_room
-      lights: light.living_room
-  - type: turn_off
-    device_id: 96cdd7ffa4fc86864d9baf8d83b431c7
-    entity_id: light.1296db50d5c70000_light
-    domain: light
-  - type: turn_off
-    device_id: 101afa81baf0178e938f81ef2cd7008f
-    entity_id: light.50ec50dfc6a6_light
-    domain: light
-  - type: turn_off
-    device_id: c9d7d051855ded544595e7851f77a4a7
-    entity_id: light.50ec50dfc119_light
-    domain: light
-  - type: turn_off
-    device_id: 0a2968f5e6d4069fc194c42826e06b68
-    entity_id: light.50ec50e1301e_light
-    domain: light
-  - type: turn_off
-    device_id: 2b7ddbfa7de98d413806979267904f04
-    entity_id: light.50ec50dfe40f_light
-    domain: light
-  - type: turn_off
-    device_id: 96d11ba00c882403308cdfa967a7e9de
-    entity_id: light.50ec50e18344_light
-    domain: light
-  - service: light.turn_on
-    data:
-      entity_id: light.living_room
-      effect: Fire Flicker
-    entity_id: light.living_room
-  - service: light.turn_on
-    data:
-      entity_id: light.wled
-      brightness_pct: 80
-    entity_id: light.wled
-  - service: script.turn_on
-    data: {}
-    entity_id: script.wled_random_effect
-  - choose:
-    - conditions:
-      - condition: time
-        after: 08:00
-        before: '22:00'
-      sequence:
-      - type: turn_on
-        device_id: caa4492bae4673fc2ae5f5b441999f90
-        entity_id: switch.lumi_lumi_plug_maeu01_on_off
-        domain: switch
-    default: []
-  mode: single
-  icon: mdi:pine-tree
 power_off_all:
   alias: Выключить всё
   sequence:
