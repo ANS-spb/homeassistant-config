@@ -840,8 +840,18 @@
                                     "state_adaptive_color": false
                                 },
                                 {
+                                    "entity": "sensor.mini_graph_day_pct",
+                                    "color": "white",
+                                    "show_line": false,
+                                    "show_legend": false,
+                                    "show_points": false,
+                                    "show_indicator": false,
+                                    "show_fill": true,
+                                    "state_adaptive_color": false
+                                },
+                                {
                                     "entity": "sensor.mini_graph_night_pct",
-                                    "color": "gray",
+                                    "color": "dark-grey",
                                     "show_line": false,
                                     "show_legend": false,
                                     "show_points": false,
