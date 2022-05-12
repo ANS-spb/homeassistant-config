@@ -1069,6 +1069,32 @@
                             }
                         },
                         {
+                            "type": "entities",
+                            "entities": [
+                                {
+                                    "entity": "sensor.radiacode_dr_mean_value",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.radiacode_count_rate",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.radiacode_cr_mean_value",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.geiger_counter_radiation_dose_per_hour",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.geiger_dr_mean_value",
+                                    "secondary_info": "last-updated"
+                                }
+                            ],
+                            "state_color": false
+                        },
+                        {
                             "type": "custom:auto-entities",
                             "show_empty": false,
                             "card": {
@@ -1114,32 +1140,6 @@
                             "refresh_interval": 0,
                             "title": "\u041f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0435",
                             "hours_to_show": 48
-                        },
-                        {
-                            "type": "entities",
-                            "entities": [
-                                {
-                                    "entity": "sensor.radiacode_dr_mean_value",
-                                    "secondary_info": "last-updated"
-                                },
-                                {
-                                    "entity": "sensor.radiacode_count_rate",
-                                    "secondary_info": "last-updated"
-                                },
-                                {
-                                    "entity": "sensor.radiacode_cr_mean_value",
-                                    "secondary_info": "last-updated"
-                                },
-                                {
-                                    "entity": "sensor.geiger_counter_radiation_dose_per_hour",
-                                    "secondary_info": "last-updated"
-                                },
-                                {
-                                    "entity": "sensor.geiger_dr_mean_value",
-                                    "secondary_info": "last-updated"
-                                }
-                            ],
-                            "state_color": false
                         }
                     ]
                 },

@@ -5,7 +5,7 @@
     "data": {
         "items": [
             {
-                "url": "/hacsfiles/mini-media-player/mini-media-player-bundle.js?hacstag=1485208381162",
+                "url": "/hacsfiles/mini-media-player/mini-media-player-bundle.js?hacstag=1485208381164",
                 "type": "module",
                 "id": "7a222721f98841f5a520ead09daeefed"
             },
@@ -65,7 +65,7 @@
                 "id": "3e95d8c95b034e97b9d16fe32c7cc64d"
             },
             {
-                "url": "/hacsfiles/hass-hue-icons/hass-hue-icons.js?hacstag=3844345221227",
+                "url": "/hacsfiles/hass-hue-icons/hass-hue-icons.js?hacstag=3844345221228",
                 "type": "module",
                 "id": "842259ec27764dba9697aa854ffafd69"
             },

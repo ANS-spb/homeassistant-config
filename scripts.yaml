@@ -400,7 +400,10 @@ wled_static_effect:
   sequence:
   - service: light.turn_on
     data:
+      transition: 2
+      brightness_pct: 100
       effect: Solid Pattern
+      color_temp: 407
     target:
       entity_id: light.wled
   - parallel:
@@ -408,7 +411,7 @@ wled_static_effect:
       target:
         entity_id: select.wled_color_palette
       data:
-        option: Pastel
+        option: Default
     - service: number.set_value
       target:
         entity_id: number.wled_intensity

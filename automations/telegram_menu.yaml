@@ -1,11 +1,11 @@
 - alias: Telegram Menu start
   id: telegram_menu_start
-  description: 'Обработка первого запуска бота и показ основного меню'
+  description: "Обработка первого запуска бота и показ основного меню"
   trigger:
     - platform: event
       event_type: telegram_command
       event_data:
-        command: /start        
+        command: /start
     - platform: event
       event_type: telegram_callback
       event_data:
@@ -13,39 +13,39 @@
   condition: []
   action:
     - choose:
-      - conditions:
-        - condition: template
-          value_template: '{{ trigger.event.data.command == "/start" }}'
-        sequence:
-          - service: telegram_bot.send_message
-            data:
-              message: &stmsg >
-                {{ [ "Что желаете, Повелитель?", "Что я могу для Вас сделать?", "Внимаю!", "Хорошего дня" ] | random }}
-              parse_mode: html
-              disable_notification: true
-              disable_web_page_preview: true
-              timeout: 1000
-              inline_keyboard: &mainkeyb
-                - 💡 Свет:/lights, ℹ Статус:/status
-                - ☀ Погода:/weather, 💻 Система:/system
-                - ☢️ Радиация:/radiation, 📸 Фото с домофона:/photo_entrance
-              target: '{{ trigger.event.data.user_id }}'
-      - conditions:
-        - condition: template
-          value_template: '{{ trigger.event.data.command == "/back" }}'
-        sequence:
-          - service: telegram_bot.edit_message
-            data:
-              message_id: last
-              chat_id: '{{ trigger.event.data.user_id }}'
-              message: *stmsg
-              inline_keyboard: *mainkeyb
-              target: '{{ trigger.event.data.user_id }}'
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data.command == "/start" }}'
+          sequence:
+            - service: telegram_bot.send_message
+              data:
+                message: &stmsg >
+                  {{ [ "Что желаете, Повелитель?", "Что я могу для Вас сделать?", "Внимаю!", "Хорошего дня" ] | random }}
+                parse_mode: html
+                disable_notification: true
+                disable_web_page_preview: true
+                timeout: 1000
+                inline_keyboard: &mainkeyb
+                  - 💡 Свет:/lights, ℹ Статус:/status
+                  - ☀ Погода:/weather, 💻 Система:/system
+                  - ☢️ Радиация:/radiation, 📸 Фото с домофона:/photo_entrance
+                target: "{{ trigger.event.data.chat_id }}"
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data.command == "/back" }}'
+          sequence:
+            - service: telegram_bot.edit_message
+              data:
+                message_id: last
+                chat_id: "{{ trigger.event.data.chat_id }}"
+                message: *stmsg
+                inline_keyboard: *mainkeyb
+                target: "{{ trigger.event.data.chat_id }}"
   mode: single
 
 - alias: Telegram Menu Lights
   id: telefram_menu_lights
-  description: 'Управление светом через Telegram'
+  description: "Управление светом через Telegram"
   trigger:
     - platform: event
       event_type: telegram_callback
@@ -53,157 +53,172 @@
   condition: []
   action:
     - choose:
-      - conditions:
-        - condition: template
-          value_template: '{{ trigger.event.data.command == "/lights" }}'
-        sequence:
-        - service: script.dynamic_update_all_light_group
-          data: {}
-        - service: telegram_bot.answer_callback_query
-          data_template:
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: Что Вы хотите сделать со светом?
-        - service: telegram_bot.edit_message
-          data:
-            message_id: last
-            chat_id: '{{ trigger.event.data.user_id }}'
-            message: &msg |
-              {% if is_state("group.dyn_all_lights", "off") %}*Свет* везде выключен.
-              {% else %}*Свет* включен: {{ states.light | selectattr("state", "eq", "on") | map(attribute  = "name") | join(", ") }}.{% endif %}
-            inline_keyboard: &keyb
-            - '{% if is_state("light.light.prikhozhaia", "off")%}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Прихожая:/lobby_toggle,
-              {% if is_state("light.kukhnia_hue", "off") %}{{"🔴"}}{% else %}{{"🟢"}}{%endif %} Кухня:/kitchen_toggle'
-            - '{% if is_state("light.torsher", "off") %}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Торшер:/torsher_toggle'
-            - '{% if is_state("light.living_room", "off") %}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Лампа:/living_toggle, 
-              {% if is_state("light.liustra", "off") %}{{"🔴"}}{% else %}{{"🟢"}}{%endif %} Люстра:/liustra_toggle'
-            - Выключить ВСË:/lightoff
-            - Назад:/back
-      - conditions:
-        - condition: template
-          value_template: '{{ trigger.event.data.command == "/lobby_toggle" }}'
-        sequence:
-        - service: telegram_bot.answer_callback_query
-          data_template:
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: Переключаю свет в прихожей.
-        - service: light.toggle
-          target:
-            entity_id: light.prikhozhaia
-        - delay:
-            milliseconds: 500
-        - service: telegram_bot.edit_message
-          data:
-            message_id: '{{ trigger.event.data.message.message_id }}'
-            chat_id: '{{ trigger.event.data.user_id }}'
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: *msg
-            inline_keyboard: *keyb
-      - conditions:
-        - condition: template
-          value_template: '{{ trigger.event.data.command == "/kitchen_toggle" }}'
-        sequence:
-        - service: telegram_bot.answer_callback_query
-          data_template:
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: '{% if is_state("light.kukhnia_hue", "off")%}{{"Включаю свет на кухне."}}{%else %}{{"Выключаю свет на кухне."}}{% endif %}'
-        - service: light.toggle
-          target:
-            entity_id: light.kukhnia_hue
-        - delay:
-            milliseconds: 500
-        - service: telegram_bot.edit_message
-          data:
-            message_id: '{{ trigger.event.data.message.message_id }}'
-            chat_id: '{{ trigger.event.data.user_id }}'
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: *msg
-            inline_keyboard: *keyb
-      - conditions:
-        - condition: template
-          value_template: '{{ trigger.event.data.command == "/torsher_toggle" }}'
-        sequence:
-        - service: telegram_bot.answer_callback_query
-          data_template:
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: '{% if is_state("light.torsher", "off")%}{{"Включаю торшер в спальне."}}{%else %}{{"Выключаю лампу в спальне."}}{% endif %}'
-        - service: light.toggle
-          target:
-            entity_id: light.torsher
-        - delay:
-            milliseconds: 500
-        - service: telegram_bot.edit_message
-          data:
-            message_id: '{{ trigger.event.data.message.message_id }}'
-            chat_id: '{{ trigger.event.data.user_id }}'
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: *msg
-            inline_keyboard: *keyb
-      - conditions:
-        - condition: template
-          value_template: '{{ trigger.event.data.command == "/living_toggle" }}'
-        sequence:
-        - service: telegram_bot.answer_callback_query
-          data_template:
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: '{% if is_state("light.living_room", "off")%}{{"Включаю лампу в спальне."}}{%else %}{{"Выключаю лампу в спальне."}}{% endif %}'
-        - service: light.toggle
-          target:
-            entity_id: light.living_room
-        - delay:
-            milliseconds: 500
-        - service: telegram_bot.edit_message
-          data:
-            message_id: '{{ trigger.event.data.message.message_id }}'
-            chat_id: '{{ trigger.event.data.user_id }}'
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: *msg
-            inline_keyboard: *keyb
-      - conditions:
-        - condition: template
-          value_template: '{{ trigger.event.data.command == "/liustra_toggle" }}'
-        sequence:
-        - service: telegram_bot.answer_callback_query
-          data_template:
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: '{% if is_state("light.liustra", "off")%}{{"Включаю люстру в спальне."}}{%else %}{{"Выключаю люстру в спальне."}}{% endif %}'
-        - service: light.toggle
-          target:
-            entity_id: light.liustra
-        - delay:
-            milliseconds: 500
-        - service: telegram_bot.edit_message
-          data:
-            message_id: '{{ trigger.event.data.message.message_id }}'
-            chat_id: '{{ trigger.event.data.user_id }}'
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: *msg
-            inline_keyboard: *keyb
-      - conditions:
-        - condition: template
-          value_template: '{{ trigger.event.data.command == "/lightoff" }}'
-        sequence:
-        - service: telegram_bot.answer_callback_query
-          data_template:
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: Выключаю весь свет!
-        - service: light.turn_off
-          target:
-            entity_id: all
-        - delay:
-            milliseconds: 500
-        - service: telegram_bot.edit_message
-          data:
-            message_id: '{{ trigger.event.data.message.message_id }}'
-            chat_id: '{{ trigger.event.data.user_id }}'
-            callback_query_id: '{{ trigger.event.data.id }}'
-            message: *msg
-            inline_keyboard: *keyb
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data.command == "/lights" }}'
+          sequence:
+            - service: script.dynamic_update_all_light_group
+              data: {}
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: Что Вы хотите сделать со светом?
+            - service: telegram_bot.edit_message
+              data:
+                message_id: last
+                chat_id: "{{ trigger.event.data.chat_id }}"
+                message: &msg |
+                  {% if is_state("group.dyn_all_lights", "off") %}*Свет* везде выключен.
+                  {% else %}*Свет* включен: {{ states.light | selectattr("state", "eq", "on") | map(attribute  = "name") | join(", ") }}.{% endif %}
+                inline_keyboard: &keyb
+                  - Включить свет в комнате:/lighton
+                  - '{% if is_state("light.prikhozhaia", "off")%}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Прихожая:/lobby_toggle,
+                    {% if is_state("light.kukhnia_hue", "off") %}{{"🔴"}}{% else %}{{"🟢"}}{%endif %} Кухня:/kitchen_toggle'
+                  - '{% if is_state("light.torsher_2", "off") %}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Торшер:/torsher_toggle'
+                  - '{% if is_state("light.living_room", "off") %}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Лампа:/living_toggle,
+                    {% if is_state("light.liustra", "off") %}{{"🔴"}}{% else %}{{"🟢"}}{%endif %} Люстра:/liustra_toggle'
+                  - Выключить ВСË:/lightoff
+                  - Назад:/back
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data.command == "/lighton" }}'
+          sequence:
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: "Включаю обычный свет :)"
+            - service: script.1599944056170
+              data: {}
+            - service: telegram_bot.edit_message
+              data:
+                message_id: "{{ trigger.event.data.message.message_id }}"
+                chat_id: "{{ trigger.event.data.chat_id }}"
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: *msg
+                inline_keyboard: *keyb
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data.command == "/lobby_toggle" }}'
+          sequence:
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: Переключаю свет в прихожей.
+            - service: light.toggle
+              target:
+                entity_id: light.prikhozhaia
+            - delay:
+                milliseconds: 500
+            - service: telegram_bot.edit_message
+              data:
+                message_id: "{{ trigger.event.data.message.message_id }}"
+                chat_id: "{{ trigger.event.data.chat_id }}"
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: *msg
+                inline_keyboard: *keyb
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data.command == "/kitchen_toggle" }}'
+          sequence:
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: '{% if is_state("light.kukhnia_hue", "off")%}{{"Включаю свет на кухне."}}{%else %}{{"Выключаю свет на кухне."}}{% endif %}'
+            - service: light.toggle
+              target:
+                entity_id: light.kukhnia_hue
+            - delay:
+                milliseconds: 500
+            - service: telegram_bot.edit_message
+              data:
+                message_id: "{{ trigger.event.data.message.message_id }}"
+                chat_id: "{{ trigger.event.data.chat_id }}"
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: *msg
+                inline_keyboard: *keyb
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data.command == "/torsher_toggle" }}'
+          sequence:
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: '{% if is_state("light.torsher_2", "off")%}{{"Включаю торшер в спальне."}}{%else %}{{"Выключаю лампу в спальне."}}{% endif %}'
+            - service: light.toggle
+              target:
+                entity_id: light.torsher
+            - delay:
+                milliseconds: 500
+            - service: telegram_bot.edit_message
+              data:
+                message_id: "{{ trigger.event.data.message.message_id }}"
+                chat_id: "{{ trigger.event.data.chat_id }}"
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: *msg
+                inline_keyboard: *keyb
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data.command == "/living_toggle" }}'
+          sequence:
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: '{% if is_state("light.living_room", "off")%}{{"Включаю лампу в спальне."}}{%else %}{{"Выключаю лампу в спальне."}}{% endif %}'
+            - service: light.toggle
+              target:
+                entity_id: light.living_room
+            - delay:
+                milliseconds: 500
+            - service: telegram_bot.edit_message
+              data:
+                message_id: "{{ trigger.event.data.message.message_id }}"
+                chat_id: "{{ trigger.event.data.chat_id }}"
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: *msg
+                inline_keyboard: *keyb
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data.command == "/liustra_toggle" }}'
+          sequence:
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: '{% if is_state("light.liustra", "off")%}{{"Включаю люстру в спальне."}}{%else %}{{"Выключаю люстру в спальне."}}{% endif %}'
+            - service: light.toggle
+              target:
+                entity_id: light.liustra
+            - delay:
+                milliseconds: 500
+            - service: telegram_bot.edit_message
+              data:
+                message_id: "{{ trigger.event.data.message.message_id }}"
+                chat_id: "{{ trigger.event.data.chat_id }}"
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: *msg
+                inline_keyboard: *keyb
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data.command == "/lightoff" }}'
+          sequence:
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: Выключаю весь свет!
+            - service: script.1644819849093
+              data: {}
+            - service: telegram_bot.edit_message
+              data:
+                message_id: "{{ trigger.event.data.message.message_id }}"
+                chat_id: "{{ trigger.event.data.chat_id }}"
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: *msg
+                inline_keyboard: *keyb
       default: []
   mode: single
 
 - alias: Telegram Menu Sensors
   id: telegram_menu_sensors
-  description: 'Статус датчиков и света'
+  description: "Статус датчиков и света"
   trigger:
     - platform: event
       event_type: telegram_callback
@@ -213,25 +228,23 @@
   action:
     - service: telegram_bot.answer_callback_query
       data_template:
-        callback_query_id: '{{ trigger.event.data.id }}'
+        callback_query_id: "{{ trigger.event.data.id }}"
         message: Запрос статуса датчиков
     - service: script.dynamic_update_all_light_group
       data: {}
     - service: telegram_bot.edit_message
       data_template:
         message_id: last
-        chat_id: '{{ trigger.event.data.user_id }}'
-        message: >
+        chat_id: "{{ trigger.event.data.chat_id }}"
+        message: |-
           *Температура в комнате* {{states('sensor.582d3439b574_temperature')|round(0)|format(morph='градус',as_text=false)}}.
-
+          *Температура на кухне* {{states('sensor.ble_temperature_datchik_na_kukhne')|round(0)|format(morph='градус',as_text=false)}}.
           *Влажность в комнате* {{states('sensor.582d3439b574_humidity')|round(0)}}%
-
+          *Влажность на кухне* {{states('sensor.ble_humidity_datchik_na_kukhne')|round(0)}}%
           {% if is_state("binary_sensor.okno_v_komnate_contact", "off")%}
           Окно в спальне закрыто. {% else %} *Окно в спальне открыто!* {% endif %}
-
           {% if is_state("binary_sensor.okno_na_kukhne_contact", "off")%}
           Окно на кухне закрыто. {% else %}*Окно на кухне открыто!* {% endif %}
-
           {% if is_state("group.dyn_all_lights", "off") %}
           *Свет* везде выключен.
           {% else %}
@@ -243,7 +256,7 @@
 
 - alias: Telegram Menu System status
   id: telegram_menu_system
-  description: 'Статус системы'
+  description: "Статус системы"
   trigger:
     - platform: event
       event_type: telegram_callback
@@ -253,18 +266,18 @@
   action:
     - service: telegram_bot.answer_callback_query
       data_template:
-        callback_query_id: '{{ trigger.event.data.id }}'
+        callback_query_id: "{{ trigger.event.data.id }}"
         message: Запрос статуса системы
     - service: telegram_bot.edit_message
       data_template:
         message_id: last
-        chat_id: '{{ trigger.event.data.user_id }}'
+        chat_id: "{{ trigger.event.data.chat_id }}"
         message: |-
 
           {{ "\U0001F4BB" }} *System*:
           ------------------------------------------------        
           *CPU Usage*:   {{ states.sensor.processor_use.state }} %
-          *Last Reboot*:   {{ states.sensor.last_boot.state }}
+          *Last Reboot*:   {{ as_timestamp(states.sensor.last_boot.state) | timestamp_custom('%d.%m.%Y %H:%M') }}
           *Temp CPU*:   {{ states.sensor.cpu_temp.state }} °C
           *Memory Used*:  {{ states.sensor.memory_use_percent.state }} %
           *Disk Used*:  {{ states.sensor.disk_use_percent.state }} %
@@ -276,7 +289,7 @@
 
 - alias: Telegram Menu Weather
   id: telegram_menu_weather
-  description: 'Запрос погоды'
+  description: "Запрос погоды"
   trigger:
     - platform: event
       event_type: telegram_callback
@@ -286,19 +299,19 @@
   action:
     - service: telegram_bot.answer_callback_query
       data_template:
-        callback_query_id: '{{ trigger.event.data.id }}'
+        callback_query_id: "{{ trigger.event.data.id }}"
         message: Weather
     - service: telegram_bot.edit_message
       data_template:
         message_id: last
-        chat_id: '{{ trigger.event.data.user_id }}'
-        message: >
-          {% if is_state("sun.sun", "above_horizon") -%} Солнце встало {{relative_time(states.sun.sun.last_changed) }} назад. 
-          {%- else -%} Солнце встанет {{ as_timestamp(strptime(state_attr("sun.sun", "next_rising"),"")) | timestamp_local }}. {%- endif %}
-
-          Температура на улице: {{ states.weather.home_assistant.attributes.temperature }} °C
-
-          Влажность на улице: {{ states.weather.home_assistant.attributes.humidity }} %
+        chat_id: "{{ trigger.event.data.chat_id }}"
+        message: |-
+          {% if is_state("sun.sun", "above_horizon") -%} Солнце уже встало. 
+          {%- else -%} Солнце встанет в {{ as_timestamp(state_attr("sun.sun", "next_rising")) | timestamp_custom('%H:%M') }}. {%- endif %}
+          Сейчас за бортом {{states('sensor.openweathermap_weather')}}.
+          Температура: {{states('sensor.openweathermap_temperature')}} °C, ощущается как {{states('sensor.openweathermap_temperature')}} °C
+          Влажность: {{states('sensor.openweathermap_humidity')}} %
+          В ближайшее время ожидается температура {{states('sensor.openweathermap_forecast_temperature')}} °C. {{states('sensor.pressure_weather_forecast')}}.
         inline_keyboard:
           - Назад:/back
   mode: single

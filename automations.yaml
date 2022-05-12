@@ -937,10 +937,12 @@
     event_type: telegram_command
     event_data:
       command: /photo_entrance
+    id: command
   - platform: event
     event_type: telegram_callback
     event_data:
       data: /photo_entrance
+    id: callback
   condition: []
   action:
   - service: camera.snapshot
@@ -951,14 +953,13 @@
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
-      target: '{{ trigger.event.data.user_id }}'
+      target: '{{ trigger.event.data.chat_id }}'
       parse_mode: html
       disable_notification: true
       timeout: 1000
       inline_keyboard:
       - '{{"\U0001F6AA"}} Открыть дверь:/open_door'
       - 📸 Показать:/photo_entrance,  🕵️‍♂️ Детект:/person_entrance
-      - 🔙 Основное меню:/back
       message_tag: msg_to_edit
   mode: single
 - id: '1645086906100'
@@ -1117,7 +1118,7 @@
   - service: telegram_bot.send_photo
     data:
       url: http://127.0.0.1:5000/api/events/{{states.input_text.frigate_event.state}}/snapshot.jpg?bbox=1&crop=1&timestamp=1
-      target: '{{ trigger.event.data.user_id }}'
+      target: '{{ trigger.event.data.chat_id }}'
       parse_mode: html
       disable_notification: true
       timeout: 1000
@@ -1345,28 +1346,58 @@
     event_type: telegram_command
     event_data:
       command: /radiation
+    id: command
   - platform: event
     event_type: telegram_callback
     event_data:
       data: /radiation
+    id: callback
   condition: []
   action:
-  - service: telegram_bot.send_message
-    data:
-      title: ☢️ *Радиационный мониторинг*
-      message: "Значение радиационного фона на текущий момент: \n\nСтационарный пост:\
-        \ *{{ states('sensor.geiger_dr') }} {{\nstate_attr('sensor.geiger_dr', 'unit_of_measurement')\
-        \ }}* при среднем {{\nstates('sensor.geiger_dr_mean_value') }} {{\nstate_attr('sensor.geiger_dr_mean_value',\
-        \ 'unit_of_measurement') }}.\nОбновление данных СП было {{relative_time(states.sensor.geiger_dr.last_updated)\
-        \ }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\nRadiacode:\
-        \ *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')\
-        \ }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',\
-        \ 'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')\
-        \ }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\
-        Обновление данных ПП было {{relative_time(states.sensor.radiacode.last_updated)\
-        \ }}\nназад.\n{% else %}\nСенсор Radiacode недоступен.\n{% endif %}\n"
-      target: '{{ trigger.event.data.user_id }}'
-      parse_mode: markdown
-      disable_notification: true
-      message_tag: msg_to_edit
+  - if:
+    - condition: trigger
+      id: command
+    then:
+    - service: telegram_bot.send_message
+      data:
+        title: ☢️ *Радиационный мониторинг*
+        message: "Значение радиационного фона на текущий момент: \n\nСтационарный\
+          \ пост: *{{ states('sensor.geiger_dr') }} {{\nstate_attr('sensor.geiger_dr',\
+          \ 'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')\
+          \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
+          \ }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dr.last_updated)\
+          \ }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:\
+          \ *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')\
+          \ }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',\
+          \ 'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')\
+          \ }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\
+          \nОбновление данных ПП было {{relative_time(states.sensor.radiacode.last_updated)\
+          \ }} назад.\n\n{% else %}\nСенсор Radiacode недоступен.\n\n{% endif %}\n"
+        target: '{{ trigger.event.data.chat_id }}'
+        parse_mode: markdown
+        disable_notification: true
+    else: []
+  - if:
+    - condition: trigger
+      id: callback
+    then:
+    - service: telegram_bot.edit_message
+      data:
+        title: ☢️ *Радиационный мониторинг*
+        message: "Значение радиационного фона на текущий момент: \n\nСтационарный\
+          \ пост: *{{ states('sensor.geiger_dr') }} {{\nstate_attr('sensor.geiger_dr',\
+          \ 'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')\
+          \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
+          \ }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dr.last_updated)\
+          \ }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:\
+          \ *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')\
+          \ }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',\
+          \ 'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')\
+          \ }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\
+          \nОбновление данных ПП было {{relative_time(states.sensor.radiacode.last_updated)\
+          \ }} назад.\n\n{% else %}\nСенсор Radiacode недоступен.\n\n{% endif %}\n"
+        message_id: last
+        chat_id: '{{ trigger.event.data.chat_id }}'
+        inline_keyboard:
+        - Назад:/back
   mode: single
