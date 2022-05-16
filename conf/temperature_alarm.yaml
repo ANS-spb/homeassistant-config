@@ -16,66 +16,66 @@ input_number:
     unit_of_measurement: "°C"
     icon: mdi:thermometer-high
     
-automation:
-  - id: alarm_temperature_low
-    alias: Temperature Alarm Low
-    initial_state: true
-    trigger:
-    - platform: template
-      value_template: >
-        {% macro temperature_threshold() %}
-        {%- set threshold = states.input_number.scale_min_temp.state | int -%}
-        {% for item in expand('group.temperature_inside_home') if ((item.attributes.temperature is defined and item.attributes['temperature'] | int < threshold) or ("temperature" in item.name | lower and ((item.state | int < threshold and item.state|int != 0)))) -%}
-        {% if (item.attributes.temperature is defined and item.attributes['temperature'] | int < threshold) -%}
-        {{ item.name }} ({{ item.attributes['temperature'] }}){%- if not loop.last %}, {% endif -%}{% endif -%}
-        {% if "temperature" in item.name | lower and ((item.state | int < threshold and item.state|int != 0)) -%}
-        {{ item.name }} ({{ item.state }}){% if not loop.last %}, {%- endif %} {% endif -%}
-        {% endfor %}
-        {% endmacro %}
-        {{ temperature_threshold() | trim != "" }}
-    action:
-    - service: notify.mobile_app_iphone_ans
-      data:
-        title: "Низкая температура:"
-        message: >
-          {{'\uD83C\uDF21'}} {% macro temperature_threshold() %}
-          {%- set threshold = states.input_number.scale_min_temp.state | int -%}
-          {% for item in expand('group.temperature_inside_home') if ((item.attributes.temperature is defined and item.attributes['temperature'] | int < threshold) or ("temperature" in item.name | lower and ((item.state | int < threshold and item.state|int != 0)))) -%}
-          {% if (item.attributes.temperature is defined and item.attributes['temperature'] | int < threshold) -%}
-          {{ item.name }} ({{ item.attributes['temperature'] }}){%- if not loop.last %}, {% endif -%}{% endif -%}
-          {% if "temperature" in item.name | lower and ((item.state | int < threshold and item.state|int != 0)) -%}
-          {{ item.name }} ({{ item.state }}){% if not loop.last %}, {%- endif %} {% endif -%}
-          {% endfor %}
-          {% endmacro %}
-          {{ temperature_threshold().split(',') | unique | join (', ') }}
-  - id: alarm_temperature_high
-    alias: Temperature Alarm High
-    initial_state: true
-    trigger:
-    - platform: template
-      value_template: >
-        {% macro temperature_threshold() %}
-        {%- set threshold = states.input_number.scale_max_temp.state | int(0) -%}
-        {% for item in expand('group.temperature_inside_home') if ((item.attributes.temperature is defined and item.attributes['temperature'] | int(0) > threshold) or ("temperature" in item.name | lower and ((item.state | int(0) > threshold and item.state | int(0) != 0)))) -%}
-        {% if (item.attributes.temperature is defined and item.attributes['temperature'] | int(0) > threshold) -%}
-        {{ item.name }} ({{ item.attributes['temperature'] }}){%- if not loop.last %}, {% endif -%}{% endif -%}
-        {% if "temperature" in item.name | lower and ((item.state | int(0) > threshold and item.state | int(0) != 0)) -%}
-        {{ item.name }} ({{ item.state }}){% if not loop.last %}, {%- endif %} {% endif -%}
-        {% endfor %}
-        {% endmacro %}
-        {{ temperature_threshold() | trim != "" }}
-    action:
-    - service: notify.mobile_app_iphone_ans
-      data:
-        title: "Высокая температура:"
-        message: >
-          {{'\uD83C\uDF21'}} {% macro temperature_threshold() %}
-          {%- set threshold = states.input_number.scale_max_temp.state | int(0) -%}
-          {% for item in expand('group.temperature_inside_home') if ((item.attributes.temperature is defined and item.attributes['temperature'] | int(0) > threshold) or ("temperature" in item.name | lower and ((item.state | int(0) > threshold and item.state | int(0) != 0)))) -%}
-          {% if (item.attributes.temperature is defined and item.attributes['temperature'] | int(0) > threshold) -%}
-          {{ item.name }} ({{ item.attributes['temperature'] }}){%- if not loop.last %}, {% endif -%}{% endif -%}
-          {% if "temperature" in item.name | lower and ((item.state | int(0) > threshold and item.state | int(0) != 0)) -%}
-          {{ item.name }} ({{ item.state }}){% if not loop.last %}, {%- endif %} {% endif -%}
-          {% endfor %}
-          {% endmacro %}
-          {{ temperature_threshold().split(',') | unique | join (', ') }}
+# automation:
+#   - id: alarm_temperature_low
+#     alias: Temperature Alarm Low
+#     initial_state: true
+#     trigger:
+#     - platform: template
+#       value_template: >
+#         {% macro temperature_threshold() %}
+#         {%- set threshold = states.input_number.scale_min_temp.state | int) -%}
+#         {% for item in expand('group.temperature_inside_home') if ((item.attributes.temperature is defined and item.attributes['temperature'] | int < threshold) or ("temperature" in item.name | lower and ((item.state | int < threshold and item.state|int != 0)))) -%}
+#         {% if (item.attributes.temperature is defined and item.attributes['temperature'] | int < threshold) -%}
+#         {{ item.name }} ({{ item.attributes['temperature'] }}){%- if not loop.last %}, {% endif -%}{% endif -%}
+#         {% if "temperature" in item.name | lower and ((item.state | int < threshold and item.state|int != 0)) -%}
+#         {{ item.name }} ({{ item.state }}){% if not loop.last %}, {%- endif %} {% endif -%}
+#         {% endfor %}
+#         {% endmacro %}
+#         {{ temperature_threshold() | trim != "" }}
+#     action:
+#     - service: notify.mobile_app_iphone_ans
+#       data:
+#         title: "Низкая температура:"
+#         message: >
+#           {{'\uD83C\uDF21'}} {% macro temperature_threshold() %}
+#           {%- set threshold = states.input_number.scale_min_temp.state | int -%}
+#           {% for item in expand('group.temperature_inside_home') if ((item.attributes.temperature is defined and item.attributes['temperature'] | int < threshold) or ("temperature" in item.name | lower and ((item.state | int < threshold and item.state|int != 0)))) -%}
+#           {% if (item.attributes.temperature is defined and item.attributes['temperature'] | int < threshold) -%}
+#           {{ item.name }} ({{ item.attributes['temperature'] }}){%- if not loop.last %}, {% endif -%}{% endif -%}
+#           {% if "temperature" in item.name | lower and ((item.state | int < threshold and item.state|int != 0)) -%}
+#           {{ item.name }} ({{ item.state }}){% if not loop.last %}, {%- endif %} {% endif -%}
+#           {% endfor %}
+#           {% endmacro %}
+#           {{ temperature_threshold().split(',') | unique | join (', ') }}
+#   - id: alarm_temperature_high
+#     alias: Temperature Alarm High
+#     initial_state: true
+#     trigger:
+#     - platform: template
+#       value_template: >
+#         {% macro temperature_threshold() %}
+#         {%- set threshold = states.input_number.scale_max_temp.state | int(0) -%}
+#         {% for item in expand('group.temperature_inside_home') if ((item.attributes.temperature is defined and item.attributes['temperature'] | int(0) > threshold) or ("temperature" in item.name | lower and ((item.state | int(0) > threshold and item.state | int(0) != 0)))) -%}
+#         {% if (item.attributes.temperature is defined and item.attributes['temperature'] | int(0) > threshold) -%}
+#         {{ item.name }} ({{ item.attributes['temperature'] }}){%- if not loop.last %}, {% endif -%}{% endif -%}
+#         {% if "temperature" in item.name | lower and ((item.state | int(0) > threshold and item.state | int(0) != 0)) -%}
+#         {{ item.name }} ({{ item.state }}){% if not loop.last %}, {%- endif %} {% endif -%}
+#         {% endfor %}
+#         {% endmacro %}
+#         {{ temperature_threshold() | trim != "" }}
+#     action:
+#     - service: notify.mobile_app_iphone_ans
+#       data:
+#         title: "Высокая температура:"
+#         message: >
+#           {{'\uD83C\uDF21'}} {% macro temperature_threshold() %}
+#           {%- set threshold = states.input_number.scale_max_temp.state | int(0) -%}
+#           {% for item in expand('group.temperature_inside_home') if ((item.attributes.temperature is defined and item.attributes['temperature'] | int(0) > threshold) or ("temperature" in item.name | lower and ((item.state | int(0) > threshold and item.state | int(0) != 0)))) -%}
+#           {% if (item.attributes.temperature is defined and item.attributes['temperature'] | int(0) > threshold) -%}
+#           {{ item.name }} ({{ item.attributes['temperature'] }}){%- if not loop.last %}, {% endif -%}{% endif -%}
+#           {% if "temperature" in item.name | lower and ((item.state | int(0) > threshold and item.state | int(0) != 0)) -%}
+#           {{ item.name }} ({{ item.state }}){% if not loop.last %}, {%- endif %} {% endif -%}
+#           {% endfor %}
+#           {% endmacro %}
+#           {{ temperature_threshold().split(',') | unique | join (', ') }}

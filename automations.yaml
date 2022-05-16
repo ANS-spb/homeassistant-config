@@ -102,8 +102,12 @@
   trigger:
   - platform: numeric_state
     entity_id: sensor.cpu_temp
-    above: '65'
-    for: 0:05:00
+    above: '70'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
   condition: []
   action:
   - service: notify.mobile_app_iphone_ans
@@ -117,36 +121,64 @@
   trigger:
   - platform: numeric_state
     entity_id: sensor.ble_datchik_v_spalne_temperature
-    above: '30'
-    for: 0:05:00
+    above: input_number.scale_max_temp
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    id: Температура в комнате
+  - platform: numeric_state
+    entity_id: sensor.ble_temperature_datchik_na_kukhne
+    above: input_number.scale_max_temp
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+    id: Температура на кухне
   condition: []
   action:
   - service: notify.mobile_app_iphone_ans
     data:
       title: Внимание!
-      message: Температура в комнате слишком высокая и составляет {{ states("sensor.ble_datchik_v_spalne_temperature")
-        }}°!
+      message: '{{ trigger.id }} слишком высокая и составляет {{ trigger.to_state.state
+        }} {{ trigger.to_state.attributes.unit_of_measurement }}!'
   - delay:
       hours: 1
       minutes: 0
       seconds: 0
       milliseconds: 0
-  mode: single
+  mode: parallel
+  max: 5
 - id: '1601889021443'
   alias: Alarm room low temperature
   description: ''
   trigger:
   - platform: numeric_state
     entity_id: sensor.ble_datchik_v_spalne_temperature
-    for: 0:05:00
-    below: '20'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+    below: input_number.scale_min_temp
+    id: Температура в комнате
+  - platform: numeric_state
+    entity_id: sensor.ble_temperature_datchik_na_kukhne
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+    below: input_number.scale_min_temp
+    id: Температура на кухне
   condition: []
   action:
   - service: notify.mobile_app_iphone_ans
     data:
       title: Внимание!
-      message: Температура в комнате слижком низкая и составляет {{ states("sensor.ble_datchik_v_spalne_temperature")
-        }}°!
+      message: '{{ trigger.id }} слижком низкая и составляет {{ trigger.to_state.state
+        }} {{ trigger.to_state.attributes.unit_of_measurement }}!'
   mode: single
 - id: '1603558647104'
   alias: Включить лампу, если стало темно
@@ -1226,43 +1258,6 @@
         trigger.entity_id.split(\".\")[1]].name }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value')\
         \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
         \ }}. \n"
-  mode: single
-- id: '1647947761669'
-  alias: Radiacode отвалился, прислать в телегу
-  description: ''
-  trigger:
-  - platform: time_pattern
-    minutes: /5
-  condition:
-  - condition: state
-    entity_id: device_tracker.ble_tracker_radiacode
-    state: home
-  - condition: template
-    value_template: '{% if states(''sensor.radiacode'') != "unknown" %}
-
-      {{ (as_timestamp(now()) - as_timestamp(states.sensor.radiacode.last_updated))
-      > 120 }}
-
-      {% elif states(''sensor.radiacode'') == "unknown" %}
-
-      true
-
-      {% else %}
-
-      false
-
-      {% endif %}'
-  action:
-  - service: notify.telegram
-    data:
-      title: ☢️ *Радиационный мониторинг*
-      message: 'Дозиметр недоступен. Последнее обновление данных: {{ relative_time(states.sensor.radiacode.last_updated)
-        }} назад.
-
-        Последнее значение: *{{ states(''sensor.radiacode'') }} {{ state_attr(''sensor.radiacode'',
-        ''unit_of_measurement'') }}* при среднем значении за 24 часа {{ states(''sensor.radiacode_dr_mean_value'')
-        }} {{ state_attr(''sensor.radiacode_dr_mean_value'', ''unit_of_measurement'')
-        }}.'
   mode: single
 - id: '1648154272024'
   alias: Открыть домофон с приложения

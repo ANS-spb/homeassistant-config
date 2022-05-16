@@ -224,33 +224,6 @@ dynamic_update_all_light_group:
         ''light.50ec50e1b80d_light'']) | map(attribute=''entity_id'') | join('','')
         }}'
   mode: single
-ramp_light:
-  alias: Ramp Light Brightness
-  description: Ramp light brightness up or down
-  fields:
-    direction:
-      description: 'Direction to change brightness: up or down'
-      example: up
-    light:
-      description: Light entity_id
-      example: light.family_room_lamp
-  mode: restart
-  sequence:
-  - repeat:
-      while:
-      - condition: template
-        value_template: "{% set br = state_attr(light, 'brightness')|int(0) %} {%\
-          \ set mn = 1 %} {% set mx = 255 %} {{ direction == 'up' and br < mx or\n\
-          \   direction == 'down' and br > mn }}\n"
-      sequence:
-      - service: light.turn_on
-        data:
-          entity_id: '{{ light }}'
-          brightness: "{% set br = state_attr(light, 'brightness')|int(0) %} {% set\
-            \ mn = 1 %} {% set mx = 255 %} {% set st = 20 %} {% if direction == 'up'\
-            \ %}\n  {{ [br + st, mx]|min }}\n{% else %}\n  {{ [br - st, mn]|max }}\n\
-            {% endif %}\n"
-      - delay: '0.1'
 '1638995744105':
   alias: Эффект ленты
   sequence:
