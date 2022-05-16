@@ -24,7 +24,7 @@
                 parse_mode: html
                 disable_notification: true
                 disable_web_page_preview: true
-                timeout: 1000
+                timeout: 500
                 inline_keyboard: &mainkeyb
                   - 💡 Свет:/lights, ℹ Статус:/status
                   - ☀ Погода:/weather, 💻 Система:/system
@@ -57,8 +57,6 @@
             - condition: template
               value_template: '{{ trigger.event.data.command == "/lights" }}'
           sequence:
-            - service: script.dynamic_update_all_light_group
-              data: {}
             - service: telegram_bot.answer_callback_query
               data_template:
                 callback_query_id: "{{ trigger.event.data.id }}"
@@ -68,8 +66,12 @@
                 message_id: last
                 chat_id: "{{ trigger.event.data.chat_id }}"
                 message: &msg |
-                  {% if is_state("group.dyn_all_lights", "off") %}*Свет* везде выключен.
-                  {% else %}*Свет* включен: {{ states.light | selectattr("state", "eq", "on") | map(attribute  = "name") | join(", ") }}.{% endif %}
+                  {%if states.light | rejectattr('entity_id', 'in', 
+                  ['light.50ec50dfc9c5_light', 'light.50ec50e1b80d_light']) | selectattr('entity_id') |
+                  selectattr('state','eq','on') | map(attribute='entity_id') | list | count == 0 %}*Свет* везде выключен.
+                  {% else %}*Свет* включен: {{ states.light | rejectattr('entity_id', 'in', 
+                  ['light.50ec50dfc9c5_light', 'light.50ec50e1b80d_light'])| selectattr("state", "eq", "on") |
+                  map(attribute  = "name") | join(", ") }}.{% endif %}
                 inline_keyboard: &keyb
                   - Включить свет в комнате:/lighton
                   - '{% if is_state("light.prikhozhaia", "off")%}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Прихожая:/lobby_toggle,
@@ -206,6 +208,8 @@
                 message: Выключаю весь свет!
             - service: script.1644819849093
               data: {}
+            - delay:
+                milliseconds: 2000
             - service: telegram_bot.edit_message
               data:
                 message_id: "{{ trigger.event.data.message.message_id }}"
@@ -214,7 +218,7 @@
                 message: *msg
                 inline_keyboard: *keyb
       default: []
-  mode: single
+  mode: queued
 
 - alias: Telegram Menu Sensors
   id: telegram_menu_sensors
@@ -245,10 +249,14 @@
           Окно в спальне закрыто. {% else %} *Окно в спальне открыто!* {% endif %}
           {% if is_state("binary_sensor.okno_na_kukhne_contact", "off")%}
           Окно на кухне закрыто. {% else %}*Окно на кухне открыто!* {% endif %}
-          {% if is_state("group.dyn_all_lights", "off") %}
+          {%if states.light | rejectattr('entity_id', 'in', 
+          ['light.50ec50dfc9c5_light','light.50ec50e1b80d_light']) | selectattr('entity_id') |
+          selectattr('state','eq','on') | map(attribute='entity_id') | list | count == 0 %}
           *Свет* везде выключен.
           {% else %}
-          *Свет* включен: {{ states.light | selectattr("state", "eq", "on") | map(attribute  = "name") | join(", ") }}.
+          *Свет* включен: {{ states.light| rejectattr('entity_id', 'in', 
+          ['light.50ec50dfc9c5_light','light.50ec50e1b80d_light']) | selectattr("state", "eq", "on") 
+          | map(attribute  = "name") | join(", ") }}.
           {% endif %}
         inline_keyboard:
           - Назад:/back

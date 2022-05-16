@@ -364,7 +364,7 @@ push_for_closing_curtain:
   - parallel:
     - service: light.turn_off
       data:
-        transition: 2
+        transition: 4
       target:
         entity_id:
         - light.living_room
@@ -385,11 +385,6 @@ push_for_closing_curtain:
       data: {}
       target:
         entity_id: all
-    - service: media_player.media_stop
-      data: {}
-      target:
-        entity_id:
-        - media_player.volumio
     - service: switch.turn_on
       data: {}
       entity_id: switch.azur_off

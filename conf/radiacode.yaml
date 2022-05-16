@@ -1,0 +1,76 @@
+sensor:
+
+  - platform: template
+    sensors:
+      geiger_dr:
+        friendly_name: "Gerger counter dose rate"
+        icon_template: mdi:radioactive
+        unit_of_measurement: 'μSv/h'
+        value_template: |
+          {% set drmr = states('sensor.geiger_counter_radiation_dose_per_hour') | float(0) / 114 %}
+          {{ drmr | round(2) }}
+
+  - platform: statistics
+    name: radiacode_dr_mean_value
+    entity_id: sensor.radiacode_dose_rate
+    sampling_size: 1500
+    state_characteristic: mean
+    max_age:
+      hours: 24
+  - platform: statistics
+    name: radiacode_cr_mean_value
+    entity_id: sensor.radiacode_count_rate
+    sampling_size: 1500
+    state_characteristic: mean
+    max_age:
+      hours: 24
+  - platform: statistics
+    name: geiger_dr_mean_value
+    entity_id: sensor.geiger_dr
+    sampling_size: 1500
+    state_characteristic: mean
+    max_age:
+      hours: 24
+  - platform: statistics
+    name: geiger_cr_mean_value
+    entity_id: sensor.geiger_counter_radioactive_events_per_minute
+    sampling_size: 1500
+    state_characteristic: mean
+    max_age:
+      hours: 24
+
+template:
+
+  - trigger:
+      - platform: state
+        entity_id:
+          - sensor.radiacode
+
+    sensor:
+      - name: "Radiacode dose rate"
+        unique_id: radiacode-dr
+        state: "{{ states('sensor.radiacode') }}"
+        unit_of_measurement: "μSv/h"
+        icon: mdi:radioactive
+      - name: "Radiacode count rate"
+        unique_id: radiacode-cr
+        state: "{{ state_attr('sensor.radiacode', 'cps') }}"
+        unit_of_measurement: "CPS"
+        icon: mdi:radioactive
+
+  - trigger:
+      - platform: state
+        entity_id:
+          - sensor.radiacode_work
+
+    sensor:
+      - name: "Radiacode (work) dose rate"
+        unique_id: radiacode-work-dr
+        state: "{{ states('sensor.radiacode_work') }}"
+        unit_of_measurement: "μSv/h"
+        icon: mdi:radioactive
+      - name: "Radiacode (work) count rate"
+        unique_id: radiacode-work-cr
+        state: "{{ state_attr('sensor.radiacode_work', 'cps') }}"
+        unit_of_measurement: "CPS"
+        icon: mdi:radioactive

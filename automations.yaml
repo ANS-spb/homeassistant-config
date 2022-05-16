@@ -59,31 +59,25 @@
     from: home
     to: not_home
     entity_id: group.devices
-  condition: []
+  condition:
+  - condition: template
+    value_template: "{{states.light |\n    rejectattr('entity_id', 'in', ['light.50ec50dfc9c5_light',\n\
+      \    'light.50ec50e1b80d_light']) | selectattr('entity_id') |\n    selectattr('state','eq','on')\
+      \ | map(attribute='entity_id') | list | count > 0 }}"
   action:
-  - service: script.dynamic_update_all_light_group
-    data: {}
-  - delay: 00:00:03
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: group.dyn_all_lights
-        state: 'on'
-      sequence:
-      - service: notify.mobile_app_iphone_ans
-        data:
-          title: Выключить свет?
-          message: '{% set filter = [''light.50ec50dfc9c5_light'', ''light.50ec50e1b80d_light'']
-            %} {{ ''💧'' }} Похоже, Вы ушли из дома. Есть {{states.light | rejectattr(''entity_id'',
-            ''in'', filter) | selectattr(''entity_id'') | selectattr(''state'',''eq'',''on'')
-            | map(attribute=''entity_id'') | list | count | format(morph=''работающий
-            светильник'', as_text=false)}}.'
-          data:
-            actions:
-            - action: LIGHTSOFF
-              title: Выкл весь свет
-              destructive: true
-    default: []
+  - service: notify.mobile_app_iphone_ans
+    data:
+      title: Выключить свет?
+      message: '{% set filter = [''light.50ec50dfc9c5_light'', ''light.50ec50e1b80d_light'']
+        %} {{ ''💧'' }} Похоже, Вы ушли из дома. Есть {{states.light | rejectattr(''entity_id'',
+        ''in'', filter) | selectattr(''entity_id'') | selectattr(''state'',''eq'',''on'')
+        | map(attribute=''entity_id'') | list | count | format(morph=''работающий
+        светильник'', as_text=false)}}.'
+      data:
+        actions:
+        - action: LIGHTSOFF
+          title: Выкл весь свет
+          destructive: true
   mode: single
 - id: '1601829524780'
   alias: Push Notify Lights Off
@@ -790,8 +784,8 @@
   - wait_for_trigger:
     - platform: state
       entity_id: sensor.opple_action
-    continue_on_timeout: true
-    timeout: '30'
+    continue_on_timeout: false
+    timeout: 00:00:30
   - service: cover.stop_cover
     target:
       entity_id: cover.shtora
