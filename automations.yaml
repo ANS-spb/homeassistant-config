@@ -19,8 +19,8 @@
   condition: []
   action:
   - data:
-      message: '{{ ''🏁'' }} Cервер запущен в {{ states(''sensor.time'') }}.'
-      title: '{{ ''🆗'' }} Системное уведомление'
+      message: 🏁 Cервер запущен в {{ states('sensor.time') }}
+      title: 🆗 Системное уведомление
     service: notify.mobile_app_iphone_ans
   - choose:
     - conditions:
@@ -37,6 +37,7 @@
   - service: input_boolean.turn_off
     target:
       entity_id: input_boolean.manual_light_off
+    data: {}
   mode: single
 - id: '1601827285752'
   alias: Hass Shutdown Notification
@@ -47,8 +48,8 @@
   condition: []
   action:
   - data:
-      message: '{{ ''❗️'' }} Сервер остановлен в {{ states(''sensor.time'') }}'
-      title: '{{ ''🆗'' }} Системное уведомление'
+      message: ❗️Сервер остановлен в {{ states('sensor.time') }}
+      title: 🆗 Системное уведомление
     service: notify.mobile_app_iphone_ans
   mode: single
 - id: '1601829228272'
@@ -430,14 +431,16 @@
   - choose:
     - conditions:
       - condition: template
-        value_template: "{% set min_battery_level = 10 -%} {% set ns = namespace(found=false)\
-          \ -%} {% for entity_id in states.group.dyn_all_batteries.attributes.entity_id\
-          \ -%}\n  {% set parts = entity_id.split('.') -%}\n  {% if (states(entity_id)\
-          \ | replace(\"%\",\"\") | int(0)) < min_battery_level -%}\n    {% set ns.found\
-          \ = true -%}\n  {% endif -%}\n{% endfor -%} {{ ns.found }}"
+        value_template: "{% set min_battery_level = states('input_number.scale_minimal_battery')\
+          \ | int(0) -%} \n{% set ns = namespace(found=false) -%} \n{% for entity_id\
+          \ in states.group.dyn_all_batteries.attributes.entity_id -%}\n  {% set parts\
+          \ = entity_id.split('.') -%}\n  {% if (states(entity_id) | replace(\"%\"\
+          ,\"\") | int(0)) < min_battery_level -%}\n    {% set ns.found = true -%}\n\
+          \  {% endif -%}\n{% endfor -%} {{ ns.found }}"
       sequence:
       - data_template:
-          message: "{%- set min_battery_level = 10 -%} {%- for entity_id in states.group.dyn_all_batteries.attributes.entity_id\
+          message: "{%- set min_battery_level = states('input_number.scale_minimal_battery')\
+            \ | int(0) -%}  {%- for entity_id in states.group.dyn_all_batteries.attributes.entity_id\
             \ -%}\n  {%- set parts = entity_id.split('.') -%}\n  {%- if (states(entity_id)\
             \ | replace(\"%\",\"\") | int(0)) < min_battery_level -%}\n    {{ states[parts[0]][parts[1]].name\
             \ }} is {{ states(entity_id) }}%{{ '\\n' }}\n  {%- endif -%}\n{%- endfor\
@@ -690,7 +693,7 @@
   - delay:
       hours: 0
       minutes: 0
-      seconds: 30
+      seconds: 10
       milliseconds: 0
   - condition: state
     entity_id: light.prikhozhaia
@@ -722,7 +725,7 @@
   - delay:
       hours: 0
       minutes: 0
-      seconds: 30
+      seconds: 10
       milliseconds: 0
   - condition: state
     state: 'on'
