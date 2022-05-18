@@ -83,10 +83,16 @@ shell_command:
   radiacode_kill: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux kill-session -t radiacode || exit 0'
   radiacode_start: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux new -d -s radiacode "python3 /home/ans/homeassistant.py --bluetooth-mac 52:43:06:50:01:54 --interval 1"'
 
+folder_watcher:
+  - folder: /media
+    patterns:
+      - '*.mp4'
+
 frontend:
   themes: !include_dir_merge_named themes
   extra_module_url:
     - /hacsfiles/lovelace-card-mod/card-mod.js
+
 #zha:
 #  zigpy_config:
 #    ota:

@@ -40,8 +40,8 @@
                             "menu": {
                                 "buttons": {
                                     "snapshots": true,
-                                    "clips": false,
-                                    "frigate": false,
+                                    "clips": true,
+                                    "frigate": true,
                                     "live": true,
                                     "download": false,
                                     "frigate_ui": false,

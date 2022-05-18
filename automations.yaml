@@ -836,6 +836,11 @@
     to: Ring
   condition: []
   action:
+  - service: camera.snapshot
+    data:
+      filename: /media/domofon.jpg
+    target:
+      entity_id: camera.domru_domofon
   - variables:
       action_open: '{{ ''OPEN_'' ~ context.id }}'
       action_drop: '{{ ''DROP_'' ~ context.id }}'
@@ -852,14 +857,22 @@
             destructive: true
           - action: '{{ action_drop }}'
             title: Сгинь
+      enabled: false
+    - service: notify.mobile_app_iphone_ans
+      data:
+        title: Домофон
+        message: Кто-то звонит в квартиру!
+        data:
+          image: /media/local/domofon.jpg
+          actions:
+          - action: '{{ action_open }}'
+            title: Открыть дверь
+            destructive: true
+          - action: '{{ action_drop }}'
+            title: Сгинь
     - service: notify.tv
       data:
         message: Кто-то звонит в домофон!
-    - service: camera.snapshot
-      data:
-        filename: /media/domofon.jpg
-      target:
-        entity_id: camera.domru_domofon
   - service: telegram_bot.send_photo
     data:
       url: http://127.0.0.1:5000/api/events/{{states.input_text.frigate_event.state}}/snapshot.jpg?bbox=1&crop=1&timestamp=1
@@ -1076,12 +1089,15 @@
       filename: /media/record.mp4
       duration: 5
     target:
-      entity_id: camera.domru_domofon_657617
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 10
-      milliseconds: 0
+      entity_id:
+      - camera.domru_domofon
+  - wait_for_trigger:
+    - platform: event
+      event_type: folder_watcher
+      event_data:
+        event_type: closed
+        file: record.mp4
+    continue_on_timeout: true
   - service: telegram_bot.send_video
     data:
       file: /media/record.mp4
