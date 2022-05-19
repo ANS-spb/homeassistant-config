@@ -41,7 +41,7 @@
                                 "buttons": {
                                     "snapshots": true,
                                     "clips": true,
-                                    "frigate": true,
+                                    "frigate": false,
                                     "live": true,
                                     "download": false,
                                     "frigate_ui": false,
@@ -70,6 +70,9 @@
                                 "controls": {
                                     "thumbnails": {
                                         "mode": "none"
+                                    },
+                                    "next_previous": {
+                                        "style": "chevrons"
                                     }
                                 }
                             },

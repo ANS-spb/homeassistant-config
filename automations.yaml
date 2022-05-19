@@ -875,7 +875,7 @@
         message: Кто-то звонит в домофон!
   - service: telegram_bot.send_photo
     data:
-      url: http://127.0.0.1:5000/api/events/{{states.input_text.frigate_event.state}}/snapshot.jpg?bbox=1&crop=1&timestamp=1
+      url: http://127.0.0.1:5000/api/events/{{states('input_text.frigate_event')}}/snapshot.jpg?bbox=1&crop=1&timestamp=1
       target:
       - 116325704
       parse_mode: html
@@ -1084,6 +1084,16 @@
     to: Ring
   condition: []
   action:
+  - service: telegram_bot.send_video
+    data:
+      caption: Тестовый (по ивенту)
+      url: http://127.0.0.1:5000/api/events/{{states('input_text.frigate_event')}}/clip.mp4
+      target:
+      - 116325704
+      parse_mode: html
+      timeout: 1000
+      message_tag: msg_to_edit
+      disable_notification: true
   - service: camera.record
     data:
       filename: /media/record.mp4
