@@ -1942,23 +1942,14 @@
                             "type": "entities",
                             "entities": [
                                 {
-                                    "entity": "sensor.meshtastic_airtime",
-                                    "secondary_info": "last-updated"
-                                },
-                                {
                                     "entity": "sensor.meshtastic_frequency"
                                 },
                                 {
-                                    "entity": "sensor.meshtastic_channel_utilization"
-                                },
-                                {
-                                    "entity": "sensor.meshtastic_utilization_tx"
+                                    "entity": "sensor.meshtastic_utilization_tx",
+                                    "secondary_info": "last-updated"
                                 },
                                 {
                                     "entity": "sensor.meshtastic_uptime_friendly"
-                                },
-                                {
-                                    "entity": "sensor.meshtastic_uptime"
                                 },
                                 {
                                     "entity": "sensor.meshtastic_reboot_counter"

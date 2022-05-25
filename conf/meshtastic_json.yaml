@@ -4,7 +4,7 @@ rest:
     sensor:
       - name: "Meshtastic Airtime"
         json_attributes_path: "$.data.airtime"
-        value_template: "{{ value_json.status }}"
+        value_template: "{{ value_json.data.airtime.channel_utilization }}"
         json_attributes:
           - "tx_log"
           - "rx_log"
@@ -14,13 +14,13 @@ rest:
           - "seconds_since_boot"
       - name: "Meshtastic Connection"
         json_attributes_path: "$.data.wifi"
-        value_template: "{{ value_json.status }}"
+        value_template: "{{ value_json.data.wifi.rssi }}"
         json_attributes:
           - "rssi"
           - "ip"
       - name: "Meshtastic Power"
         json_attributes_path: "$.data.power"
-        value_template: "{{ value_json.status }}"
+        value_template: "{{ value_json.data.power.battery_percent }}"
         json_attributes:
           - "battery_percent"
           - "battery_voltage_mv"
@@ -34,7 +34,7 @@ rest:
           - "reboot_counter"
       - name: "Meshtastic Radio"
         json_attributes_path: "$.data.radio"
-        value_template: "{{ value_json.status }}"
+        value_template: "{{ value_json.data.radio.frequecy }}"
         json_attributes:
           - "frequecy"
           - "lora_channel"
