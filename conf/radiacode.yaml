@@ -56,16 +56,6 @@ template:
 
 sensor:
 
-  # - platform: template
-  #   sensors:
-  #     geiger_dr:
-  #       friendly_name: "Gerger counter dose rate"
-  #       icon_template: mdi:radioactive
-  #       unit_of_measurement: 'μSv/h'
-  #       value_template: |
-  #         {% set drmr = states('sensor.geiger_counter_radiation_dose_per_hour') | float(0) / 114 %}
-  #         {{ drmr | round(2) }}
-
   - platform: statistics
     name: radiacode_dr_mean_value
     entity_id: sensor.radiacode_dose_rate
