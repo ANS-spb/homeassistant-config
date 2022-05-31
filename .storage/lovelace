@@ -297,7 +297,7 @@
                                     "filter": {
                                         "include": [
                                             {
-                                                "entity_id": "sensor.geiger_dr"
+                                                "entity_id": "sensor.geiger_dose_rate"
                                             }
                                         ],
                                         "exclude": [
@@ -311,7 +311,7 @@
                                     },
                                     "card": {
                                         "type": "entity",
-                                        "entity": "sensor.geiger_dr",
+                                        "entity": "sensor.geiger_dose_rate",
                                         "name": "Geiger Doserate"
                                     }
                                 },
@@ -391,8 +391,7 @@
                             "cards": [
                                 {
                                     "type": "custom:weather-chart-card",
-                                    "title": "\u041f\u043e\u0433\u043e\u0434\u0430",
-                                    "entity": "weather.openweathermap",
+                                    "entity": "weather.home_assistant_hourly",
                                     "units": {
                                         "speed": "m/s"
                                     }
@@ -401,12 +400,25 @@
                                     "type": "entities",
                                     "entities": [
                                         {
+                                            "entity": "sensor.owm_weather",
+                                            "name": "\u0417\u0430 \u043e\u043a\u043d\u043e\u043c \u0441\u0435\u0439\u0447\u0430\u0441"
+                                        },
+                                        {
                                             "entity": "sensor.pressure_weather_forecast"
                                         },
                                         {
                                             "entity": "sensor.pressure_indicator"
+                                        },
+                                        {
+                                            "entity": "sensor.openweather_weather_desc_today",
+                                            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 \u0441\u0435\u0433\u043e\u0434\u043d\u044f"
+                                        },
+                                        {
+                                            "entity": "sensor.openweather_weather_desc_tomorrow",
+                                            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 \u0437\u0430\u0432\u0442\u0440\u0430"
                                         }
-                                    ]
+                                    ],
+                                    "show_header_toggle": false
                                 }
                             ]
                         },
@@ -714,7 +726,7 @@
                             "line_width": 2,
                             "entities": [
                                 {
-                                    "entity": "sensor.openweathermap_temperature",
+                                    "entity": "sensor.owm_temp",
                                     "name": "\u0422\u0435\u043a\u0443\u0449\u0430\u044f"
                                 },
                                 {
@@ -795,7 +807,7 @@
                             "animate": true,
                             "entities": [
                                 {
-                                    "entity": "sensor.openweathermap_cloud_coverage",
+                                    "entity": "sensor.owm_clouds",
                                     "name": "\u041e\u0431\u043b\u0430\u043a\u0430",
                                     "color": "rgb(52, 152, 219)",
                                     "show_line": false,
@@ -883,7 +895,7 @@
                             "line_width": 2,
                             "entities": [
                                 {
-                                    "entity": "sensor.geiger_dr",
+                                    "entity": "sensor.geiger_dose_rate",
                                     "name": "\u0413\u0435\u0439\u0433\u0435\u0440"
                                 },
                                 {

@@ -7,5 +7,6 @@
 - sensor.cgllc_cgdn1_42a2_pm25_density
 - sensor.cgllc_cgdn1_42a2_co2_density
 - sensor.pressure_average
-- sensor.geiger_dr
+- sensor.geiger_dose_rate
 - sensor.geiger_counter_radioactive_events_per_minute
+- sensor.geiger_dr_mean_value

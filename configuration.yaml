@@ -51,7 +51,6 @@ logger:
     #homeassistant.components.zha: debug
     #zigpy: debug
 
-# InfluxDB
 influxdb:
   host: localhost
   port: 8086

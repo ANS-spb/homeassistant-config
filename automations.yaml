@@ -1269,10 +1269,10 @@
     entity_id: sensor.radiacode_dose_rate
     above: '1'
   - platform: numeric_state
-    entity_id: sensor.geiger_dr
+    entity_id: sensor.geiger_dose_rate
     above: '0.5'
   - platform: numeric_state
-    entity_id: sensor.geiger_dr
+    entity_id: sensor.geiger_dose_rate
     above: '1'
   condition: []
   action:
@@ -1294,7 +1294,7 @@
         trigger.entity_id.split(\".\")[1]].name }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value')\
         \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
         \ }}. \n"
-  mode: single
+  mode: parallel
 - id: '1648154272024'
   alias: Открыть домофон с приложения
   description: ''
@@ -1387,10 +1387,10 @@
       data:
         title: ☢️ *Радиационный мониторинг*
         message: "Значение радиационного фона на текущий момент: \n\nСтационарный\
-          \ пост: *{{ states('sensor.geiger_dr') }} {{\nstate_attr('sensor.geiger_dr',\
+          \ пост: *{{ states('sensor.geiger_dose_rate') }} {{\nstate_attr('sensor.geiger_dose_rate',\
           \ 'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')\
           \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
-          \ }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dr.last_updated)\
+          \ }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)\
           \ }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:\
           \ *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')\
           \ }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',\
@@ -1410,10 +1410,10 @@
       data:
         title: ☢️ *Радиационный мониторинг*
         message: "Значение радиационного фона на текущий момент: \n\nСтационарный\
-          \ пост: *{{ states('sensor.geiger_dr') }} {{\nstate_attr('sensor.geiger_dr',\
+          \ пост: *{{ states('sensor.geiger_dose_rate') }} {{\nstate_attr('sensor.geiger_dose_rate',\
           \ 'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')\
           \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
-          \ }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dr.last_updated)\
+          \ }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)\
           \ }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:\
           \ *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')\
           \ }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',\
@@ -1442,7 +1442,8 @@
   - service: camera.record
     data:
       filename: /media/record.mp4
-      duration: 5
+      lookback: 5
+      duration: 10
     target:
       entity_id: camera.domru_domofon
   - wait_for_trigger:

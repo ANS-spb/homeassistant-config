@@ -316,10 +316,15 @@
         message: |-
           {% if is_state("sun.sun", "above_horizon") -%} Солнце уже встало. 
           {%- else -%} Солнце встанет в {{ as_timestamp(state_attr("sun.sun", "next_rising")) | timestamp_custom('%H:%M') }}. {%- endif %}
-          Сейчас за бортом {{states('sensor.openweathermap_weather')}}.
-          Температура: {{states('sensor.openweathermap_temperature')}} °C, ощущается как {{states('sensor.openweathermap_temperature')}} °C
-          Влажность: {{states('sensor.openweathermap_humidity')}} %
-          В ближайшее время ожидается температура {{states('sensor.openweathermap_forecast_temperature')}} °C. {{states('sensor.pressure_weather_forecast')}}.
+          Сейчас за бортом {%- set current = state_attr('sensor.owm_report', 'current')['weather'][0]['id']|int () %} {%- set conditions = { '\U0001F32B': [701, 741], '\U0001F329': [210, 211, 212, 221], '\U000026C8': [200, 201, 202, 230, 231, 232], '\U000026C5': [801, 802, 803, 804], '\U00002614': [504, 314, 502, 503, 522, 300, 301, 302, 310, 311, 312, 313, 500, 501, 520, 521, 906], '\U00002744': [600, 601, 602, 611, 612, 620, 621, 622], '\U00002614\U00002744': [511, 615, 616], '\U00002600': [800], '\U0001F4A8': [905, 951, 952, 953, 954, 955, 956, 957, 958, 959, 960, 961], '\U000026A0': [711, 721, 731, 751, 761, 762, 771, 900, 901, 962, 903, 904] } %} {%- for condition, value in conditions.items() %} {%- if current in value %} {{- " " + condition}} {%- endif %} {%- endfor %} {{ state_attr('sensor.owm_report', 'current')['weather'][0]['description'] }}.
+          Температура: {{states('sensor.owm_temp') | int(0) }}°C, ощущается как {{state_attr('sensor.owm_report', 'current')['feels_like'] | int(0) }}°C
+          Влажность: {{states('sensor.owm_humidity')}} %
+          Скорость ветра: {{ state_attr('sensor.owm_report', 'current')['wind_speed'] | int(0) }} м/с с порывами до {{ state_attr('sensor.owm_report', 'current')['wind_gust'] | int(0) }} м/с.
+          
+          В течение часа будет {{ state_attr('sensor.owm_report', 'hourly')[1]['weather'][0]['description'] }}, температура {{state_attr('sensor.owm_report', 'hourly')[1]['temp'] | int(0) }}°C, ощущение {{state_attr('sensor.owm_report', 'hourly')[1]['feels_like'] | int(0) }}°C.
+          В течение двух часов {{ state_attr('sensor.owm_report', 'hourly')[2]['weather'][0]['description'] }}, температура {{state_attr('sensor.owm_report', 'hourly')[2]['temp'] | int(0) }}°C, ощущение {{state_attr('sensor.owm_report', 'hourly')[2]['feels_like'] | int(0) }}°C.
+          
+          В целом, сегодня {{ state_attr('sensor.owm_report', 'daily')[0].weather[0].description }}, от {{ state_attr('sensor.owm_report', 'daily')[0].temp.night | int(0) }} до {{ state_attr('sensor.owm_report', 'daily')[0].temp.day | int(0) }} градусов, завтра {{ state_attr('sensor.owm_report', 'daily')[1].weather[0].description }}, от {{ state_attr('sensor.owm_report', 'daily')[1].temp.night | int(0) }} до {{ state_attr('sensor.owm_report', 'daily')[1].temp.day | int(0) }} градусов.
         inline_keyboard:
           - Назад:/back
   mode: single

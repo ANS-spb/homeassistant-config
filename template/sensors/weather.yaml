@@ -36,7 +36,7 @@
         state: >-
           {% set diff = states('sensor.pressure_change_3h') | float(0) %}
           {% set press = states('sensor.pressure_average') | float(0) %}
-          {% set tempr = state_attr('weather.openweathermap','temperature') | int(0) %}
+          {% set tempr = states('sensor.owm_temp') | int(0) %}
           {% if press > 1022.689 %}
             {% if diff <= -1.4 %}
               Пасмурно
@@ -79,7 +79,7 @@
         icon: >-
           {% set diff = states('sensor.pressure_change_3h') | float(0) %}
           {% set press = states('sensor.pressure_average') | float(0) %}
-          {% set tempr = state_attr('weather.openweathermap','temperature') | int(0) %}
+          {% set tempr = states('sensor.owm_temp') | int(0) %}
           {%- if press > 1022.689 -%}
             {%- if diff <= -1.4 -%}
               mdi:weather-partly-cloudy
@@ -123,3 +123,6 @@
               mdi:ship-wheel
             {%- endif -%}
           {%- endif -%}
+
+#### old OWM integration
+#### {% set tempr = state_attr('weather.openweathermap','temperature') | int(0) %}
