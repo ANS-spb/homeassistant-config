@@ -22,6 +22,10 @@
       message: 🏁 Cервер запущен в {{ states('sensor.time') }}
       title: 🆗 Системное уведомление
     service: notify.mobile_app_iphone_ans
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.manual_light_off
+    data: {}
   - choose:
     - conditions:
       - condition: state
@@ -34,10 +38,6 @@
     - conditions: []
       sequence: []
     default: []
-  - service: input_boolean.turn_off
-    target:
-      entity_id: input_boolean.manual_light_off
-    data: {}
   mode: single
 - id: '1601827285752'
   alias: Hass Shutdown Notification

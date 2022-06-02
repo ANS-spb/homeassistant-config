@@ -46,7 +46,8 @@ homekit:
 
 logger:
   default: info
-#  logs:
+  logs:
+    custom_components.openweathermap: debug
     #pysqueezebox.server: fatal
     #homeassistant.components.zha: debug
     #zigpy: debug

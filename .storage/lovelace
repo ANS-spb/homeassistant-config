@@ -391,7 +391,7 @@
                             "cards": [
                                 {
                                     "type": "custom:weather-chart-card",
-                                    "entity": "weather.home_assistant_hourly",
+                                    "entity": "weather.openweathermap",
                                     "units": {
                                         "speed": "m/s"
                                     }

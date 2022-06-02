@@ -8,7 +8,7 @@
     - daily
   value_template: "{{ value_json['current']['dt'] | timestamp_custom('%Y-%m-%d %H:%M', true) }}"
   resource: !secret owm_onecall_api
-  scan_interval: 300
+  scan_interval: 3600
   headers:
     User-Agent: Home Assistant
 
