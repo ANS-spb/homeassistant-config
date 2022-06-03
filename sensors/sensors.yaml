@@ -1,3 +1,7 @@
+###################################
+# Вспомогательные сенсоры разные  #
+###################################
+
 - platform: min_max
   type: mean
   name: Pressure Average
@@ -15,8 +19,8 @@
 
 - platform: statistics
   name: outside_temperature_min_value
-  #entity_id: sensor.openweathermap_temperature
-  entity_id: sensor.owm_temp
+  entity_id: sensor.openweathermap_temperature
+  #entity_id: sensor.owm_temp
   sampling_size: 1500
   state_characteristic: value_min
   max_age:

@@ -726,7 +726,7 @@
                             "line_width": 2,
                             "entities": [
                                 {
-                                    "entity": "sensor.owm_temp",
+                                    "entity": "sensor.openweathermap_temperature",
                                     "name": "\u0422\u0435\u043a\u0443\u0449\u0430\u044f"
                                 },
                                 {
@@ -807,7 +807,7 @@
                             "animate": true,
                             "entities": [
                                 {
-                                    "entity": "sensor.owm_clouds",
+                                    "entity": "sensor.openweathermap_cloud_coverage",
                                     "name": "\u041e\u0431\u043b\u0430\u043a\u0430",
                                     "color": "rgb(52, 152, 219)",
                                     "show_line": false,

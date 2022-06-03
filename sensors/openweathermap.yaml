@@ -1,4 +1,6 @@
-# https://openweathermap.org/current
+###################################
+#   OpenWeatherMap REST сенсоры   #
+###################################
 
 - platform: rest
   name: OWM_report

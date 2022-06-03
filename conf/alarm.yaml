@@ -1,23 +1,28 @@
-#Будильник
+###################################
+#       Световой будильник        #
+###################################
+
 input_boolean:
   wakeup_enabled:
     name: "Световой будильник"
-    #initial: on
     icon: mdi:theme-light-dark
   wakeup_weekend:
     name: "Будильник по выходным"
-    initial: off # I disable the system on default on weekends
+    initial: off ## По умолчанию будильник для выходных дней выключен
     icon: mdi:calendar-blank
   sleep_enabled:
     name: "Вечерний свет"
     initial: on
     icon: mdi:weather-night
+  wakeup_disabled:
+    name: "У меня отпуск"
+    icon: mdi:emoticon-cool
+
 input_datetime:
   wakeup_time:
     name: "Время пробуждения"
     has_time: true
     has_date: false
-    #initial: "06:40"
   wakeup_weekend_time:
     name: "Время пробуждения по выходным"
     has_time: true
@@ -26,7 +31,7 @@ input_datetime:
     name: "Время ложиться спать"
     has_time: true
     has_date: false
-    #initial: "23:30"
+
 automation:
   - id: light_wakeup
     alias: Световой будильник
@@ -39,11 +44,12 @@ automation:
       - condition: state
         entity_id: input_boolean.wakeup_enabled
         state: "on"
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: binary_sensor.workday
-            state: "on"
+      - condition: state
+        entity_id: input_boolean.wakeup_disabled
+        state: "off"
+      - condition: state
+        entity_id: binary_sensor.workday
+        state: "on"
     action:
       - choose:
           - conditions:
@@ -55,6 +61,7 @@ automation:
                 data: {}
         default: []
     mode: single
+
   - id: light_wakeup_weekend
     alias: Световой будильник в выходной
     trigger:
@@ -71,6 +78,9 @@ automation:
           - condition: state
             entity_id: binary_sensor.workday
             state: "off"
+          - condition: state
+            entity_id: input_boolean.wakeup_disabled
+            state: "on"
     action:
       - choose:
           - conditions:

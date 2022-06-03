@@ -1,3 +1,8 @@
+######################################
+# Сенсоры радиации c RadiaCode-101 и #
+# пересчёт значений с Zigbee гейгера #
+######################################
+
 template:
 
   - trigger:
@@ -29,7 +34,6 @@ template:
         icon: mdi:radioactive
       - name: "Radiacode count rate"
         unique_id: radiacode-cr
-        #state: "{{ state_attr('sensor.radiacode', 'cps') }}"
         state: "{{ trigger.to_state.attributes.cps }}"
         unit_of_measurement: "CPS"
         icon: mdi:radioactive
@@ -49,7 +53,6 @@ template:
         icon: mdi:radioactive
       - name: "Radiacode (work) count rate"
         unique_id: radiacode-work-cr
-        #state: "{{ state_attr('sensor.radiacode_work', 'cps') }}"
         state: "{{ trigger.to_state.attributes.cps }}"
         unit_of_measurement: "CPS"
         icon: mdi:radioactive

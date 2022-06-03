@@ -1,7 +1,10 @@
+######################################
+# Оповещение о низком заряде батарей #
+######################################
+
 input_number:
-  # Battery status:
   scale_minimal_battery:
-    name: Уровень заряда
+    name: "Уровень заряда"
     min: 5
     max: 30
     step: 5
@@ -10,9 +13,8 @@ input_number:
     icon: mdi:battery-alert
 
 automation:
-  # Battery status
   - id: alarm_battery
-    alias: Alarm battery
+    alias: "Alarm battery"
     initial_state: true
     trigger:
       - platform: time

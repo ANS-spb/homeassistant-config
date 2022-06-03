@@ -1,3 +1,7 @@
+###################################
+# (Было) оповещение о температуре #
+###################################
+
 input_number:
   scale_min_temp:
     name: "Мин Т"
@@ -15,7 +19,9 @@ input_number:
     mode: slider
     unit_of_measurement: "°C"
     icon: mdi:thermometer-high
-    
+
+## Автоматизация выключена, а инпуты используются в другой автоматизации
+
 # automation:
 #   - id: alarm_temperature_low
 #     alias: Temperature Alarm Low
