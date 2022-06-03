@@ -9,6 +9,7 @@
     - hourly
     - daily
   value_template: "{{ value_json['current']['dt'] | timestamp_custom('%Y-%m-%d %H:%M', true) }}"
+  ## Формат вызова API: http://api.openweathermap.org/data/2.5/onecall?units=metric&lang=ru&lat=широта&lon=долгота&appid=ключ_api
   resource: !secret owm_onecall_api
   scan_interval: 3600
   headers:
