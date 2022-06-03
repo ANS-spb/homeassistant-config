@@ -150,12 +150,35 @@ wakeup_bedroom:
 light_tosleep:
   alias: Sleep lighting, smooth transition
   sequence:
-  - data_template:
-      brightness_pct: 5
-      entity_id: light.living_room
-      kelvin: 2700
-      transition: 20
-    service: light.turn_on
+  - service: hue.activate_scene
+    data:
+      transition: 10
+      dynamic: true
+    target:
+      entity_id: '{{[''scene.spalnia_galaktika'',''scene.spalnia_svet_zvezd'',''scene.spalnia_tumannost'']
+        | random }}'
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.manual_effects_on
+  - choose:
+    - conditions:
+      - condition: device
+        type: is_on
+        device_id: d9631ea87a6b46b5e7e5fadb00518bb8
+        entity_id: light.wled
+        domain: light
+      sequence:
+      - service: script.turn_on
+        data: {}
+        target:
+          entity_id: script.wled_static_effect
+    default: []
   mode: single
   icon: mdi:sleep
 azur_on:

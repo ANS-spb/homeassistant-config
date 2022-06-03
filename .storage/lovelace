@@ -511,6 +511,8 @@
                                             "columns": 3
                                         },
                                         {
+                                            "square": true,
+                                            "columns": 3,
                                             "type": "grid",
                                             "cards": [
                                                 {
@@ -518,20 +520,25 @@
                                                     "entity": "light.liustra"
                                                 },
                                                 {
-                                                    "type": "custom:slider-button-card",
-                                                    "entity": "light.wled"
+                                                    "show_name": true,
+                                                    "show_icon": true,
+                                                    "type": "button",
+                                                    "tap_action": {
+                                                        "action": "toggle"
+                                                    },
+                                                    "entity": "script.1599944056170"
                                                 },
                                                 {
-                                                    "type": "custom:slider-button-card",
-                                                    "entity": "light.wled_2"
-                                                },
-                                                {
-                                                    "type": "custom:slider-button-card",
-                                                    "entity": "light.wled_table",
-                                                    "name": "\u0421\u0442\u043e\u043b"
+                                                    "show_name": true,
+                                                    "show_icon": true,
+                                                    "type": "button",
+                                                    "tap_action": {
+                                                        "action": "toggle"
+                                                    },
+                                                    "entity": "script.light_tosleep",
+                                                    "name": "\u0412\u0435\u0447\u0435\u0440\u043d\u0438\u0439 \u0441\u0432\u0435\u0442 "
                                                 }
-                                            ],
-                                            "columns": 4
+                                            ]
                                         }
                                     ]
                                 },
