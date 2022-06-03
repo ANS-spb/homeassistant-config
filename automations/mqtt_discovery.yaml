@@ -6,15 +6,15 @@
   alias: mqtt_sensors_discovery
   initial_state: true 
   trigger: 
-    #- platform: state 
-    #  entity_id: binary_sensor.mqtt_broker_hp
-    #  to: 'on' 
+    - platform: state 
+      entity_id: binary_sensor.mqtt_broker
+      to: 'on' 
     - event: start 
       platform: homeassistant 
-  #condition: 
-  #  - condition: state 
-  #    entity_id: binary_sensor.mqtt_broker_hp
-  #    state: 'on' 
+  condition: 
+    - condition: state 
+      entity_id: binary_sensor.mqtt_broker
+      state: 'on' 
   action: 
     - service: mqtt.publish 
       data: 
