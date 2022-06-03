@@ -11,10 +11,9 @@
     - type: memory_use_percent
     - type: processor_use
     - type: last_boot
-- platform: systemmonitor
-  resources:
     - type: disk_use_percent
       arg: /
+    - type: swap_use_percent
 
 # InfluxDB size
 - platform: influxdb
@@ -42,3 +41,10 @@
   command: "cat /sys/class/thermal/thermal_zone3/temp"
   unit_of_measurement: "°C"
   value_template: '{{ value | multiply(0.001) | round(2)  }}'
+
+# HDD used space
+- platform: command_line
+  name: HDD use percent
+  command: "ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 df -h | awk '/hdd/ {print $5}' | grep -o -E '[0-9]+'"
+  unit_of_measurement: "%"
+  value_template: '{{ value }}'

@@ -1253,6 +1253,33 @@
                                             ]
                                         },
                                         {
+                                            "type": "custom:mini-graph-card",
+                                            "name": "Swap Usage",
+                                            "entities": [
+                                                "sensor.swap_use_percent"
+                                            ],
+                                            "hours_to_show": 12,
+                                            "points_per_hour": 4,
+                                            "show": {
+                                                "graph": "bar"
+                                            },
+                                            "animate": true,
+                                            "color_thresholds": [
+                                                {
+                                                    "color": "#4bcf17",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "color": "#cfba17",
+                                                    "value": 50
+                                                },
+                                                {
+                                                    "color": "#cf1717",
+                                                    "value": 80
+                                                }
+                                            ]
+                                        },
+                                        {
                                             "type": "gauge",
                                             "entity": "sensor.disk_use_percent",
                                             "min": 0,
@@ -1262,7 +1289,19 @@
                                                 "yellow": 70,
                                                 "red": 90
                                             },
-                                            "name": "SSD Usage"
+                                            "name": "SSD"
+                                        },
+                                        {
+                                            "type": "gauge",
+                                            "entity": "sensor.hdd_use_percent",
+                                            "min": 0,
+                                            "max": 100,
+                                            "severity": {
+                                                "green": 0,
+                                                "yellow": 70,
+                                                "red": 90
+                                            },
+                                            "name": "HDD"
                                         },
                                         {
                                             "type": "custom:mini-graph-card",
@@ -1431,7 +1470,7 @@
                                             "secondary_info": "\u0417\u0430\u0440\u044f\u0434 {range}%",
                                             "icon": "mdi:bluetooth",
                                             "entities": [
-                                                "sensor.nut_battery"
+                                                "sensor.nut_mini"
                                             ]
                                         }
                                     ]
