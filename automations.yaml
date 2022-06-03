@@ -1468,3 +1468,20 @@
       disable_notification: true
       caption: Тестовый видосик
   mode: single
+- id: '1654280445528'
+  alias: 'Read Nut Mini battery '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: device_tracker.ble_tracker_nut
+    from: not_home
+    to: home
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  condition: []
+  action:
+  - service: shell_command.nut_battery_parse
+    data: {}
+  mode: single
