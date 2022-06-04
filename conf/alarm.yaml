@@ -16,7 +16,7 @@ input_boolean:
     icon: mdi:weather-night
   wakeup_disabled:
     name: "У меня отпуск"
-    icon: mdi:emoticon-cool
+    icon: mdi:emoticon-cool-outline
 
 input_datetime:
   wakeup_time:
