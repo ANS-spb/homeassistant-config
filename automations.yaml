@@ -1458,3 +1458,31 @@
   - service: shell_command.nut_battery_parse
     data: {}
   mode: single
+- id: '1655208369646'
+  alias: Что-то отвалилось
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.meshtastic
+    - binary_sensor.xg3
+    - binary_sensor.google
+    - binary_sensor.yandex
+    - binary_sensor.yeelight
+    from: 'on'
+    to: 'off'
+  - platform: template
+    value_template: '{{ not state_attr(''sensor.meshtastic_power'', ''has_usb'') }}'
+  - platform: numeric_state
+    entity_id: sensor.meshtastic_battery
+    below: '75'
+  condition: []
+  action:
+  - service: notify.telegram
+    data:
+      title: ⚠️ *Что-то отвалилось*
+      message: 'Устройство {{ states[trigger.entity_id.split(".")[0]][trigger.entity_id.split(".")[1]].name
+        }} сообщает: {{ trigger.to_state.state }}
+
+        '
+  mode: parallel
