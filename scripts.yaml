@@ -9,8 +9,9 @@
         dynamic: true
       target:
         entity_id: '{{ [''scene.spalnia_tuman_na_ozere'',''scene.spalnia_otdykh_na_zakate'',''scene.spalnia_gornyi_briz'',
-          ''scene.spalnia_zakat_v_savanne'',''scene.spalnia_under_the_tree''] | random
-          }}'
+          ''scene.spalnia_zakat_v_savanne'',''scene.spalnia_under_the_tree'',''scene.spalnia_tsvetenie'',
+          ''scene.spalnia_krokus'',''scene.spalnia_dragotsennyi'',''scene.spalnia_voskresnoe_utro'',
+          ''scene.spalnia_vesennee_ozero''] | random }}'
     - data:
         effect: Stop
         transition: 10
