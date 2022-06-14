@@ -125,6 +125,6 @@ sensor:
 
       meshtastic_frequency:
         friendly_name: Meshtastic radio frequency
-        value_template: "{{ state_attr('sensor.meshtastic_radio', 'frequecy') }}"
+        value_template: "{{ state_attr('sensor.meshtastic_radio', 'frequecy') | round(1) }}"
         icon_template: mdi:access-point
         unit_of_measurement: "MHz"

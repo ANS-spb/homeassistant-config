@@ -2003,6 +2003,9 @@
                             "type": "entities",
                             "entities": [
                                 {
+                                    "entity": "binary_sensor.meshtastic"
+                                },
+                                {
                                     "entity": "sensor.meshtastic_frequency"
                                 },
                                 {
@@ -2191,6 +2194,42 @@
                                     ],
                                     "refresh_interval": 0,
                                     "hours_to_show": 1
+                                },
+                                {
+                                    "type": "history-graph",
+                                    "entities": [
+                                        {
+                                            "entity": "binary_sensor.gateway"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.google"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.yandex"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.yeelight"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.wled_strip"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.wled_garland"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.wled_table"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.xg3"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.espdisplay"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.meshtastic"
+                                        }
+                                    ],
+                                    "hours_to_show": 24
                                 },
                                 {
                                     "type": "history-graph",

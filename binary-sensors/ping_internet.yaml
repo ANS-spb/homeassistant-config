@@ -3,20 +3,23 @@
 ###################################
 
 - platform: ping
+  name: Gateway
   host: 192.168.1.1
-  name: gateway
-  count: 5
-  scan_interval: 60
+  count: 2
+  scan_interval: 15
+
 - platform: ping
+  name: Google
   host: google.com
-  count: 5
-  scan_interval: 60
-  name: google
+  count: 2
+  scan_interval: 15
+
 - platform: ping
+  name: Yandex
   host: ya.ru
-  count: 5
-  scan_interval: 60
-  name: yandex
+  count: 2
+  scan_interval: 15
+
 - platform: template
   sensors:
     internet:
