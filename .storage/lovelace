@@ -2006,14 +2006,14 @@
                                     "entity": "binary_sensor.meshtastic"
                                 },
                                 {
-                                    "entity": "sensor.meshtastic_frequency"
+                                    "entity": "sensor.meshtastic_radio_frequency"
                                 },
                                 {
-                                    "entity": "sensor.meshtastic_utilization_tx",
+                                    "entity": "sensor.meshtastic_tx_utilization",
                                     "secondary_info": "last-updated"
                                 },
                                 {
-                                    "entity": "sensor.meshtastic_uptime_friendly"
+                                    "entity": "sensor.meshtastic_uptime"
                                 },
                                 {
                                     "entity": "sensor.meshtastic_reboot_counter"
@@ -2121,7 +2121,7 @@
                                             }
                                         },
                                         {
-                                            "entity": "sensor.meshtastic_utilization_tx",
+                                            "entity": "sensor.meshtastic_tx_utilization",
                                             "name": "tx util",
                                             "type": "column",
                                             "group_by": {

@@ -1466,6 +1466,7 @@
   - platform: state
     entity_id:
     - binary_sensor.meshtastic
+    - binary_sensor.meshtastic_usb_power
     - binary_sensor.xg3
     - binary_sensor.google
     - binary_sensor.yandex
@@ -1476,14 +1477,12 @@
     to:
     - 'on'
     - 'off'
-  - platform: template
-    value_template: '{{ not state_attr(''sensor.meshtastic_power'', ''has_usb'') }}'
-  - platform: template
-    value_template: '{{ state_attr(''sensor.meshtastic_power'', ''has_usb'') }}'
-    enabled: true
   - platform: numeric_state
     entity_id: sensor.meshtastic_battery
     below: '75'
+  - platform: numeric_state
+    entity_id: sensor.meshtastic_battery
+    below: '50'
   - platform: numeric_state
     entity_id: sensor.meshtastic_battery
     below: '25'
