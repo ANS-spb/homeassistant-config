@@ -1276,17 +1276,18 @@
     event_type: ios.action_fired
     event_data:
       actionID: 23448B64-1AF0-498C-98D9-158B8B6F923D
-      actionName: Открыть дверь
+      actionName: Open-door
       sourceDeviceID: iphoneans
       sourceDeviceName: iPhone_ANS
       sourceDevicePermanentID: E589AD6D-665A-494A-88A7-B466809EB9DE
-      triggerSource: preview
   condition: []
   action:
-  - service: script.turn_on
+  - service: script.domru_open_door_657617
     data: {}
-    target:
-      entity_id: script.domru_open_door_657617
+  - service: notify.mobile_app_iphone_ans
+    data:
+      message: Дверь открыта
+      title: 'Домофон '
   mode: single
 - id: '1648212086564'
   alias: Radiacode отвалился, перезапуск
@@ -1469,20 +1470,48 @@
     - binary_sensor.google
     - binary_sensor.yandex
     - binary_sensor.yeelight
-    from: 'on'
-    to: 'off'
+    not_from:
+    - unknown
+    - unavailable
+    to:
+    - 'on'
+    - 'off'
   - platform: template
     value_template: '{{ not state_attr(''sensor.meshtastic_power'', ''has_usb'') }}'
+  - platform: template
+    value_template: '{{ state_attr(''sensor.meshtastic_power'', ''has_usb'') }}'
+    enabled: true
   - platform: numeric_state
     entity_id: sensor.meshtastic_battery
     below: '75'
+  - platform: numeric_state
+    entity_id: sensor.meshtastic_battery
+    below: '25'
   condition: []
   action:
   - service: notify.telegram
     data:
-      title: ⚠️ *Что-то отвалилось*
+      title: ⚠️ *Что-то пошло не так*
       message: 'Устройство {{ states[trigger.entity_id.split(".")[0]][trigger.entity_id.split(".")[1]].name
         }} сообщает: {{ trigger.to_state.state }}
 
         '
   mode: parallel
+- id: '1655236746321'
+  alias: Открыть домофон по команде Telegram
+  description: ''
+  trigger:
+  - platform: event
+    event_type: telegram_command
+    event_data:
+      command: /open_door
+  condition: []
+  action:
+  - service: script.turn_on
+    data: {}
+    target:
+      entity_id: script.domru_open_door_657617
+  - service: notify.telegram
+    data:
+      message: 'Дверь открыта '
+  mode: single

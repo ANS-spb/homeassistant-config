@@ -128,3 +128,8 @@ sensor:
         value_template: "{{ state_attr('sensor.meshtastic_radio', 'frequecy') | round(1) }}"
         icon_template: mdi:access-point
         unit_of_measurement: "MHz"
+
+      meshtastic_external_power:
+        friendly_name: Meshtastic USB Power
+        value_template: "{{ state_attr('sensor.meshtastic_power', 'has_usb') }}"
+        icon_template: mdi:usb
