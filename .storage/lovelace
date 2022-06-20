@@ -131,37 +131,15 @@
                                             ]
                                         },
                                         {
-                                            "type": "custom:auto-entities",
-                                            "show_empty": false,
-                                            "card": {
-                                                "type": "entities",
-                                                "show_header_toggle": false,
-                                                "state_color": true
-                                            },
-                                            "filter": {
-                                                "include": [
-                                                    {
-                                                        "entity_id": "binary_sensor.dd_na_kukhne_occupancy"
-                                                    },
-                                                    {
-                                                        "entity_id": "binary_sensor.ble_dd_motion"
-                                                    },
-                                                    {
-                                                        "entity_id": "timer.dvizhenie_na_kukhne"
-                                                    }
-                                                ],
-                                                "exclude": [
-                                                    {
-                                                        "state": "off"
-                                                    },
-                                                    {
-                                                        "state": "idle"
-                                                    },
-                                                    {
-                                                        "state": "unavailable"
-                                                    }
-                                                ]
-                                            }
+                                            "type": "entity-filter",
+                                            "entities": [
+                                                "binary_sensor.dd_na_kukhne_occupancy",
+                                                "binary_sensor.ble_dd_motion",
+                                                "timer.dvizhenie_na_kukhne"
+                                            ],
+                                            "state_filter": [
+                                                "on"
+                                            ]
                                         },
                                         {
                                             "type": "custom:auto-entities",
@@ -210,43 +188,83 @@
                             "show_header_toggle": false
                         },
                         {
+                            "type": "custom:slider-button-card",
+                            "entity": "cover.shtora",
+                            "slider": {
+                                "direction": "left-right",
+                                "background": "striped"
+                            },
+                            "icon": {
+                                "show": true,
+                                "tap_action": {
+                                    "action": "more-info"
+                                }
+                            },
+                            "action_button": {
+                                "tap_action": {
+                                    "action": "toggle"
+                                },
+                                "mode": "custom",
+                                "icon": "mdi:swap-horizontal"
+                            },
+                            "name": "\u0428\u0442\u043e\u0440\u0430"
+                        },
+                        {
                             "type": "vertical-stack",
                             "cards": [
                                 {
-                                    "type": "custom:time-picker-card",
-                                    "entity": "input_datetime.wakeup_time",
-                                    "hour_mode": 24,
-                                    "hour_step": 1,
-                                    "minute_step": 5,
-                                    "second_step": 5,
-                                    "name": "",
-                                    "layout": {
-                                        "embedded": true,
-                                        "align_controls": "right",
-                                        "name": "header"
-                                    },
-                                    "hide": {
-                                        "name": false
-                                    },
-                                    "link_values": false
+                                    "type": "conditional",
+                                    "conditions": [
+                                        {
+                                            "entity": "input_boolean.wakeup_enabled",
+                                            "state": "on"
+                                        }
+                                    ],
+                                    "card": {
+                                        "type": "custom:time-picker-card",
+                                        "entity": "input_datetime.wakeup_time",
+                                        "hour_mode": 24,
+                                        "hour_step": 1,
+                                        "minute_step": 5,
+                                        "second_step": 5,
+                                        "name": "",
+                                        "layout": {
+                                            "embedded": true,
+                                            "align_controls": "right",
+                                            "name": "header"
+                                        },
+                                        "hide": {
+                                            "name": false
+                                        },
+                                        "link_values": false
+                                    }
                                 },
                                 {
-                                    "type": "custom:time-picker-card",
-                                    "entity": "input_datetime.wakeup_weekend_time",
-                                    "hour_mode": 24,
-                                    "hour_step": 1,
-                                    "minute_step": 5,
-                                    "second_step": 5,
-                                    "name": "",
-                                    "layout": {
-                                        "embedded": true,
-                                        "align_controls": "right",
-                                        "name": "header"
-                                    },
-                                    "hide": {
-                                        "name": false
-                                    },
-                                    "link_values": false
+                                    "type": "conditional",
+                                    "conditions": [
+                                        {
+                                            "entity": "input_boolean.wakeup_weekend",
+                                            "state": "on"
+                                        }
+                                    ],
+                                    "card": {
+                                        "type": "custom:time-picker-card",
+                                        "entity": "input_datetime.wakeup_weekend_time",
+                                        "hour_mode": 24,
+                                        "hour_step": 1,
+                                        "minute_step": 5,
+                                        "second_step": 5,
+                                        "name": "",
+                                        "layout": {
+                                            "embedded": true,
+                                            "align_controls": "right",
+                                            "name": "header"
+                                        },
+                                        "hide": {
+                                            "name": false
+                                        },
+                                        "link_values": false
+                                    }
                                 },
                                 {
                                     "type": "entities",
@@ -277,16 +295,25 @@
                                     "state_color": true
                                 },
                                 {
-                                    "type": "custom:time-picker-card",
-                                    "entity": "input_datetime.sleep_time",
-                                    "hour_mode": 24,
-                                    "hour_step": 1,
-                                    "minute_step": 5,
-                                    "second_step": 5,
-                                    "name": "",
-                                    "layout": {
-                                        "embedded": true,
-                                        "align_controls": "right"
+                                    "type": "conditional",
+                                    "conditions": [
+                                        {
+                                            "entity": "input_boolean.sleep_enabled",
+                                            "state": "on"
+                                        }
+                                    ],
+                                    "card": {
+                                        "type": "custom:time-picker-card",
+                                        "entity": "input_datetime.sleep_time",
+                                        "hour_mode": 24,
+                                        "hour_step": 1,
+                                        "minute_step": 5,
+                                        "second_step": 5,
+                                        "name": "",
+                                        "layout": {
+                                            "embedded": true,
+                                            "align_controls": "right"
+                                        }
                                     }
                                 }
                             ]
@@ -368,28 +395,6 @@
                             ]
                         },
                         {
-                            "type": "custom:slider-button-card",
-                            "entity": "cover.shtora",
-                            "slider": {
-                                "direction": "left-right",
-                                "background": "striped"
-                            },
-                            "icon": {
-                                "show": true,
-                                "tap_action": {
-                                    "action": "more-info"
-                                }
-                            },
-                            "action_button": {
-                                "tap_action": {
-                                    "action": "toggle"
-                                },
-                                "mode": "custom",
-                                "icon": "mdi:swap-horizontal"
-                            },
-                            "name": "\u0428\u0442\u043e\u0440\u0430"
-                        },
-                        {
                             "type": "vertical-stack",
                             "cards": [
                                 {
@@ -399,30 +404,6 @@
                                         "speed": "m/s"
                                     },
                                     "icons": "/local/weather-icons/"
-                                },
-                                {
-                                    "type": "entities",
-                                    "entities": [
-                                        {
-                                            "entity": "sensor.owm_weather",
-                                            "name": "\u0417\u0430 \u043e\u043a\u043d\u043e\u043c \u0441\u0435\u0439\u0447\u0430\u0441"
-                                        },
-                                        {
-                                            "entity": "sensor.pressure_weather_forecast"
-                                        },
-                                        {
-                                            "entity": "sensor.pressure_indicator"
-                                        },
-                                        {
-                                            "entity": "sensor.openweather_weather_desc_today",
-                                            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 \u0441\u0435\u0433\u043e\u0434\u043d\u044f"
-                                        },
-                                        {
-                                            "entity": "sensor.openweather_weather_desc_tomorrow",
-                                            "name": "\u041f\u043e\u0433\u043e\u0434\u0430 \u0437\u0430\u0432\u0442\u0440\u0430"
-                                        }
-                                    ],
-                                    "show_header_toggle": false
                                 }
                             ]
                         },
