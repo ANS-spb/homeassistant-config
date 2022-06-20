@@ -649,9 +649,11 @@
       seconds: 0
   condition:
   - condition: template
-    value_template: '{{states.light.prikhozhaia.state != ''on'' and states.light.torsher.state
-      != ''on'' and state_attr(''light.kukhnia_hue'', ''brightness'') | float(0) >
-      2 and states.light.living_room.state != ''on'' }}'
+    value_template: '{{ state(light.prikhozhaia) != on }}'
+  - condition: template
+    value_template: '{{ state(light.kukhnia_hue) != on }}'
+  - condition: template
+    value_template: '{{ state(light.torsher) != on }}'
   - condition: numeric_state
     entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
     below: '5'
