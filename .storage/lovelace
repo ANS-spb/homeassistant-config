@@ -1,0 +1,2332 @@
+{
+    "version": 1,
+    "minor_version": 1,
+    "key": "lovelace",
+    "data": {
+        "config": {
+            "title": "Home Assistant",
+            "swipe_nav": {
+                "wrap": false,
+                "animate": "swipe",
+                "prevent_default": true,
+                "swipe_amount": 30
+            },
+            "views": [
+                {
+                    "path": "default_view",
+                    "title": "Home",
+                    "icon": "mdi:home",
+                    "type": "custom:masonry-layout",
+                    "layout": {
+                        "max_cols": 3
+                    },
+                    "badges": [
+                        {
+                            "entity": "binary_sensor.updater"
+                        },
+                        {
+                            "entity": "person.ans"
+                        },
+                        {
+                            "entity": "device_tracker.ble_tracker_nut"
+                        },
+                        {
+                            "entity": "sun.sun"
+                        }
+                    ],
+                    "cards": [
+                        {
+                            "type": "custom:frigate-card",
+                            "menu": {
+                                "buttons": {
+                                    "snapshots": true,
+                                    "clips": true,
+                                    "frigate": false,
+                                    "live": true,
+                                    "download": false,
+                                    "frigate_ui": false,
+                                    "fullscreen": true,
+                                    "image": false
+                                },
+                                "mode": "overlay-right"
+                            },
+                            "view": {
+                                "default": "live",
+                                "update_force": false
+                            },
+                            "elements": [
+                                {
+                                    "type": "custom:frigate-card-menu-icon",
+                                    "title": "\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u0434\u0432\u0435\u0440\u044c",
+                                    "icon": "mdi:door-open",
+                                    "service": "script.turn_on",
+                                    "service_data": {
+                                        "entity_id": "script.domru_open_door_657617"
+                                    }
+                                }
+                            ],
+                            "live": {
+                                "preload": true,
+                                "controls": {
+                                    "thumbnails": {
+                                        "mode": "none"
+                                    },
+                                    "next_previous": {
+                                        "style": "chevrons"
+                                    }
+                                }
+                            },
+                            "cameras": [
+                                {
+                                    "camera_entity": "camera.domru_domofon",
+                                    "live_provider": "frigate-jsmpeg"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "markdown",
+                                    "content": "### \u0421\u0432\u0435\u0442:\n"
+                                },
+                                {
+                                    "type": "vertical-stack",
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "square": true,
+                                            "cards": [
+                                                {
+                                                    "type": "button",
+                                                    "icon": "mdi:power",
+                                                    "name": "\u0412\u044b\u043a\u043b \u0441\u0432\u0435\u0442",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "script.turn_on",
+                                                        "service_data": {
+                                                            "entity_id": "script.power_off_all"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "type": "button",
+                                                    "icon": "mdi:lamp",
+                                                    "tap_action": {
+                                                        "action": "call-service",
+                                                        "service": "script.turn_on",
+                                                        "service_data": {
+                                                            "entity_id": "script.1599944056170"
+                                                        }
+                                                    },
+                                                    "name": "\u0412\u043a\u043b \u0441\u0432\u0435\u0442"
+                                                },
+                                                {
+                                                    "show_name": true,
+                                                    "show_icon": true,
+                                                    "type": "button",
+                                                    "tap_action": {
+                                                        "action": "toggle"
+                                                    },
+                                                    "entity": "script.1638995744105",
+                                                    "name": "\u042d\u0444\u0444\u0435\u043a\u0442"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "entity-filter",
+                                            "entities": [
+                                                "binary_sensor.dd_na_kukhne_occupancy",
+                                                "binary_sensor.ble_dd_motion",
+                                                "timer.dvizhenie_na_kukhne"
+                                            ],
+                                            "state_filter": [
+                                                "on",
+                                                "active"
+                                            ]
+                                        },
+                                        {
+                                            "type": "custom:auto-entities",
+                                            "show_empty": false,
+                                            "card": {
+                                                "type": "entities",
+                                                "show_header_toggle": false,
+                                                "state_color": true
+                                            },
+                                            "filter": {
+                                                "include": [
+                                                    {
+                                                        "domain": "light",
+                                                        "not": {
+                                                            "name": "/Light/"
+                                                        }
+                                                    }
+                                                ],
+                                                "exclude": [
+                                                    {
+                                                        "state": "off"
+                                                    },
+                                                    {
+                                                        "state": "unavailable"
+                                                    }
+                                                ]
+                                            },
+                                            "sort": {
+                                                "method": "none"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "entities",
+                            "entities": [
+                                {
+                                    "entity": "switch.domofon_once"
+                                },
+                                {
+                                    "entity": "sensor.domofon_state"
+                                }
+                            ],
+                            "show_header_toggle": false
+                        },
+                        {
+                            "type": "custom:slider-button-card",
+                            "entity": "cover.shtora",
+                            "slider": {
+                                "direction": "left-right",
+                                "background": "striped"
+                            },
+                            "icon": {
+                                "show": true,
+                                "tap_action": {
+                                    "action": "more-info"
+                                }
+                            },
+                            "action_button": {
+                                "tap_action": {
+                                    "action": "toggle"
+                                },
+                                "mode": "custom",
+                                "icon": "mdi:swap-horizontal"
+                            },
+                            "name": "\u0428\u0442\u043e\u0440\u0430"
+                        },
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "conditional",
+                                    "conditions": [
+                                        {
+                                            "entity": "input_boolean.wakeup_enabled",
+                                            "state": "on"
+                                        }
+                                    ],
+                                    "card": {
+                                        "type": "custom:time-picker-card",
+                                        "entity": "input_datetime.wakeup_time",
+                                        "hour_mode": 24,
+                                        "hour_step": 1,
+                                        "minute_step": 5,
+                                        "second_step": 5,
+                                        "name": "",
+                                        "layout": {
+                                            "embedded": true,
+                                            "align_controls": "right",
+                                            "name": "header"
+                                        },
+                                        "hide": {
+                                            "name": false
+                                        },
+                                        "link_values": false
+                                    }
+                                },
+                                {
+                                    "type": "conditional",
+                                    "conditions": [
+                                        {
+                                            "entity": "input_boolean.wakeup_weekend",
+                                            "state": "on"
+                                        }
+                                    ],
+                                    "card": {
+                                        "type": "custom:time-picker-card",
+                                        "entity": "input_datetime.wakeup_weekend_time",
+                                        "hour_mode": 24,
+                                        "hour_step": 1,
+                                        "minute_step": 5,
+                                        "second_step": 5,
+                                        "name": "",
+                                        "layout": {
+                                            "embedded": true,
+                                            "align_controls": "right",
+                                            "name": "header"
+                                        },
+                                        "hide": {
+                                            "name": false
+                                        },
+                                        "link_values": false
+                                    }
+                                },
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "entity": "input_boolean.wakeup_enabled"
+                                        },
+                                        {
+                                            "entity": "input_boolean.wakeup_weekend"
+                                        },
+                                        {
+                                            "entity": "sensor.daytime"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.workday"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.workday_tomorrow"
+                                        },
+                                        {
+                                            "entity": "input_boolean.sleep_enabled"
+                                        },
+                                        {
+                                            "entity": "input_boolean.wakeup_disabled"
+                                        }
+                                    ],
+                                    "show_header_toggle": false,
+                                    "state_color": true
+                                },
+                                {
+                                    "type": "conditional",
+                                    "conditions": [
+                                        {
+                                            "entity": "input_boolean.sleep_enabled",
+                                            "state": "on"
+                                        }
+                                    ],
+                                    "card": {
+                                        "type": "custom:time-picker-card",
+                                        "entity": "input_datetime.sleep_time",
+                                        "hour_mode": 24,
+                                        "hour_step": 1,
+                                        "minute_step": 5,
+                                        "second_step": 5,
+                                        "name": "",
+                                        "layout": {
+                                            "embedded": true,
+                                            "align_controls": "right"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "custom:auto-entities",
+                                    "show_empty": false,
+                                    "filter": {
+                                        "include": [
+                                            {
+                                                "entity_id": "sensor.geiger_dose_rate"
+                                            }
+                                        ],
+                                        "exclude": [
+                                            {
+                                                "state": "unavailable"
+                                            },
+                                            {
+                                                "last_updated": "> 5"
+                                            }
+                                        ]
+                                    },
+                                    "card": {
+                                        "type": "entity",
+                                        "entity": "sensor.geiger_dose_rate",
+                                        "name": "Geiger Doserate"
+                                    }
+                                },
+                                {
+                                    "type": "custom:auto-entities",
+                                    "show_empty": false,
+                                    "filter": {
+                                        "include": [
+                                            {
+                                                "entity_id": "sensor.radiacode"
+                                            }
+                                        ],
+                                        "exclude": [
+                                            {
+                                                "state": "unavailable"
+                                            },
+                                            {
+                                                "last_updated": "> 5"
+                                            }
+                                        ]
+                                    },
+                                    "card": {
+                                        "type": "entity",
+                                        "entity": "sensor.radiacode"
+                                    }
+                                },
+                                {
+                                    "type": "custom:auto-entities",
+                                    "show_empty": false,
+                                    "filter": {
+                                        "include": [
+                                            {
+                                                "entity_id": "sensor.radiacode_work"
+                                            }
+                                        ],
+                                        "exclude": [
+                                            {
+                                                "state": "unavailable"
+                                            },
+                                            {
+                                                "last_updated": "> 5"
+                                            }
+                                        ]
+                                    },
+                                    "card": {
+                                        "type": "entity",
+                                        "entity": "sensor.radiacode_work",
+                                        "name": "Radiacode Doserate (work)"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "glance",
+                            "show_name": true,
+                            "show_state": true,
+                            "state_color": true,
+                            "columns": 4,
+                            "entities": [
+                                "person.ans",
+                                "person.lisitsa"
+                            ]
+                        },
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "custom:weather-chart-card",
+                                    "entity": "weather.openweathermap",
+                                    "units": {
+                                        "speed": "m/s"
+                                    },
+                                    "icons": "/local/weather-icons/"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "entities",
+                            "entities": [
+                                {
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "sensor.spalnia_perception",
+                                    "name": "\u041a\u043e\u043c\u043d\u0430\u0442\u0430",
+                                    "icon": "mdi:home-thermometer-outline",
+                                    "styles": {
+                                        "width": "100px"
+                                    },
+                                    "state_header": "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c",
+                                    "entities": [
+                                        {
+                                            "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
+                                            "entity": "sensor.spalnia_simmerzone",
+                                            "styles": {
+                                                "width": "100px"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "sensor.kukhnia_perception",
+                                    "name": "\u041a\u0443\u0445\u043d\u044f",
+                                    "icon": "mdi:home-thermometer-outline",
+                                    "styles": {
+                                        "width": "100px"
+                                    },
+                                    "state_header": "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c",
+                                    "entities": [
+                                        {
+                                            "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
+                                            "entity": "sensor.kukhnia_simmerzone",
+                                            "styles": {
+                                                "width": "100px"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "sensor.lodzhiia_perception",
+                                    "name": "\u041b\u043e\u0434\u0436\u0438\u044f",
+                                    "icon": "mdi:home-thermometer-outline",
+                                    "styles": {
+                                        "width": "100px"
+                                    },
+                                    "state_header": "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c",
+                                    "entities": [
+                                        {
+                                            "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
+                                            "entity": "sensor.lodzhiia_simmerzone",
+                                            "styles": {
+                                                "width": "100px"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "section"
+                                },
+                                {
+                                    "type": "custom:multiple-entity-row",
+                                    "entity": "sensor.ulitsa_owm_perception",
+                                    "name": "\u0423\u043b\u0438\u0446\u0430",
+                                    "icon": "mdi:home-thermometer-outline",
+                                    "styles": {
+                                        "width": "100px"
+                                    },
+                                    "state_header": "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c",
+                                    "entities": [
+                                        {
+                                            "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
+                                            "entity": "sensor.ulitsa_owm_simmerzone",
+                                            "styles": {
+                                                "width": "100px"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "markdown",
+                                    "content": "### \u041e\u043a\u043d\u0430 \u0438 \u0434\u0432\u0435\u0440\u0438:\n"
+                                },
+                                {
+                                    "type": "vertical-stack",
+                                    "cards": [
+                                        {
+                                            "type": "custom:auto-entities",
+                                            "show_empty": false,
+                                            "card": {
+                                                "type": "entities",
+                                                "show_header_toggle": false,
+                                                "state_color": true
+                                            },
+                                            "filter": {
+                                                "include": [
+                                                    {
+                                                        "entity_id": "binary_sensor.*_contact"
+                                                    }
+                                                ],
+                                                "exclude": [
+                                                    {
+                                                        "state": "off"
+                                                    },
+                                                    {
+                                                        "state": "unavailable"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "Light",
+                    "path": "light",
+                    "icon": "mdi:lightbulb-on-outline",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "markdown",
+                                    "content": "### \u0421\u043f\u0430\u043b\u044c\u043d\u044f:\n"
+                                },
+                                {
+                                    "type": "vertical-stack",
+                                    "cards": [
+                                        {
+                                            "type": "grid",
+                                            "cards": [
+                                                {
+                                                    "type": "custom:slider-button-card",
+                                                    "entity": "light.torsher",
+                                                    "slider": {
+                                                        "direction": "left-right",
+                                                        "background": "solid"
+                                                    },
+                                                    "action_button": {
+                                                        "mode": "toggle"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:slider-button-card",
+                                                    "entity": "light.hue_ambiance_candle_1",
+                                                    "slider": {
+                                                        "direction": "left-right",
+                                                        "background": "solid"
+                                                    },
+                                                    "action_button": {
+                                                        "mode": "toggle"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:slider-button-card",
+                                                    "entity": "light.living_room"
+                                                }
+                                            ],
+                                            "columns": 3
+                                        },
+                                        {
+                                            "square": true,
+                                            "columns": 3,
+                                            "type": "grid",
+                                            "cards": [
+                                                {
+                                                    "type": "custom:slider-button-card",
+                                                    "entity": "light.liustra"
+                                                },
+                                                {
+                                                    "show_name": true,
+                                                    "show_icon": true,
+                                                    "type": "button",
+                                                    "tap_action": {
+                                                        "action": "toggle"
+                                                    },
+                                                    "entity": "script.1599944056170"
+                                                },
+                                                {
+                                                    "show_name": true,
+                                                    "show_icon": true,
+                                                    "type": "button",
+                                                    "tap_action": {
+                                                        "action": "toggle"
+                                                    },
+                                                    "entity": "script.light_tosleep",
+                                                    "name": "\u0412\u0435\u0447\u0435\u0440\u043d\u0438\u0439 \u0441\u0432\u0435\u0442 "
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "markdown",
+                                    "content": "### \u0410\u0434\u0430\u043f\u0442\u0438\u0432\u043d\u043e\u0435 \u043e\u0441\u0432\u0435\u0449\u0435\u043d\u0438\u0435:\n"
+                                },
+                                {
+                                    "type": "horizontal-stack",
+                                    "cards": [
+                                        {
+                                            "type": "custom:mini-graph-card",
+                                            "name": "\u042f\u0440\u043a\u043e\u0441\u0442\u044c",
+                                            "points_per_hour": 5,
+                                            "line_width": 2,
+                                            "entities": [
+                                                {
+                                                    "entity": "sensor.adaptive_brt"
+                                                }
+                                            ],
+                                            "show": {
+                                                "fill": "fade"
+                                            },
+                                            "animate": true
+                                        },
+                                        {
+                                            "type": "custom:mini-graph-card",
+                                            "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0446\u0432\u0435\u0442\u0430",
+                                            "points_per_hour": 5,
+                                            "line_width": 2,
+                                            "entities": [
+                                                {
+                                                    "entity": "sensor.adaptive_ct"
+                                                }
+                                            ],
+                                            "show": {
+                                                "fill": "fade"
+                                            },
+                                            "animate": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "markdown",
+                                    "content": "### \u041f\u0440\u0438\u0445\u043e\u0436\u0430\u044f:\n"
+                                },
+                                {
+                                    "type": "vertical-stack",
+                                    "cards": [
+                                        {
+                                            "type": "conditional",
+                                            "conditions": [
+                                                {
+                                                    "entity": "light.prikhozhaia",
+                                                    "state_not": "unavailable"
+                                                }
+                                            ],
+                                            "card": {
+                                                "type": "custom:slider-button-card",
+                                                "entity": "light.prikhozhaia"
+                                            }
+                                        },
+                                        {
+                                            "square": false,
+                                            "columns": 2,
+                                            "type": "grid",
+                                            "cards": [
+                                                {
+                                                    "type": "custom:slider-button-card",
+                                                    "entity": "light.50ec50e1b80d_light",
+                                                    "slider": {
+                                                        "direction": "left-right",
+                                                        "background": "solid"
+                                                    },
+                                                    "action_button": {
+                                                        "mode": "toggle"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "custom:slider-button-card",
+                                                    "entity": "light.50ec50dfc9c5_light"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "markdown",
+                                    "content": "### \u041a\u0443\u0445\u043d\u044f:\n"
+                                },
+                                {
+                                    "type": "horizontal-stack",
+                                    "cards": [
+                                        {
+                                            "type": "custom:slider-button-card",
+                                            "entity": "light.kukhnia_garnitur",
+                                            "name": "\u0413\u0430\u0440\u043d\u0438\u0442\u0443\u0440"
+                                        },
+                                        {
+                                            "type": "custom:slider-button-card",
+                                            "entity": "light.kukhnia_potolok",
+                                            "name": "\u0421\u043f\u043e\u0442\u044b",
+                                            "icon": "hue:bulb-spot"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "theme": "Backend-selected",
+                    "title": "Charts",
+                    "path": "charts",
+                    "icon": "mdi:chart-line",
+                    "type": "custom:masonry-layout",
+                    "square": false,
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "custom:mini-graph-card",
+                            "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
+                            "hour24": true,
+                            "hours_to_show": 24,
+                            "group_by": "hour",
+                            "line_width": 2,
+                            "entities": [
+                                {
+                                    "entity": "sensor.ble_datchik_v_spalne_temperature",
+                                    "name": "\u0421\u043f\u0430\u043b\u044c\u043d\u044f"
+                                },
+                                {
+                                    "entity": "sensor.ble_temperature_datchik_na_kukhne",
+                                    "name": "\u041a\u0443\u0445\u043d\u044f"
+                                }
+                            ],
+                            "show": {
+                                "labels": true,
+                                "labels_secondary": true,
+                                "average": true,
+                                "extrema": true,
+                                "fill": "fade"
+                            },
+                            "animate": true,
+                            "height": 150,
+                            "style": "ha-card {\n  height: 350px !important;\n}\n"
+                        },
+                        {
+                            "type": "custom:mini-graph-card",
+                            "name": "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c",
+                            "hour24": true,
+                            "hours_to_show": 24,
+                            "group_by": "hour",
+                            "line_width": 2,
+                            "entities": [
+                                {
+                                    "entity": "sensor.ble_datchik_v_spalne_humidity",
+                                    "name": "\u0421\u043f\u0430\u043b\u044c\u043d\u044f"
+                                },
+                                {
+                                    "entity": "sensor.ble_humidity_datchik_na_kukhne",
+                                    "name": "\u041a\u0443\u0445\u043d\u044f"
+                                }
+                            ],
+                            "show": {
+                                "labels": true,
+                                "labels_secondary": true,
+                                "average": true,
+                                "extrema": true,
+                                "fill": "fade"
+                            },
+                            "animate": true,
+                            "style": "ha-card {\n  height: 350px !important;\n}\n",
+                            "height": 150
+                        },
+                        {
+                            "type": "custom:mini-graph-card",
+                            "name": "\u0412\u043d\u0435\u0448\u043d\u044f\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
+                            "hours_to_show": 48,
+                            "hour24": true,
+                            "group_by": "hour",
+                            "line_width": 2,
+                            "entities": [
+                                {
+                                    "entity": "sensor.openweathermap_temperature",
+                                    "name": "\u0422\u0435\u043a\u0443\u0449\u0430\u044f"
+                                },
+                                {
+                                    "entity": "sensor.lodzhiia_temperature",
+                                    "name": "\u041b\u043e\u0434\u0436\u0438\u044f"
+                                },
+                                {
+                                    "entity": "sensor.outside_temperature_min_value",
+                                    "name": "\u041c\u0438\u043d. \u0437\u0430 24 \u0447\u0430\u0441\u0430"
+                                },
+                                {
+                                    "entity": "sensor.pressure_average",
+                                    "name": "\u0414\u0430\u0432\u043b\u0435\u043d\u0438\u0435",
+                                    "y_axis": "secondary"
+                                }
+                            ],
+                            "show": {
+                                "labels": true,
+                                "labels_secondary": true,
+                                "average": false,
+                                "extrema": false,
+                                "fill": "fade"
+                            },
+                            "animate": true,
+                            "style": "ha-card {\n  height: 350px !important;\n}\n",
+                            "height": 220
+                        },
+                        {
+                            "type": "custom:mini-graph-card",
+                            "name": "\u0412\u043e\u0437\u0434\u0443\u0445",
+                            "icon": "mdi:molecule-co2",
+                            "smoothing": true,
+                            "hour24": true,
+                            "hours_to_show": 24,
+                            "group_by": "hour",
+                            "line_width": 2,
+                            "entities": [
+                                {
+                                    "entity": "sensor.cgllc_cgdn1_42a2_co2_density",
+                                    "name": "CO2"
+                                },
+                                {
+                                    "entity": "sensor.cgllc_cgdn1_42a2_pm25_density",
+                                    "name": "PM2.5",
+                                    "y-axis": "secondary"
+                                },
+                                {
+                                    "entity": "sensor.cgllc_cgdn1_42a2_pm10_density",
+                                    "name": "PM10",
+                                    "y-axis": "secondary"
+                                }
+                            ],
+                            "show": {
+                                "labels": true,
+                                "labels_secondary": true,
+                                "average": true,
+                                "extrema": true,
+                                "fill": "fade"
+                            },
+                            "animate": true,
+                            "style": "ha-card {\n  height: 350px !important;\n}\n",
+                            "height": 150
+                        },
+                        {
+                            "type": "custom:mini-graph-card",
+                            "name": "\u041e\u0431\u043b\u0430\u0447\u043d\u043e\u0441\u0442\u044c \u0438 \u043e\u0441\u0432\u0435\u0449\u0451\u043d\u043d\u043e\u0441\u0442\u044c",
+                            "hour24": true,
+                            "hours_to_show": 48,
+                            "line_width": 3,
+                            "group_by": "hour",
+                            "lower_bound_secondary": 0,
+                            "lower_bound": 0,
+                            "show": {
+                                "labels": false,
+                                "fill": "fade",
+                                "labels_secondary": false
+                            },
+                            "animate": true,
+                            "entities": [
+                                {
+                                    "entity": "sensor.openweathermap_cloud_coverage",
+                                    "name": "\u041e\u0431\u043b\u0430\u043a\u0430",
+                                    "color": "rgb(52, 152, 219)",
+                                    "show_line": false,
+                                    "show_legend": true,
+                                    "show_points": false,
+                                    "show_indicator": true,
+                                    "show_fill": true,
+                                    "state_adaptive_color": false
+                                },
+                                {
+                                    "entity": "sensor.mini_graph_day_pct",
+                                    "color": "white",
+                                    "show_line": false,
+                                    "show_legend": false,
+                                    "show_points": false,
+                                    "show_indicator": false,
+                                    "show_fill": true,
+                                    "state_adaptive_color": false
+                                },
+                                {
+                                    "entity": "sensor.mini_graph_night_pct",
+                                    "color": "dark-grey",
+                                    "show_line": false,
+                                    "show_legend": false,
+                                    "show_points": false,
+                                    "show_indicator": false,
+                                    "show_fill": true,
+                                    "state_adaptive_color": false
+                                },
+                                {
+                                    "entity": "sun.sun",
+                                    "name": "\u0421\u043e\u043b\u043d\u0446\u0435",
+                                    "color": "yellow",
+                                    "attribute": "elevation",
+                                    "show_line": false,
+                                    "show_legend": true,
+                                    "show_points": false,
+                                    "show_indicator": true,
+                                    "show_fill": false,
+                                    "state_adaptive_color": false
+                                },
+                                {
+                                    "entity": "sensor.osveshchionnost_na_kukhne_illuminance_lux",
+                                    "name": "\u041a\u0443\u0445\u043d\u044f",
+                                    "show_state": true,
+                                    "show_legend": true,
+                                    "show_indicator": true,
+                                    "show_fill": false,
+                                    "state_adaptive_color": false,
+                                    "color": "var(--accent-color)",
+                                    "y_axis": "secondary"
+                                },
+                                {
+                                    "entity": "sensor.osveshchionnost_snaruzhi_illuminance_lux",
+                                    "name": "\u0421\u043d\u0430\u0440\u0443\u0436\u0438",
+                                    "show_state": true,
+                                    "show_legend": true,
+                                    "show_indicator": true,
+                                    "show_fill": false,
+                                    "state_adaptive_color": false,
+                                    "color": "rgb(231, 76, 60)",
+                                    "y_axis": "secondary"
+                                },
+                                {
+                                    "entity": "sensor.osveshchionnost_v_spalne_illuminance_lux",
+                                    "name": "\u0412 \u043a\u043e\u043c\u043d\u0430\u0442\u0435",
+                                    "show_state": true,
+                                    "show_legend": true,
+                                    "show_indicator": true,
+                                    "show_fill": false,
+                                    "state_adaptive_color": false,
+                                    "color": "green",
+                                    "y_axis": "secondary"
+                                }
+                            ],
+                            "style": "ha-card {\n  height: 350px !important;\n}\n",
+                            "height": 180
+                        },
+                        {
+                            "type": "custom:mini-graph-card",
+                            "name": "\u0420\u0430\u0434\u0438\u0430\u0446\u0438\u044f",
+                            "hours_to_show": 48,
+                            "hour24": true,
+                            "group_by": "hour",
+                            "line_width": 2,
+                            "entities": [
+                                {
+                                    "entity": "sensor.geiger_dose_rate",
+                                    "name": "\u0413\u0435\u0439\u0433\u0435\u0440"
+                                },
+                                {
+                                    "entity": "sensor.radiacode_dose_rate",
+                                    "name": "Radiacode (\u0434\u043e\u043c\u0430)"
+                                },
+                                {
+                                    "entity": "sensor.radiacode_work_dose_rate",
+                                    "name": "Radiacode (\u043d\u0430 \u0440\u0430\u0431\u043e\u0442\u0435)"
+                                }
+                            ],
+                            "show": {
+                                "labels": true,
+                                "labels_secondary": true,
+                                "average": true,
+                                "extrema": true,
+                                "fill": "fade"
+                            },
+                            "animate": true,
+                            "style": "ha-card {\n  height: 350px !important;\n}\n",
+                            "height": 150
+                        }
+                    ]
+                },
+                {
+                    "title": "Climate",
+                    "path": "climate",
+                    "icon": "mdi:home-thermometer-outline",
+                    "type": "sidebar",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "statistics-graph",
+                            "entities": [
+                                "sensor.ble_datchik_v_spalne_temperature",
+                                "sensor.ble_temperature_datchik_na_kukhne"
+                            ],
+                            "days_to_show": 30,
+                            "chart_type": "line"
+                        },
+                        {
+                            "type": "statistics-graph",
+                            "entities": [
+                                "sensor.ble_datchik_v_spalne_humidity",
+                                "sensor.ble_humidity_datchik_na_kukhne"
+                            ],
+                            "days_to_show": 30
+                        },
+                        {
+                            "type": "gauge",
+                            "name": "\u0421\u043f\u0430\u043b\u044c\u043d\u044f",
+                            "entity": "sensor.ble_datchik_v_spalne_temperature",
+                            "max": 40,
+                            "min": 0,
+                            "severity": {
+                                "blue": 0,
+                                "green": 18,
+                                "yellow": 25,
+                                "red": 30
+                            },
+                            "view_layout": {
+                                "position": "sidebar"
+                            },
+                            "needle": true
+                        },
+                        {
+                            "type": "gauge",
+                            "name": "\u0421\u043f\u0430\u043b\u044c\u043d\u044f",
+                            "entity": "sensor.ble_datchik_v_spalne_humidity",
+                            "min": 0,
+                            "max": 100,
+                            "view_layout": {
+                                "position": "sidebar"
+                            },
+                            "needle": true
+                        },
+                        {
+                            "type": "gauge",
+                            "name": "\u041a\u0443\u0445\u043d\u044f",
+                            "max": 40,
+                            "entity": "sensor.ble_temperature_datchik_na_kukhne",
+                            "min": 0,
+                            "severity": {
+                                "blue": 0,
+                                "green": 18,
+                                "yellow": 25,
+                                "red": 30
+                            },
+                            "view_layout": {
+                                "position": "sidebar"
+                            },
+                            "needle": true
+                        },
+                        {
+                            "type": "gauge",
+                            "name": "\u041a\u0443\u0445\u043d\u044f",
+                            "entity": "sensor.ble_humidity_datchik_na_kukhne",
+                            "min": 0,
+                            "max": 100,
+                            "view_layout": {
+                                "position": "sidebar"
+                            },
+                            "needle": true
+                        },
+                        {
+                            "type": "gauge",
+                            "name": "\u041b\u043e\u0434\u0436\u0438\u044f",
+                            "max": 40,
+                            "entity": "sensor.lodzhiia_temperature",
+                            "min": 0,
+                            "severity": {
+                                "blue": 0,
+                                "green": 18,
+                                "yellow": 25,
+                                "red": 30
+                            },
+                            "view_layout": {
+                                "position": "sidebar"
+                            },
+                            "needle": true
+                        },
+                        {
+                            "type": "gauge",
+                            "entity": "sensor.lodzhiia_humidity",
+                            "min": 0,
+                            "max": 100,
+                            "name": "\u041b\u043e\u0434\u0436\u0438\u044f",
+                            "view_layout": {
+                                "position": "sidebar"
+                            },
+                            "needle": true
+                        },
+                        {
+                            "type": "gauge",
+                            "name": "\u0414\u0430\u0432\u043b\u0435\u043d\u0438\u0435",
+                            "max": 1050,
+                            "entity": "sensor.lodzhiia_pressure",
+                            "min": 950,
+                            "severity": {
+                                "green": 1000,
+                                "yellow": 1020,
+                                "blue": 1000,
+                                "red": 1040
+                            },
+                            "view_layout": {
+                                "position": "sidebar"
+                            },
+                            "needle": true
+                        }
+                    ]
+                },
+                {
+                    "title": "\u0414\u0430\u0442\u0447\u0438\u043a\u0438",
+                    "path": "",
+                    "icon": "mdi:gauge",
+                    "type": "custom:masonry-layout",
+                    "layout": {
+                        "max_cols": 3
+                    },
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities",
+                                "state_color": true,
+                                "title": "\u0412\u0435\u0441\u044c \u0441\u0432\u0435\u0442 \u0432 \u0434\u043e\u043c\u0435"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "domain": "light",
+                                        "options": {
+                                            "secondary_info": "last-changed"
+                                        }
+                                    }
+                                ],
+                                "exclude": [
+                                    {
+                                        "state": "unavailable"
+                                    }
+                                ]
+                            },
+                            "sort": {
+                                "method": "name"
+                            }
+                        },
+                        {
+                            "type": "entities",
+                            "entities": [
+                                {
+                                    "entity": "sensor.radiacode_dr_mean_value",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.radiacode_count_rate",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.radiacode_cr_mean_value",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.geiger_counter_radiation_dose_per_hour",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.geiger_dr_mean_value",
+                                    "secondary_info": "last-updated"
+                                }
+                            ],
+                            "state_color": false
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "show_empty": false,
+                            "card": {
+                                "type": "entities",
+                                "state_color": true,
+                                "title": "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c",
+                                "show_header_toggle": false
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "sensor.*humidity*"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "show_empty": false,
+                            "card": {
+                                "type": "entities",
+                                "title": "\u041e\u0441\u0432\u0435\u0449\u0451\u043d\u043d\u043e\u0441\u0442\u044c",
+                                "show_header_toggle": false
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "sensor.*illuminance*"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "history-graph",
+                            "entities": [
+                                {
+                                    "entity": "device_tracker.iphone_ans"
+                                },
+                                {
+                                    "entity": "device_tracker.ble_tracker_nut"
+                                }
+                            ],
+                            "refresh_interval": 0,
+                            "title": "\u041f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0435",
+                            "hours_to_show": 48
+                        }
+                    ]
+                },
+                {
+                    "title": "System",
+                    "path": "system-health",
+                    "icon": "mdi:server",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "markdown",
+                                    "content": "**\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435**"
+                                },
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "entity": "binary_sensor.z2m_health"
+                                        },
+                                        {
+                                            "entity": "sensor.start_time"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "grid",
+                                    "cards": [
+                                        {
+                                            "type": "custom:mini-graph-card",
+                                            "name": "CPU Usage",
+                                            "entities": [
+                                                "sensor.processor_use"
+                                            ],
+                                            "show": {
+                                                "fill": "fade"
+                                            },
+                                            "animate": true,
+                                            "hours_to_show": 12,
+                                            "points_per_hour": 10
+                                        },
+                                        {
+                                            "type": "custom:mini-graph-card",
+                                            "name": "CPU Temp",
+                                            "entities": [
+                                                "sensor.cpu_temp"
+                                            ],
+                                            "hours_to_show": 12,
+                                            "points_per_hour": 10,
+                                            "show": {
+                                                "fill": "fade"
+                                            },
+                                            "animate": true,
+                                            "color_thresholds": [
+                                                {
+                                                    "value": 30,
+                                                    "color": "#f39c12"
+                                                },
+                                                {
+                                                    "value": 50,
+                                                    "color": "#d35400"
+                                                },
+                                                {
+                                                    "value": 70,
+                                                    "color": "#c0392b"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "custom:mini-graph-card",
+                                            "name": "RAM Usage",
+                                            "entities": [
+                                                "sensor.memory_use_percent"
+                                            ],
+                                            "hours_to_show": 12,
+                                            "points_per_hour": 4,
+                                            "show": {
+                                                "graph": "bar"
+                                            },
+                                            "animate": true,
+                                            "color_thresholds": [
+                                                {
+                                                    "color": "#4bcf17",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "color": "#cfba17",
+                                                    "value": 50
+                                                },
+                                                {
+                                                    "color": "#cf1717",
+                                                    "value": 80
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "custom:mini-graph-card",
+                                            "name": "Swap Usage",
+                                            "entities": [
+                                                "sensor.swap_use_percent"
+                                            ],
+                                            "hours_to_show": 12,
+                                            "points_per_hour": 4,
+                                            "show": {
+                                                "graph": "bar"
+                                            },
+                                            "animate": true,
+                                            "color_thresholds": [
+                                                {
+                                                    "color": "#4bcf17",
+                                                    "value": 0
+                                                },
+                                                {
+                                                    "color": "#cfba17",
+                                                    "value": 50
+                                                },
+                                                {
+                                                    "color": "#cf1717",
+                                                    "value": 80
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "gauge",
+                                            "entity": "sensor.disk_use_percent",
+                                            "min": 0,
+                                            "max": 100,
+                                            "severity": {
+                                                "green": 0,
+                                                "yellow": 70,
+                                                "red": 90
+                                            },
+                                            "name": "SSD"
+                                        },
+                                        {
+                                            "type": "gauge",
+                                            "entity": "sensor.hdd_use_percent",
+                                            "min": 0,
+                                            "max": 100,
+                                            "severity": {
+                                                "green": 0,
+                                                "yellow": 70,
+                                                "red": 90
+                                            },
+                                            "name": "HDD"
+                                        },
+                                        {
+                                            "type": "custom:mini-graph-card",
+                                            "name": "SQLite Size",
+                                            "entities": [
+                                                "sensor.home_assistant_v2_db_size"
+                                            ],
+                                            "hours_to_show": 96,
+                                            "points_per_hour": 0.25,
+                                            "show": {
+                                                "graph": "bar"
+                                            },
+                                            "animate": true
+                                        },
+                                        {
+                                            "type": "custom:mini-graph-card",
+                                            "name": "InfluxDB Size",
+                                            "entities": [
+                                                "sensor.influxdb_size"
+                                            ],
+                                            "hours_to_show": 96,
+                                            "points_per_hour": 0.25,
+                                            "show": {
+                                                "graph": "bar"
+                                            },
+                                            "animate": true
+                                        }
+                                    ],
+                                    "columns": 2
+                                },
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.home_assistant_v2_db_size",
+                                            "icon": "mdi:database"
+                                        },
+                                        {
+                                            "entity": "sensor.influxdb_size",
+                                            "icon": "mdi:database"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "custom:transmission-card",
+                            "default_type": "started"
+                        },
+                        {
+                            "type": "logbook",
+                            "entities": [
+                                "automation.zvonok_v_domofon",
+                                "sensor.domofon_state",
+                                "automation.zvonok_v_dver"
+                            ]
+                        },
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "history-graph",
+                                    "entities": [
+                                        {
+                                            "entity": "binary_sensor.gateway"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.google"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.yandex"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.internet"
+                                        }
+                                    ],
+                                    "hours_to_show": 48,
+                                    "refresh_interval": 0
+                                }
+                            ]
+                        },
+                        {
+                            "type": "entities",
+                            "entities": [
+                                {
+                                    "type": "custom:numberbox-card",
+                                    "entity": "input_number.scale_minimal_battery"
+                                },
+                                {
+                                    "type": "custom:numberbox-card",
+                                    "entity": "input_number.scale_max_temp"
+                                },
+                                {
+                                    "type": "custom:numberbox-card",
+                                    "entity": "input_number.scale_min_temp"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "markdown",
+                                    "content": "### \u0411\u0430\u0442\u0430\u0440\u0435\u0439\u043a\u0438:\n"
+                                },
+                                {
+                                    "type": "custom:battery-state-card",
+                                    "sort_by_level": "asc",
+                                    "collapse": [
+                                        {
+                                            "name": "\u041e\u0442\u043a\u0440\u044b\u0442\u0438\u0435 (min: {min}%, count: {count})",
+                                            "secondary_info": "\u0417\u0430\u0440\u044f\u0434 {range}%",
+                                            "icon": "mdi:door",
+                                            "entities": [
+                                                "sensor.domofon_battery",
+                                                "sensor.zvonok_battery",
+                                                "sensor.okno_na_kukhne_battery",
+                                                "sensor.okno_v_komnate_battery"
+                                            ]
+                                        },
+                                        {
+                                            "name": "\u0414\u0432\u0438\u0436\u0435\u043d\u0438\u0435 (min: {min}%, count: {count})",
+                                            "secondary_info": "\u0417\u0430\u0440\u044f\u0434 {range}%",
+                                            "icon": "mdi:motion-sensor",
+                                            "entities": [
+                                                "sensor.dd_na_kukhne_battery",
+                                                "sensor.ble_dd_battery"
+                                            ]
+                                        },
+                                        {
+                                            "name": "\u041e\u0441\u0432\u0435\u0449\u0451\u043d\u043d\u043e\u0441\u0442\u044c (min: {min}%, count: {count})",
+                                            "secondary_info": "\u0417\u0430\u0440\u044f\u0434 {range}%",
+                                            "icon": "mdi:weather-sunny",
+                                            "entities": [
+                                                "sensor.osveshchionnost_v_spalne_battery",
+                                                "sensor.osveshchionnost_na_kukhne_battery",
+                                                "sensor.osveshchionnost_snaruzhi_battery"
+                                            ]
+                                        },
+                                        {
+                                            "name": "\u041a\u043b\u0438\u043c\u0430\u0442 (min: {min}%, count: {count})",
+                                            "secondary_info": "\u0417\u0430\u0440\u044f\u0434 {range}%",
+                                            "icon": "mdi:thermometer-lines",
+                                            "entities": [
+                                                "sensor.ble_datchik_v_spalne_battery",
+                                                "sensor.ble_battery_datchik_na_kukhne",
+                                                "sensor.lodzhiia_battery"
+                                            ]
+                                        },
+                                        {
+                                            "name": "\u041a\u043d\u043e\u043f\u043a\u0438 (min: {min}%, count: {count})",
+                                            "secondary_info": "\u0417\u0430\u0440\u044f\u0434 {range}%",
+                                            "icon": "mdi:gesture-tap-button",
+                                            "entities": [
+                                                "sensor.knopka_aqara_komnata_battery",
+                                                "sensor.knopka_v_koridore_battery",
+                                                "sensor.knopka_na_kukhne_battery",
+                                                "sensor.opple_battery",
+                                                "sensor.hue_dimmer_switch_1_battery_level",
+                                                "sensor.hue_dimmer_switch_2_battery_level",
+                                                "sensor.hue_wall_switch_module_1_battery_level"
+                                            ]
+                                        },
+                                        {
+                                            "name": "\u0411\u0440\u0435\u043b\u043a\u0438 (min: {min}%, count: {count})",
+                                            "secondary_info": "\u0417\u0430\u0440\u044f\u0434 {range}%",
+                                            "icon": "mdi:bluetooth",
+                                            "entities": [
+                                                "sensor.nut_mini"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "custom:auto-entities",
+                            "card": {
+                                "type": "entities"
+                            },
+                            "filter": {
+                                "include": [
+                                    {
+                                        "entity_id": "sensor.total*"
+                                    }
+                                ],
+                                "exclude": []
+                            }
+                        },
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "markdown",
+                                    "content": "### \u041d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0435 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430:\n"
+                                },
+                                {
+                                    "type": "vertical-stack",
+                                    "cards": [
+                                        {
+                                            "type": "custom:auto-entities",
+                                            "show_empty": false,
+                                            "card": {
+                                                "type": "entities",
+                                                "show_header_toggle": false
+                                            },
+                                            "filter": {
+                                                "include": [
+                                                    {
+                                                        "state": "unavailable"
+                                                    }
+                                                ],
+                                                "exclude": [
+                                                    {
+                                                        "entity_id": "media_player.plex*"
+                                                    },
+                                                    {
+                                                        "entity_id": "device_tracker.*"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "Zigbee",
+                    "path": "zigbee",
+                    "icon": "mdi:zigbee",
+                    "panel": true,
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "markdown",
+                                    "content": "### <center> Gateways </center>"
+                                },
+                                {
+                                    "type": "custom:flex-table-card",
+                                    "clickable": false,
+                                    "entities": {
+                                        "include": [
+                                            "binary_sensor.*_gateway"
+                                        ]
+                                    },
+                                    "sort_by": "friendly_name",
+                                    "columns": [
+                                        {
+                                            "data": "icon",
+                                            "name": " ",
+                                            "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:router-wireless\" + \"\\\"></ha-icon>\""
+                                        },
+                                        {
+                                            "data": "friendly_name",
+                                            "name": "Friendly Name",
+                                            "modify": "(x+\"\").replace(/ Gateway$/,\"\")"
+                                        },
+                                        {
+                                            "data": "free_mem",
+                                            "name": "Memory Free (KB)",
+                                            "modify": "isNaN(parseInt(x, 10)) ? \"\" : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "load_avg",
+                                            "name": "Load Avg (1m, 5m, 15m)",
+                                            "modify": "(x+\"\").split(\"|\").slice(0, 3).join(\", \")"
+                                        },
+                                        {
+                                            "data": "zigbee_tx",
+                                            "name": "ZB Tx",
+                                            "modify": "x"
+                                        },
+                                        {
+                                            "data": "zigbee_rx",
+                                            "name": "ZB Rx",
+                                            "modify": "x"
+                                        },
+                                        {
+                                            "data": "zigbee_oe",
+                                            "name": "ZB Err OE",
+                                            "modify": "isNaN(parseInt(x, 10)) ? \"0\" : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "network_pan_id",
+                                            "name": "ZB Net PanID",
+                                            "modify": "x+''"
+                                        },
+                                        {
+                                            "data": "radio_channel",
+                                            "name": "ZB Channel",
+                                            "modify": "isNaN(parseInt(x, 10)) ? \"0\" : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "bluetooth_tx",
+                                            "name": "BT Tx",
+                                            "modify": "x"
+                                        },
+                                        {
+                                            "data": "bluetooth_rx",
+                                            "name": "BT Rx",
+                                            "modify": "x"
+                                        },
+                                        {
+                                            "data": "bluetooth_oe",
+                                            "name": "BT Err",
+                                            "modify": "isNaN(parseInt(x, 10)) ? \"0\" : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "rssi",
+                                            "name": "RSSI",
+                                            "modify": "isNaN(parseInt(x, 10)) ? \"\" : (100 + parseInt(x, 10)) * -1"
+                                        },
+                                        {
+                                            "data": "uptime",
+                                            "name": "Gateway Uptime",
+                                            "modify": "x+''"
+                                        },
+                                        {
+                                            "data": "state",
+                                            "name": "Connected"
+                                        },
+                                        {
+                                            "data": "last_changed",
+                                            "name": "Connected Since",
+                                            "modify": "var dt = new Date(x); var hrs = parseInt((Date.now()-Date.parse(x)) / 3600000); var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60); hrs = (hrs < 10) ? \"0\" + hrs : hrs; min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec; isFinite(dt) ? dt.toLocaleString(['ru-RU', 'en-US']) + \" (Up: \" + hrs + \":\" + min + \":\" + sec + \")\" : \"\"\n"
+                                        }
+                                    ],
+                                    "css": {
+                                        "table+": "padding-top: 0px;",
+                                        "tbody tr:nth-child(even)": "background-color: #a2542f6;",
+                                        "td.left": "padding: 0px 10px 0px 10px",
+                                        "th.left": "padding: 0px 10px 0px 10px",
+                                        "thead th": "text-align: left"
+                                    }
+                                },
+                                {
+                                    "type": "markdown",
+                                    "content": "### <center> GW3 ZigBee </center>"
+                                },
+                                {
+                                    "type": "custom:flex-table-card",
+                                    "clickable": false,
+                                    "entities": {
+                                        "include": [
+                                            "sensor.*_zigbee"
+                                        ]
+                                    },
+                                    "sort_by": "ieee",
+                                    "columns": [
+                                        {
+                                            "data": "icon",
+                                            "name": " ",
+                                            "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:zigbee\" + \"\\\"></ha-icon>\""
+                                        },
+                                        {
+                                            "data": "friendly_name",
+                                            "name": "Friendly Name",
+                                            "modify": "x.replace(/ Zigbee$/,\"\")"
+                                        },
+                                        {
+                                            "data": "ieee",
+                                            "name": "IEEE",
+                                            "modify": "(x+'').toLowerCase()"
+                                        },
+                                        {
+                                            "data": "nwk",
+                                            "name": "NWK",
+                                            "modify": "(x+'').replace(/^0x/,\"\")"
+                                        },
+                                        {
+                                            "data": "parent",
+                                            "name": "Parent",
+                                            "modify": "(x+'').replace(/^0x/,\"\").toLowerCase()"
+                                        },
+                                        {
+                                            "data": "type",
+                                            "name": "Type",
+                                            "modify": "(x+'').replace(/^-$/, \"child device\")"
+                                        },
+                                        {
+                                            "data": "msg_received",
+                                            "name": "Received",
+                                            "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "msg_missed",
+                                            "name": "Missed",
+                                            "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "unresponsive",
+                                            "name": "Unresp",
+                                            "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "linkquality",
+                                            "name": "LQI",
+                                            "modify": "isNaN(parseInt(x, 10)) ? \"\" : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "rssi",
+                                            "name": "RSSI",
+                                            "modify": "isNaN(parseInt(x, 10)) ? \"\" : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "last_msg",
+                                            "name": "Last Message",
+                                            "modify": "x+''"
+                                        },
+                                        {
+                                            "data": "available",
+                                            "name": "Available",
+                                            "modify": "x+''"
+                                        },
+                                        {
+                                            "data": "state",
+                                            "name": "Last Seen",
+                                            "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
+                                        }
+                                    ],
+                                    "css": {
+                                        "table+": "padding-top: 0px;",
+                                        "tbody tr:nth-child(even)": "background-color: #a2542f6;",
+                                        "td.left": "padding: 0px 10px 0px 10px",
+                                        "th.left": "padding: 0px 10px 0px 10px",
+                                        "thead th": "text-align: left"
+                                    }
+                                },
+                                {
+                                    "type": "markdown",
+                                    "content": "### <center> GW3 Bluetooth Mesh </center>"
+                                },
+                                {
+                                    "type": "custom:flex-table-card",
+                                    "clickable": false,
+                                    "entities": {
+                                        "include": [
+                                            "sensor.*_mesh"
+                                        ]
+                                    },
+                                    "sort_by": "mac",
+                                    "columns": [
+                                        {
+                                            "data": "icon",
+                                            "name": " ",
+                                            "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:bluetooth\" + \"\\\"></ha-icon>\""
+                                        },
+                                        {
+                                            "data": "friendly_name",
+                                            "name": "Friendly Name",
+                                            "modify": "x.replace(/ Ble$/,\"\")"
+                                        },
+                                        {
+                                            "data": "mac",
+                                            "name": "MAC",
+                                            "modify": "(x+'').replace(/(.{2}(?!$))/g,\"$1:\")"
+                                        },
+                                        {
+                                            "data": "msg_received",
+                                            "name": "Received",
+                                            "modify": "isNaN(parseInt(x, 10)) ? \"\" : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "last_msg",
+                                            "name": "Last Msg",
+                                            "modify": "x+''"
+                                        },
+                                        {
+                                            "data": "available",
+                                            "name": "Available",
+                                            "modify": "x+''"
+                                        },
+                                        {
+                                            "data": "state",
+                                            "name": "Last Seen",
+                                            "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
+                                        }
+                                    ],
+                                    "css": {
+                                        "table+": "padding-top: 0px;",
+                                        "tbody tr:nth-child(even)": "background-color: #a2542f6;",
+                                        "td.left": "padding: 0px 10px 0px 10px",
+                                        "th.left": "padding: 0px 10px 0px 10px",
+                                        "thead th": "text-align: left"
+                                    }
+                                },
+                                {
+                                    "type": "markdown",
+                                    "content": "### <center> GW3 Bluetooth </center>"
+                                },
+                                {
+                                    "type": "custom:flex-table-card",
+                                    "clickable": false,
+                                    "entities": {
+                                        "include": [
+                                            "sensor.*_ble"
+                                        ]
+                                    },
+                                    "sort_by": "mac",
+                                    "columns": [
+                                        {
+                                            "data": "icon",
+                                            "name": " ",
+                                            "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:bluetooth\" + \"\\\"></ha-icon>\""
+                                        },
+                                        {
+                                            "data": "friendly_name",
+                                            "name": "Friendly Name",
+                                            "modify": "x.replace(/ Ble$/,\"\")"
+                                        },
+                                        {
+                                            "data": "mac",
+                                            "name": "MAC",
+                                            "modify": "(x+'').replace(/(.{2}(?!$))/g,\"$1:\")"
+                                        },
+                                        {
+                                            "data": "msg_received",
+                                            "name": "Received",
+                                            "modify": "isNaN(parseInt(x, 10)) ? \"\" : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "last_msg",
+                                            "name": "Last Msg",
+                                            "modify": "x+''"
+                                        },
+                                        {
+                                            "data": "available",
+                                            "name": "Available",
+                                            "modify": "x+''"
+                                        },
+                                        {
+                                            "data": "state",
+                                            "name": "Last Seen",
+                                            "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
+                                        }
+                                    ],
+                                    "css": {
+                                        "table+": "padding-top: 0px;",
+                                        "tbody tr:nth-child(even)": "background-color: #a2542f6;",
+                                        "td.left": "padding: 0px 10px 0px 10px",
+                                        "th.left": "padding: 0px 10px 0px 10px",
+                                        "thead th": "text-align: left"
+                                    }
+                                },
+                                {
+                                    "type": "markdown",
+                                    "content": "### <center> ZigBee2MQTT </center>"
+                                },
+                                {
+                                    "type": "custom:flex-table-card",
+                                    "clickable": false,
+                                    "entities": {
+                                        "include": [
+                                            "sensor.*_linkquality"
+                                        ]
+                                    },
+                                    "sort_by": "last_seen-",
+                                    "columns": [
+                                        {
+                                            "data": "icon",
+                                            "name": " ",
+                                            "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:zigbee\" + \"\\\"></ha-icon>\""
+                                        },
+                                        {
+                                            "data": "friendly_name",
+                                            "name": "Friendly Name",
+                                            "modify": "x.replace(/ linkquality$/,\"\")"
+                                        },
+                                        {
+                                            "data": "linkquality",
+                                            "name": "Link quality",
+                                            "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "battery",
+                                            "name": "Battery",
+                                            "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "voltage",
+                                            "name": "Voltage",
+                                            "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "last_seen",
+                                            "name": "Last seen",
+                                            "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
+                                        },
+                                        {
+                                            "data": "battery_low",
+                                            "name": "Battery low",
+                                            "modify": "x+''"
+                                        },
+                                        {
+                                            "data": "update_available",
+                                            "name": "Update available",
+                                            "modify": "x+''"
+                                        }
+                                    ],
+                                    "css": {
+                                        "table+": "padding-top: 0px;",
+                                        "tbody tr:nth-child(even)": "background-color: #a2542f6;",
+                                        "td.left": "padding: 0px 10px 0px 10px",
+                                        "th.left": "padding: 0px 10px 0px 10px",
+                                        "thead th": "text-align: left"
+                                    }
+                                },
+                                {
+                                    "type": "markdown",
+                                    "content": "### <center> BLE Monitor </center>"
+                                },
+                                {
+                                    "type": "custom:flex-table-card",
+                                    "clickable": false,
+                                    "entities": {
+                                        "include": [
+                                            "sensor.ble_rssi_*"
+                                        ]
+                                    },
+                                    "sort_by": "last_seen-",
+                                    "columns": [
+                                        {
+                                            "data": "icon",
+                                            "name": " ",
+                                            "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:bluetooth\" + \"\\\"></ha-icon>\""
+                                        },
+                                        {
+                                            "data": "friendly_name",
+                                            "name": "Friendly Name",
+                                            "modify": "x.replace(\"ble_rssi\",\"\")"
+                                        },
+                                        {
+                                            "data": "sensor_type",
+                                            "name": "Sensor type"
+                                        },
+                                        {
+                                            "data": "firmware",
+                                            "name": "Firmware"
+                                        },
+                                        {
+                                            "data": "state",
+                                            "name": "RSSI",
+                                            "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "battery_level",
+                                            "name": "Battery",
+                                            "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
+                                        },
+                                        {
+                                            "data": "mac_address",
+                                            "name": "MAC address"
+                                        },
+                                        {
+                                            "data": "last_changed",
+                                            "name": "Last Seen",
+                                            "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
+                                        },
+                                        {
+                                            "data": "last_packet_id",
+                                            "name": "Last packet ID"
+                                        }
+                                    ],
+                                    "css": {
+                                        "table+": "padding-top: 0px;",
+                                        "tbody tr:nth-child(even)": "background-color: #a2542f6;",
+                                        "td.left": "padding: 0px 10px 0px 10px",
+                                        "th.left": "padding: 0px 10px 0px 10px",
+                                        "thead th": "text-align: left"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "Meshtastic",
+                    "path": "meshtastic",
+                    "icon": "mdi:access-point",
+                    "type": "sidebar",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "entities",
+                            "entities": [
+                                {
+                                    "entity": "binary_sensor.meshtastic"
+                                },
+                                {
+                                    "entity": "sensor.meshtastic_radio_frequency"
+                                },
+                                {
+                                    "entity": "sensor.meshtastic_tx_utilization",
+                                    "secondary_info": "last-updated"
+                                },
+                                {
+                                    "entity": "sensor.meshtastic_uptime"
+                                },
+                                {
+                                    "entity": "sensor.meshtastic_reboot_counter"
+                                },
+                                {
+                                    "entity": "sensor.meshtastic_wifi_rssi"
+                                },
+                                {
+                                    "entity": "sensor.meshtastic_wifi_ip"
+                                },
+                                {
+                                    "entity": "sensor.meshtastic_battery"
+                                },
+                                {
+                                    "entity": "sensor.meshtastic_voltage"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "view_layout": {
+                                "position": "sidebar"
+                            }
+                        },
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "custom:apexcharts-card",
+                                    "apex_config": {
+                                        "chart": {
+                                            "height": "250px"
+                                        }
+                                    },
+                                    "header": {
+                                        "show": true,
+                                        "show_states": true,
+                                        "colorize_states": true
+                                    },
+                                    "stacked": true,
+                                    "hours_12": false,
+                                    "graph_span": "24h",
+                                    "span": {
+                                        "end": "hour",
+                                        "offset": ""
+                                    },
+                                    "series": [
+                                        {
+                                            "entity": "sensor.meshtastic_airtime",
+                                            "name": "tx",
+                                            "type": "column",
+                                            "data_generator": "let now = start.getTime();\nconst data = JSON.parse(\"[\" + entity.attributes.tx_log + \"]\").reverse();\nreturn data.map((entry) => {\n  const lNow = now;\n  now += 60 * 60 * 1000;\n  return [lNow, entry];\n}).reverse();\n",
+                                            "group_by": {
+                                                "func": "min",
+                                                "duration": "1h"
+                                            }
+                                        },
+                                        {
+                                            "entity": "sensor.meshtastic_airtime",
+                                            "name": "rx",
+                                            "type": "column",
+                                            "data_generator": "let now = start.getTime();\nconst data = JSON.parse(\"[\" + entity.attributes.rx_log + \"]\").reverse();\nreturn data.map((entry) => {\n  const lNow = now;\n  now += 60 * 60 * 1000;\n  return [lNow, entry];\n}).reverse();\n",
+                                            "group_by": {
+                                                "func": "min",
+                                                "duration": "1h"
+                                            }
+                                        },
+                                        {
+                                            "entity": "sensor.meshtastic_airtime",
+                                            "name": "all_rx",
+                                            "type": "column",
+                                            "data_generator": "let now = start.getTime();\nconst data = JSON.parse(\"[\" + entity.attributes.rx_all_log + \"]\").reverse();\nreturn data.map((entry) => {\n  const lNow = now;\n  now += 60 * 60 * 1000;\n  return [lNow, entry];\n}).reverse();\n",
+                                            "group_by": {
+                                                "func": "min",
+                                                "duration": "1h"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "custom:apexcharts-card",
+                                    "apex_config": {
+                                        "chart": {
+                                            "height": "250px"
+                                        }
+                                    },
+                                    "header": {
+                                        "show": true,
+                                        "show_states": true,
+                                        "colorize_states": true
+                                    },
+                                    "stacked": true,
+                                    "hours_12": false,
+                                    "graph_span": "24h",
+                                    "span": {
+                                        "end": "hour",
+                                        "offset": ""
+                                    },
+                                    "series": [
+                                        {
+                                            "entity": "sensor.meshtastic_channel_utilization",
+                                            "name": "ch util",
+                                            "type": "column",
+                                            "group_by": {
+                                                "func": "max",
+                                                "duration": "1h"
+                                            }
+                                        },
+                                        {
+                                            "entity": "sensor.meshtastic_tx_utilization",
+                                            "name": "tx util",
+                                            "type": "column",
+                                            "group_by": {
+                                                "func": "max",
+                                                "duration": "1h"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "history-graph",
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.meshtastic_channel_utilization"
+                                        },
+                                        {
+                                            "entity": "sensor.meshtastic_utilization_tx"
+                                        }
+                                    ],
+                                    "hours_to_show": 24,
+                                    "refresh_interval": 10
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": "TEST",
+                    "path": "test",
+                    "type": "panel",
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "history-graph",
+                                    "entities": [
+                                        {
+                                            "entity": "device_tracker.iphone_ans"
+                                        },
+                                        {
+                                            "entity": "device_tracker.ble_tracker_nut"
+                                        },
+                                        {
+                                            "entity": "group.devices"
+                                        },
+                                        {
+                                            "entity": "light.prikhozhaia"
+                                        },
+                                        {
+                                            "entity": "device_tracker.ble_tracker_radiacode"
+                                        }
+                                    ],
+                                    "refresh_interval": 0,
+                                    "hours_to_show": 24
+                                },
+                                {
+                                    "type": "history-graph",
+                                    "entities": [
+                                        {
+                                            "entity": "binary_sensor.dd_na_kukhne_occupancy"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.ble_dd_motion"
+                                        },
+                                        {
+                                            "entity": "light.kukhnia_potolok"
+                                        }
+                                    ],
+                                    "refresh_interval": 0,
+                                    "hours_to_show": 1
+                                },
+                                {
+                                    "type": "history-graph",
+                                    "entities": [
+                                        {
+                                            "entity": "binary_sensor.gateway"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.google"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.yandex"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.yeelight"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.wled_strip"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.wled_garland"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.wled_table"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.xg3"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.espdisplay"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.meshtastic"
+                                        }
+                                    ],
+                                    "hours_to_show": 24
+                                },
+                                {
+                                    "type": "history-graph",
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.0x04cf8cdf3c76548d_power"
+                                        }
+                                    ],
+                                    "refresh_interval": 0,
+                                    "hours_to_show": 24
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
