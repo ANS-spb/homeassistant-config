@@ -13,6 +13,7 @@
       unit_of_measurement: 'K'
       value_template: "{{ state_attr('switch.adaptive_lighting_room', 'color_temp_kelvin') }}"
     daytime:
+      icon_template: mdi:sun-clock-outline
       friendly_name: "Дневное время"
       value_template: >
         {% set state = states.sensor.time.state %}

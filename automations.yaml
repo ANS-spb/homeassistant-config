@@ -615,7 +615,8 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: light.torsher
+    entity_id:
+    - light.torsher_2
     to: 'off'
     from: 'on'
   condition:

@@ -274,7 +274,7 @@ dynamic_update_all_light_group:
       data:
         value: '{{ range(0, 100) | random }}'
   mode: single
-  icon: mdi:pine-tree
+  icon: mdi:led-strip-variant
 push_for_opening_curtain:
   alias: Push for opening curtain
   sequence:
