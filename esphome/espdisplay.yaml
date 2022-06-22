@@ -1,0 +1,168 @@
+esphome:
+  name: espdisplay
+  platform: ESP8266
+  board: esp12e
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_pass
+ 
+
+
+remote_transmitter:
+  - id: azur
+    pin: 14
+    carrier_duty_percent: 50%
+  - id: onkyo
+    pin: 1
+    carrier_duty_percent: 50%
+
+remote_receiver:
+  pin: 1
+  dump: all
+
+switch:
+  - platform: template
+    name: "Azur ON"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x0E
+          
+  - platform: template
+    name: "Azur OFF"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x0F
+  
+  - platform: template
+    name: "Azur Standby"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x0C
+  
+  - platform: template
+    name: "Azur Aux Source"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x04
+          
+  - platform: template
+    name: "Azur CD Source"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x05
+  
+  - platform: template
+    name: "Azur Tuner Source"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x03
+  
+  - platform: template
+    name: "Azur DVD Source"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x01
+  - platform: template
+    name: "Azur AV Source"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x02
+  
+  - platform: template
+    name: "Azur Tape Mon Source"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x00
+  
+  - platform: template
+    name: "Azur VOL+"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x10
+  
+  - platform: template
+    name: "Azur VOL-"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x11
+   
+  - platform: template
+    name: "Azur Mute OFF"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x33
+          
+  - platform: template
+    name: "Azur Mute ON"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x32
+          
+  - platform: template
+    name: "Azur Mute toggle"
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x0D
+
+  - platform: template
+    name: "Onkyo Play"
+    turn_on_action:
+      - remote_transmitter.transmit_pronto:
+          transmitter_id: onkyo
+          data: "0000 006D 000E 0000 0075 0025 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 06C3"
+      - remote_transmitter.transmit_pronto:
+          transmitter_id: onkyo
+          data: "0000 006D 000E 0000 0074 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 0026 0027 004C 0027 004C 0027 06C3"
+  - platform: template
+    name: "Onkyo Pause"
+    turn_on_action:
+      - remote_transmitter.transmit_pronto:
+          transmitter_id: onkyo
+          data: "0000 006D 000E 0000 0074 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 06C3"
+
+binary_sensor:
+  - platform: remote_receiver
+    name: onkyo_started
+    pronto:
+      data: "0000 006D 000E 0000 0075 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 0026 0027 004C 0027 0026 0027 06C3"
+#    raw:
+#      code: [3054, -952, 1052, -952, 1051, -952, 1055, -948, 1048, -956, 1051, -952, 1051, -953, 1051, -1954, 1047, -956, 1050, -954, 1049, -953, 1052, -1953, 1052, -952, 1053]
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:

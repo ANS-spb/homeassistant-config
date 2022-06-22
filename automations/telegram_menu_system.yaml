@@ -1,0 +1,38 @@
+###################################
+#    Меню в Telegram: Система     #
+###################################
+
+- alias: Telegram Menu System status
+  id: telegram_menu_system
+  description: "Статус системы"
+
+  trigger:
+    - platform: event
+      event_type: telegram_callback
+      event_data:
+        data: /system
+
+  action:
+    - service: telegram_bot.answer_callback_query
+      data_template:
+        callback_query_id: "{{ trigger.event.data.id }}"
+        message: Запрос статуса системы
+    - service: telegram_bot.edit_message
+      data_template:
+        message_id: last
+        chat_id: "{{ trigger.event.data.chat_id }}"
+        message: |-
+
+          {{ "\U0001F4BB" }} *System*:
+                  
+          *CPU Usage*:   {{ states.sensor.processor_use.state }} %
+          *Last Reboot*:   {{ as_timestamp(states.sensor.last_boot.state) | timestamp_custom('%d.%m.%Y %H:%M') }}
+          *Temp CPU*:   {{ states.sensor.cpu_temp.state }} °C
+          *Memory Used*:  {{ states.sensor.memory_use_percent.state }} %
+          *Disk Used*:  {{ states.sensor.disk_use_percent.state }} %
+          *Local IP Address:*   {{ states.sensor.local_ip.state }}
+          *WAN IP Address:*   {{ states.sensor.d7160cc8a60d_sn_mynetname_net.state }}
+        inline_keyboard:
+          - Назад:/back
+
+  mode: single

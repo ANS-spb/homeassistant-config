@@ -1,0 +1,51 @@
+###################################
+#  Сенсоры доступности устройств  #
+###################################
+
+- platform: ping
+  name: WLED-garland
+  host: 192.168.1.24
+  count: 2
+  scan_interval: 15
+
+- platform: ping
+  name: WLED-strip
+  host: 192.168.1.25
+  count: 2
+  scan_interval: 15
+
+- platform: ping
+  name: Meshtastic
+  host: 192.168.1.28
+  count: 2
+  scan_interval: 15
+
+- platform: ping
+  name: ESPdisplay
+  host: 192.168.1.31
+  count: 2
+  scan_interval: 15
+
+- platform: ping
+  name: WLED-table
+  host: 192.168.1.32
+  count: 2
+  scan_interval: 15
+
+- platform: ping
+  name: AirMonitor
+  host: 192.168.1.38
+  count: 2
+  scan_interval: 15
+
+- platform: ping
+  name: XG3
+  host: 192.168.1.65
+  count: 2
+  scan_interval: 15
+
+- platform: ping
+  name: Yeelight
+  host: 192.168.1.86
+  count: 2
+  scan_interval: 15

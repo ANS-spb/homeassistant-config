@@ -1,0 +1,413 @@
+'1599944056170':
+  alias: Обычный свет
+  mode: single
+  sequence:
+  - parallel:
+    - service: hue.activate_scene
+      data:
+        transition: 10
+        dynamic: true
+      target:
+        entity_id: '{{ [''scene.spalnia_tuman_na_ozere'',''scene.spalnia_otdykh_na_zakate'',''scene.spalnia_gornyi_briz'',
+          ''scene.spalnia_zakat_v_savanne'',''scene.spalnia_under_the_tree'',''scene.spalnia_tsvetenie'',
+          ''scene.spalnia_krokus'',''scene.spalnia_dragotsennyi'',''scene.spalnia_voskresnoe_utro'',
+          ''scene.spalnia_vesennee_ozero''] | random }}'
+    - data:
+        effect: Stop
+        transition: 10
+      service: light.turn_on
+      target:
+        entity_id:
+        - light.living_room
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - parallel:
+    - service: adaptive_lighting.apply
+      data:
+        lights: light.torsher_melkaia, light.living_room
+        transition: 10
+        entity_id: switch.adaptive_lighting_room
+    - service: script.turn_on
+      target:
+        entity_id:
+        - script.1638995744105
+        - script.wled_random_effect
+      data: {}
+  icon: mdi:lamp
+'2131':
+  alias: Ночной свет
+  mode: single
+  sequence:
+  - data:
+      brightness: 5
+      kelvin: 2000
+    entity_id: light.living_room
+    service: yeelight.set_color_temp_scene
+  icon: mdi:lamp
+wakeup_bedroom:
+  alias: Wakeup lighting, smooth transition
+  sequence:
+  - choose:
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.osveshchionnost_snaruzhi_battery
+        above: '40'
+      sequence:
+      - condition: state
+        entity_id: cover.shtora
+        state: closed
+      - device_id: 00113b2b18e9fc886e10987ed5635044
+        domain: cover
+        entity_id: cover.shtora
+        type: set_position
+        position: 25
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 10
+          milliseconds: 0
+      - condition: numeric_state
+        entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+        below: '10'
+      - device_id: 00113b2b18e9fc886e10987ed5635044
+        domain: cover
+        entity_id: cover.shtora
+        type: set_position
+        position: 35
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 10
+          milliseconds: 0
+      - condition: numeric_state
+        entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+        below: '10'
+      - device_id: 00113b2b18e9fc886e10987ed5635044
+        domain: cover
+        entity_id: cover.shtora
+        type: set_position
+        position: 45
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 10
+          milliseconds: 0
+      - condition: numeric_state
+        entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+        below: '10'
+      - device_id: 00113b2b18e9fc886e10987ed5635044
+        domain: cover
+        entity_id: cover.shtora
+        type: set_position
+        position: 55
+    default: []
+  - condition: state
+    entity_id: binary_sensor.workday
+    state: 'on'
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 10
+      milliseconds: 0
+  - condition: numeric_state
+    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+    below: '10'
+  - service: adaptive_lighting.set_manual_control
+    data:
+      entity_id: switch.adaptive_lighting_room
+      lights: light.living_room
+      manual_control: true
+  - condition: template
+    value_template: '{{ states(''light.living_room'') != ''on'' and states(''light.torsher_2'')
+      != ''on'' }}'
+  - data:
+      brightness_pct: 1
+      kelvin: 2000
+    service: light.turn_on
+    target:
+      entity_id: light.living_room
+  - data:
+      brightness_pct: 100
+      entity_id: light.living_room
+      kelvin: 3500
+      transition: 300
+    service: light.turn_on
+  - delay:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  - condition: template
+    value_template: '{{ states(''cover.shtora'') != ''open'' }}'
+  - service: script.turn_on
+    target:
+      entity_id: script.push_for_opening_curtain
+    data: {}
+  mode: restart
+  icon: mdi:alarm
+light_tosleep:
+  alias: Sleep lighting, smooth transition
+  sequence:
+  - service: hue.activate_scene
+    data:
+      transition: 10
+      dynamic: true
+    target:
+      entity_id: '{{[''scene.spalnia_galaktika'',''scene.spalnia_svet_zvezd'',''scene.spalnia_tumannost'']
+        | random }}'
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.manual_effects_on
+  - choose:
+    - conditions:
+      - condition: device
+        type: is_on
+        device_id: d9631ea87a6b46b5e7e5fadb00518bb8
+        entity_id: light.wled
+        domain: light
+      sequence:
+      - service: script.turn_on
+        data: {}
+        target:
+          entity_id: script.wled_static_effect
+    default: []
+  mode: single
+  icon: mdi:sleep
+azur_on:
+  alias: Azur ON
+  sequence:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.azur_on
+  - delay: 00:00:05
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.azur_cd_source
+  mode: single
+  icon: mdi:audio-video
+power_off_all:
+  alias: Выключить всё
+  sequence:
+  - parallel:
+    - service: light.turn_off
+      data:
+        entity_id: all
+    - service: media_player.media_stop
+      data: {}
+      target:
+        entity_id:
+        - media_player.volumio
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.azur_off
+  mode: single
+  icon: mdi:power
+wled_random_effect:
+  alias: WLED random effect
+  sequence:
+  - entity_id: light.wled
+    service: light.turn_on
+    data_template:
+      effect: '{{ [''Android'',''Blends'',''Breathe'',''Candle Multi'',''Chase'',
+        ''Chase Random'',''Colorful'',''Colortwinkles'',''Colorwaves'',''Dancing Shadows'',
+        ''Dissolve'',''Dissolve Rnd'',''Dynamic'',''Fade'',''Fill Noise'',''Fire Flicker'',
+        ''Fireworks'',''Flow'',''Gradient'',''ICU'',''Juggle'',''Lake'',''Lighthouse'',
+        ''Meteor Smooth'',''Multi Comet'',''Noise 1'',''Noise 2'',''Noise 3'',''Noise
+        4'', ''Noise Pal'',''Pacifica'',''Phased'',''Plasma'',''Rainbow Runner'',''Ripple'',''Ripple
+        Rainbow'', ''Running'',''Sine'',''Spots Fade'',''Sunrise'',''Sweep Random'',''Twinklefox'',''Twinkleup'']|random
+        }}'
+  - parallel:
+    - service: select.select_option
+      target:
+        entity_id: select.wled_color_palette
+      data:
+        option: '{{ state_attr("select.wled_color_palette", "options") | random }}'
+    - service: number.set_value
+      target:
+        entity_id: number.wled_intensity
+      data:
+        value: '{{ range(50, 255) | random }}'
+  mode: single
+  icon: mdi:led-strip-variant
+dynamic_update_all_light_group:
+  alias: Dynamic update_all_light_group
+  sequence:
+  - service: group.set
+    data_template:
+      object_id: dyn_all_lights
+      entities: '{{ states.light | rejectattr(''entity_id'', ''in'', [''light.50ec50dfc9c5_light'',
+        ''light.50ec50e1b80d_light'']) | map(attribute=''entity_id'') | join('','')
+        }}'
+  mode: single
+'1638995744105':
+  alias: Эффект ленты
+  sequence:
+  - parallel:
+    - service: light.turn_on
+      target:
+        entity_id: light.wled_2
+      data:
+        effect: '{{ state_attr("light.wled_2", "effect_list") | random }}'
+    - service: select.select_option
+      target:
+        entity_id: select.wled_color_palette_2
+      data:
+        option: '{{ state_attr(''select.wled_color_palette_2'', ''options'') | random
+          }}'
+    - service: number.set_value
+      target:
+        entity_id: number.wled_intensity_2
+      data:
+        value: '{{ range(50, 255) | random }}'
+    - service: number.set_value
+      target:
+        entity_id: number.wled_speed_2
+      data:
+        value: '{{ range(0, 100) | random }}'
+  mode: single
+  icon: mdi:led-strip-variant
+push_for_opening_curtain:
+  alias: Push for opening curtain
+  sequence:
+  - variables:
+      action_open: '{{ ''OPEN_'' ~ context.id }}'
+      action_none: '{{ ''NONE_'' ~ context.id }}'
+  - service: notify.mobile_app_iphone_ans
+    data:
+      message: Не хочешь ли открыть шторы?
+      data:
+        actions:
+        - action: '{{ action_open }}'
+          title: Открыть
+          destructive: true
+        - action: '{{ action_none }}'
+          title: Не трогать
+  - wait_for_trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: '{{ action_open }}'
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: '{{ action_none }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ wait.trigger.event.data.action == action_open }}'
+      sequence:
+      - service: cover.open_cover
+        data: {}
+        target:
+          entity_id: cover.shtora
+    - conditions:
+      - condition: template
+        value_template: '{{ wait.trigger.event.data.action == action_none }}'
+      sequence:
+  mode: single
+  icon: mdi:curtains
+push_for_closing_curtain:
+  alias: Push for closing curtain
+  sequence:
+  - variables:
+      action_close: '{{ ''CLOSE_'' ~ context.id }}'
+      action_none: '{{ ''NONE_'' ~ context.id }}'
+  - service: notify.mobile_app_iphone_ans
+    data:
+      message: Не хочешь ли закрыть шторы?
+      data:
+        actions:
+        - action: '{{ action_close }}'
+          title: Закрыть
+          destructive: true
+        - action: '{{ action_none }}'
+          title: Не трогать
+  - wait_for_trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: '{{ action_close }}'
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: '{{ action_none }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ wait.trigger.event.data.action == action_close }}'
+      sequence:
+      - service: cover.close_cover
+        data: {}
+        target:
+          entity_id: cover.shtora
+    - conditions:
+      - condition: template
+        value_template: '{{ wait.trigger.event.data.action == action_none }}'
+      sequence:
+  mode: single
+  icon: mdi:curtains
+'1644819849093':
+  alias: Выключить всё (плавно)
+  sequence:
+  - parallel:
+    - service: light.turn_off
+      data:
+        transition: 4
+      target:
+        entity_id:
+        - light.living_room
+    - service: light.turn_off
+      data:
+        transition: 5
+      target:
+        entity_id:
+        - light.spalnia
+        - light.kukhnia_hue
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - parallel:
+    - service: light.turn_off
+      data: {}
+      target:
+        entity_id: all
+    - service: switch.turn_on
+      data: {}
+      entity_id: switch.azur_off
+  mode: single
+  icon: mdi:power
+wled_static_effect:
+  alias: WLED static effect
+  sequence:
+  - service: light.turn_on
+    data:
+      transition: 2
+      brightness_pct: 100
+      effect: Solid Pattern
+      color_temp: 407
+    target:
+      entity_id: light.wled
+  - parallel:
+    - service: select.select_option
+      target:
+        entity_id: select.wled_color_palette
+      data:
+        option: Default
+    - service: number.set_value
+      target:
+        entity_id: number.wled_intensity
+      data:
+        value: '100'
+  mode: single
+  icon: mdi:led-strip-variant

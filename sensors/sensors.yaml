@@ -1,0 +1,50 @@
+###################################
+# Вспомогательные сенсоры разные  #
+###################################
+
+- platform: min_max
+  type: mean
+  name: Pressure Average
+  round_digits: 2
+  entity_ids:
+    - sensor.lodzhiia_pressure
+
+- platform: min_max
+  name: mean_temperature
+  type: mean
+  entity_ids:
+    - sensor.ble_datchik_v_spalne_temperature
+    - sensor.cgllc_cgdn1_42a2_temperature
+    - sensor.ble_temperature_datchik_na_kukhne
+
+- platform: statistics
+  name: outside_temperature_min_value
+  entity_id: sensor.openweathermap_temperature
+  #entity_id: sensor.owm_temp
+  sampling_size: 1500
+  state_characteristic: value_min
+  max_age:
+    hours: 24
+
+- platform: statistics
+  entity_id: sensor.pressure_average
+  name: pressure
+  state_characteristic: mean
+  max_age:
+    minutes: 10
+
+- platform: statistics
+  entity_id: sensor.pressure_average
+  name: pressure_change_3h
+  state_characteristic: change
+  max_age:
+    hours: 3
+  sampling_size: 200
+
+- platform: statistics
+  entity_id: sensor.pressure_average
+  name: pressure_change_6h
+  state_characteristic: change
+  max_age:
+    hours: 6
+  sampling_size: 200

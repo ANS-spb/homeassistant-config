@@ -1,0 +1,115 @@
+###################################
+# Подсчёт количества сущностей HA #
+###################################
+
+- platform: template
+  sensors:
+      total_input_datetime:
+        friendly_name: 'Ввод Даты и Времени'
+        icon_template: mdi:eye
+        value_template: "{{ states.input_datetime | list | length }}"     
+    
+      total_scene:
+        friendly_name: 'Сцены'
+        icon_template: mdi:palette
+        value_template: "{{ states.scene | list | length }}"  
+        
+      total_timer:
+        friendly_name: 'Таймеры'
+        icon_template: mdi:timer-outline
+        value_template: "{{ states.timer | list | length }}"
+
+      total_person:
+        friendly_name: 'Люди'
+        icon_template: mdi:account-tie
+        value_template: "{{ states.person | list | length }}"
+        
+      #----- Count All Entities
+      total_entities:
+        friendly_name: 'Сущности'
+        icon_template: mdi:code-tags
+        value_template: "{{ states | count }}"
+
+      #----- Count Automations
+      total_automations:
+        friendly_name: 'Автоматизации'
+        icon_template: mdi:robot
+        value_template: "{{ states.automation | list | length }}"
+
+      #----- Count Binary Sensors
+      total_binary_sensors:
+        friendly_name: 'Бинарные сенсоры'
+        icon_template: mdi:checkbox-multiple-marked-circle # mdi:unfold-less-horizontal
+        value_template: "{{ states.binary_sensor | list | length }}"
+
+      #----- Count Cameras
+      total_cameras:
+        friendly_name: 'Камеры'
+        icon_template: mdi:cctv
+        value_template: "{{ states.camera | list | length }}"
+
+      #----- Count Device Trackers
+      total_devicetrackers:
+        friendly_name: 'Трекеры'
+        icon_template: mdi:cellphone-link
+        value_template: "{{ states.device_tracker | list | length }}"
+
+      #----- Count Input Booleans
+      total_input_booleans:
+        friendly_name: 'Логические переключатели'
+        icon_template: mdi:toggle-switch
+        value_template: "{{ states.input_boolean | list | length }}"
+
+      #----- Count Input Numbers
+      total_input_numbers:
+        friendly_name: 'Ввод числа'
+        icon_template: mdi:numeric
+        value_template: "{{ states.input_number | list | length }}"
+
+      #----- Count Input Selects
+      total_input_selects:
+        friendly_name: 'Выбор опции'
+        icon_template: mdi:format-align-justify
+        value_template: "{{ states.input_select | list | length }}"
+
+      #----- Count Input Texts
+      total_input_texts:
+        friendly_name: 'Ввод текста'
+        icon_template: mdi:alphabetical
+        value_template: "{{ states.input_text | list | length }}"
+
+      #----- Count Lights
+      total_lights:
+        friendly_name: 'Освещение'
+        icon_template: mdi:lightbulb-on
+        value_template: "{{ states.light | list | length }}"
+
+      #----- Count Media Players
+      total_media_players:
+        friendly_name: 'Медиа проигрыватели'
+        icon_template: mdi:cast-connected
+        value_template: "{{ states.media_player | list | length }}"
+
+      #----- Count Scripts
+      total_scripts:
+        friendly_name: 'Скрипты'
+        icon_template: mdi:script-text-outline
+        value_template: "{{ states.script | list | length }}"
+
+      #----- Count Sensors
+      total_sensors:
+        friendly_name: 'Сенсоры'
+        icon_template: mdi:pulse
+        value_template: "{{ states.sensor | list | length }}"
+
+      #----- Count Switches
+      total_switches:
+        friendly_name: 'Выключатели'
+        icon_template: mdi:power-socket-us
+        value_template: "{{ states.switch | list | length }}"
+
+      #----- Count Zones
+      total_zones:
+        friendly_name: 'Зоны'
+        icon_template: mdi:map-marker-radius
+        value_template: "{{ states.zone | list | length }}"

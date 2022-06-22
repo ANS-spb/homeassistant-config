@@ -1,0 +1,6 @@
+binary_sensor.okno_na_kukhne_contact:
+  device_class: window
+binary_sensor.okno_v_komnate_contact:
+  device_class: window
+sensor.geiger_counter_radioactive_events_per_minute:
+  unit_of_measurement: 'CPM'

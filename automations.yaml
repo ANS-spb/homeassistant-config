@@ -1,0 +1,1519 @@
+- id: '1599946493930'
+  alias: Let's Encrypt Renewal
+  description: ''
+  trigger:
+  - at: 00:00:00
+    platform: time
+  condition: []
+  action:
+  - data:
+      addon: core_letsencrypt
+    service: hassio.addon_restart
+  mode: single
+- id: '1599947443054'
+  alias: Hass Startup Notification
+  description: ''
+  trigger:
+  - event: start
+    platform: homeassistant
+  condition: []
+  action:
+  - data:
+      message: 🏁 Cервер запущен в {{ states('sensor.time') }}
+      title: 🆗 Системное уведомление
+    service: notify.mobile_app_iphone_ans
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.manual_light_off
+    data: {}
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.daytime
+        state: 'off'
+      sequence:
+      - service: light.turn_off
+        data: {}
+        entity_id: all
+    - conditions: []
+      sequence: []
+    default: []
+  mode: single
+- id: '1601827285752'
+  alias: Hass Shutdown Notification
+  description: ''
+  trigger:
+  - event: shutdown
+    platform: homeassistant
+  condition: []
+  action:
+  - data:
+      message: ❗️Сервер остановлен в {{ states('sensor.time') }}
+      title: 🆗 Системное уведомление
+    service: notify.mobile_app_iphone_ans
+  mode: single
+- id: '1601829228272'
+  alias: Notify away
+  description: ''
+  trigger:
+  - platform: state
+    from: home
+    to: not_home
+    entity_id: group.devices
+  condition:
+  - condition: template
+    value_template: "{{states.light |\n    rejectattr('entity_id', 'in', ['light.50ec50dfc9c5_light',\n\
+      \    'light.50ec50e1b80d_light']) | selectattr('entity_id') |\n    selectattr('state','eq','on')\
+      \ | map(attribute='entity_id') | list | count > 0 }}"
+  action:
+  - service: notify.mobile_app_iphone_ans
+    data:
+      title: Выключить свет?
+      message: '{% set filter = [''light.50ec50dfc9c5_light'', ''light.50ec50e1b80d_light'']
+        %} {{ ''💧'' }} Похоже, Вы ушли из дома. Есть {{states.light | rejectattr(''entity_id'',
+        ''in'', filter) | selectattr(''entity_id'') | selectattr(''state'',''eq'',''on'')
+        | map(attribute=''entity_id'') | list | count | format(morph=''работающий
+        светильник'', as_text=false)}}.'
+      data:
+        actions:
+        - action: LIGHTSOFF
+          title: Выкл весь свет
+          destructive: true
+  mode: single
+- id: '1601829524780'
+  alias: Push Notify Lights Off
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: LIGHTSOFF
+  condition: []
+  action:
+  - service: light.turn_off
+    entity_id: all
+  - service: script.turn_on
+    data: {}
+    target:
+      entity_id: script.power_off_all
+  mode: single
+- id: '1601888806721'
+  alias: Alarm CPU high temperature
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.cpu_temp
+    above: '70'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_ans
+    data:
+      title: Внимание!
+      message: Температура процессора {{ states("sensor.cpu_temp") }}°!
+  mode: single
+- id: '1601888980129'
+  alias: Alarm room high temperature
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.ble_datchik_v_spalne_temperature
+    above: input_number.scale_max_temp
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    id: Температура в комнате
+  - platform: numeric_state
+    entity_id: sensor.ble_temperature_datchik_na_kukhne
+    above: input_number.scale_max_temp
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+    id: Температура на кухне
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_ans
+    data:
+      title: Внимание!
+      message: '{{ trigger.id }} слишком высокая и составляет {{ trigger.to_state.state
+        }} {{ trigger.to_state.attributes.unit_of_measurement }}!'
+  - delay:
+      hours: 1
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  mode: parallel
+  max: 5
+- id: '1601889021443'
+  alias: Alarm room low temperature
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.ble_datchik_v_spalne_temperature
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+    below: input_number.scale_min_temp
+    id: Температура в комнате
+  - platform: numeric_state
+    entity_id: sensor.ble_temperature_datchik_na_kukhne
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+    below: input_number.scale_min_temp
+    id: Температура на кухне
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_ans
+    data:
+      title: Внимание!
+      message: '{{ trigger.id }} слижком низкая и составляет {{ trigger.to_state.state
+        }} {{ trigger.to_state.attributes.unit_of_measurement }}!'
+  mode: single
+- id: '1603558647104'
+  alias: Включить лампу, если стало темно
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+    below: '5'
+  condition:
+  - condition: and
+    conditions:
+    - condition: template
+      value_template: '{{states.light.living_room.state != ''on'' and states.light.torsher.state
+        != ''on'' }}'
+    - condition: state
+      entity_id: group.devices
+      state: home
+    - condition: time
+      after: '12:00'
+      before: input_datetime.sleep_time
+    - condition: state
+      entity_id: input_boolean.manual_light_off
+      state: 'off'
+  action:
+  - service: script.turn_on
+    data: {}
+    target:
+      entity_id: script.1599944056170
+  - condition: and
+    conditions:
+    - condition: sun
+      after: sunset
+    - condition: state
+      entity_id: cover.shtora
+      state: open
+  - service: script.turn_on
+    target:
+      entity_id:
+      - script.push_for_closing_curtain
+    data: {}
+  mode: single
+- id: '1603558751540'
+  alias: Выключить лампу, если стало светло
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+    for: 00:00:03
+    above: '15'
+  condition:
+  - condition: or
+    conditions:
+    - condition: device
+      type: is_on
+      device_id: fa3818f9a75a0704698062d67b597aba
+      entity_id: light.torsher_2
+      domain: light
+    - condition: device
+      type: is_on
+      device_id: 27f7e75ef92611eaa6e491c70663ffc5
+      entity_id: light.living_room
+      domain: light
+  - condition: state
+    entity_id: input_boolean.manual_light_off
+    state: 'off'
+  action:
+  - parallel:
+    - type: turn_off
+      device_id: 27f7e75ef92611eaa6e491c70663ffc5
+      entity_id: light.living_room
+      domain: light
+    - type: turn_off
+      device_id: fa3818f9a75a0704698062d67b597aba
+      entity_id: light.torsher_2
+      domain: light
+  mode: single
+- id: '1603735395693'
+  alias: Угасание света перед сном
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == (states.input_datetime.sleep_time.attributes.timestamp
+      | int(0) | timestamp_custom(''%H:%M'', False)) }}'
+  condition:
+  - condition: state
+    entity_id: input_boolean.sleep_enabled
+    state: 'on'
+  - condition: device
+    type: is_on
+    device_id: 1b788ea3d24640c4765af9db21a3d897
+    entity_id: light.torsher
+    domain: light
+  action:
+  - service: script.light_tosleep
+    data: {}
+  mode: single
+- id: '1607099938872'
+  alias: Включение усилителя при включении плеера
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: media_player.volumio
+    to: playing
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.azur_on
+  - wait_template: ''
+    continue_on_timeout: true
+    timeout: 00:00:03
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.azur_aux_source
+  mode: single
+- id: '1607706912213'
+  alias: Кнопка в комнате выключает всё
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.knopka_aqara_komnata_action
+    to: single
+  condition: []
+  action:
+  - service: script.turn_on
+    data: {}
+    target:
+      entity_id: script.1644819849093
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.daytime
+        state: 'off'
+      sequence:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.adaptive_lighting_sleep_mode_room
+        data: {}
+    default: []
+  mode: single
+- id: '1607707032964'
+  alias: Кнопка в комнате управляет светом
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.knopka_aqara_komnata_action
+    to: double
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.daytime
+        state: 'on'
+      sequence:
+      - service: script.turn_on
+        target:
+          entity_id: script.1599944056170
+        data: {}
+    default:
+    - service: hue.activate_scene
+      data: {}
+      target:
+        entity_id: scene.torsher_nochnoe_osveshchenie
+    - type: turn_on
+      device_id: 27f7e75ef92611eaa6e491c70663ffc5
+      entity_id: light.living_room
+      domain: light
+      brightness_pct: 1
+  mode: single
+- id: '1608399857199'
+  alias: 'Adaptive lighting: reset manual_control after 1 hour'
+  description: ''
+  trigger:
+  - platform: event
+    event_type: adaptive_lighting.manual_control
+  condition: []
+  action:
+  - delay: 01:00:00
+  - condition: template
+    value_template: '{{ light in state_attr(switch, ''manual_control'') }}'
+  - service: adaptive_lighting.set_manual_control
+    data:
+      entity_id: '{{ switch }}'
+      lights: '{{ light }}'
+      manual_control: false
+  mode: parallel
+  variables:
+    light: '{{ trigger.event.data.entity_id }}'
+    switch: '{{ trigger.event.data.switch }}'
+  max: 10
+- id: '1609709950828'
+  alias: Включение усилителя при включении CD-деки
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.onkyo_started
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.azur_on
+  - wait_template: ''
+    continue_on_timeout: true
+    timeout: 00:00:03
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.azur_cd_source
+  mode: single
+- id: '1610362570344'
+  alias: Notification Alert That Batteries Are Low (dynamic)
+  description: ''
+  trigger:
+  - at: '19:00:00'
+    platform: time
+  condition: []
+  action:
+  - service: group.set
+    data_template:
+      object_id: dyn_all_batteries
+      entities: '{{ states.sensor | selectattr("attributes.device_class", "eq", "battery")
+        | map(attribute="entity_id") | join(",") }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: "{% set min_battery_level = states('input_number.scale_minimal_battery')\
+          \ | int(0) -%} \n{% set ns = namespace(found=false) -%} \n{% for entity_id\
+          \ in states.group.dyn_all_batteries.attributes.entity_id -%}\n  {% set parts\
+          \ = entity_id.split('.') -%}\n  {% if (states(entity_id) | replace(\"%\"\
+          ,\"\") | int(0)) < min_battery_level -%}\n    {% set ns.found = true -%}\n\
+          \  {% endif -%}\n{% endfor -%} {{ ns.found }}"
+      sequence:
+      - data_template:
+          message: "{%- set min_battery_level = states('input_number.scale_minimal_battery')\
+            \ | int(0) -%}  {%- for entity_id in states.group.dyn_all_batteries.attributes.entity_id\
+            \ -%}\n  {%- set parts = entity_id.split('.') -%}\n  {%- if (states(entity_id)\
+            \ | replace(\"%\",\"\") | int(0)) < min_battery_level -%}\n    {{ states[parts[0]][parts[1]].name\
+            \ }} is {{ states(entity_id) }}%{{ '\\n' }}\n  {%- endif -%}\n{%- endfor\
+            \ -%}\n"
+        service: notify.mobile_app_iphone_ans
+    default: []
+  mode: single
+  initial_state: true
+- id: '1610373676864'
+  alias: Кнопка в коридоре выключает всё
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.knopka_v_koridore_action
+    to: double
+  condition: []
+  action:
+  - parallel:
+    - service: script.power_off_all
+      data: {}
+    - choose:
+      - conditions:
+        - condition: template
+          value_template: "{{ states.binary_sensor \n   | selectattr('attributes.device_class',\
+            \ 'eq', 'window')\n   | selectattr('state', 'eq', 'on')\n   | list | length\
+            \ > 0 }}"
+        sequence:
+        - service: notify.mobile_app_iphone_ans
+          data:
+            title: Открыты окна!
+            message: "{{ states.binary_sensor \n | selectattr('attributes.device_class',\
+              \ 'eq', 'window')\n | selectattr('state', 'eq', 'on') | map(attribute='name')\n\
+              \ | join(\", \") }}\n"
+      default: []
+  mode: single
+- id: '1610518233060'
+  alias: Telegram Torrent add command
+  trigger:
+  - platform: event
+    event_type: telegram_command
+    event_data:
+      command: /add_torrent
+  action:
+  - service: transmission.add_torrent
+    data_template:
+      name: Transmission
+      torrent: '{{ trigger.event.data.args  | regex_replace(find="^..", replace="",
+        ignorecase=False) | regex_replace(find="..$", replace="", ignorecase=False)
+        }}'
+  initial_state: true
+  mode: single
+- id: '1610522983136'
+  alias: Telegram Torrent Completed
+  trigger:
+  - platform: event
+    event_type: transmission_downloaded_torrent
+  action:
+  - service: notify.telegram
+    data:
+      title: Torrent completed!
+      message: '{{trigger.event.data.name}}'
+  mode: parallel
+  max: 10
+- id: '1618471116050'
+  alias: Утром выключить ночной режим
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.daytime
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - parallel:
+    - service: switch.turn_off
+      target:
+        entity_id: switch.adaptive_lighting_sleep_mode_room
+      data: {}
+    - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id: input_boolean.manual_effects_on
+  mode: single
+- id: '1619716984692'
+  alias: Выключение усилителя при простое
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: media_player.volumio
+    to: paused
+    for: 00:05
+  - platform: state
+    entity_id: media_player.volumio
+    to: idle
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id:
+      - switch.azur_off
+  mode: single
+- id: '1622805950446'
+  alias: Тестовая - контексты
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: light.living_room
+    to: 'on'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.context.parent_id == none }}'
+      sequence:
+      - service: notify.telegram
+        data:
+          message: 'Лампа включена вручную.
+
+            parent id: {{ trigger.to_state.context.parent_id }}
+
+            user id: {{ trigger.to_state.context.user_id }}
+
+            '
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.context.user_id == none }}'
+      sequence:
+      - service: notify.telegram
+        data:
+          message: 'Лампа включена автоматически.
+
+            parent id: {{ trigger.to_state.context.parent_id }}
+
+            user id: {{ trigger.to_state.context.user_id }}
+
+            '
+    default:
+    - service: notify.telegram
+      data:
+        message:
+  mode: single
+- id: '1628166260587'
+  alias: Контексты (выключение лампы)
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: light.living_room
+    to: 'off'
+    from: 'on'
+  condition:
+  - condition: or
+    conditions:
+    - condition: template
+      value_template: '{{ trigger.to_state.context.parent_id == none }}'
+    - condition: template
+      value_template: '{{ states.light.living_room.context.id == states.automation.knopka_v_komnate_vykliuchaet_vsio.context.id
+        }}'
+    - condition: template
+      value_template: '{{ states.light.living_room.context.id == states.automation.knopka_v_koridore_vykliuchaet_vsio.context.id
+        }}'
+  action:
+  - service: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.manual_light_off
+    data: {}
+  mode: restart
+- id: '1629361649319'
+  alias: Отключить колесо от зарядки
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.0x04cf8cdf3c76548d_power
+    below: '3.7'
+    for:
+      hours: 1
+      minutes: 5
+      seconds: 0
+  condition:
+  - condition: state
+    entity_id: switch.0x04cf8cdf3c76548d_plug
+    state: 'on'
+  action:
+  - parallel:
+    - service: switch.turn_off
+      data: {}
+      target:
+        entity_id: switch.0x04cf8cdf3c76548d_plug
+    - service: notify.mobile_app_iphone_ans
+      data:
+        message: Колесо зарядилось
+  mode: single
+- id: '1634548542278'
+  alias: Контексты (выключение торшера)
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.torsher_2
+    to: 'off'
+    from: 'on'
+  condition:
+  - condition: or
+    conditions:
+    - condition: template
+      value_template: '{{ trigger.to_state.context.parent_id == none }}'
+    - condition: template
+      value_template: '{{ states.light.torsher.context.id == states.automation.knopka_v_komnate_vykliuchaet_vsio.context.id
+        }}'
+    - condition: template
+      value_template: '{{ states.light.torsher.context.id == states.automation.knopka_v_koridore_vykliuchaet_vsio.context.id
+        }}'
+  action:
+  - service: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.manual_light_off
+    data: {}
+  mode: restart
+- id: '1635257248536'
+  alias: Включить свет в прихожей по приходу домой
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: device_tracker.ble_tracker_nut
+    from: not_home
+    to: home
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  condition:
+  - condition: template
+    value_template: '{{ state(light.prikhozhaia) != on }}'
+  - condition: template
+    value_template: '{{ state(light.kukhnia_hue) != on }}'
+  - condition: template
+    value_template: '{{ state(light.torsher) != on }}'
+  - condition: numeric_state
+    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+    below: '5'
+  - condition: numeric_state
+    entity_id: sensor.osveshchionnost_na_kukhne_illuminance_lux
+    below: '5'
+  - condition: state
+    entity_id: sensor.daytime
+    state: 'on'
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      entity_id: light.prikhozhaia
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - condition: state
+    entity_id: light.prikhozhaia
+    state: 'on'
+  - service: script.turn_on
+    target:
+      entity_id: script.1599944056170
+    data: {}
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  - service: cover.close_cover
+    data: {}
+    target:
+      entity_id: cover.shtora
+  mode: single
+- id: '1641831168397'
+  alias: Включить свет в прихожей кнопкой на двери
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.knopka_v_koridore_action
+    to: single
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      entity_id: light.prikhozhaia
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - condition: state
+    state: 'on'
+    entity_id: light.prikhozhaia
+  - condition: template
+    value_template: '{{states.light.torsher.state != ''on'' and state_attr(''light.kukhnia_hue'',
+      ''brightness'') | float(0) > 2 and states.light.living_room.state != ''on''
+      }}'
+  - condition: numeric_state
+    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+    below: '5'
+  - condition: numeric_state
+    entity_id: sensor.osveshchionnost_na_kukhne_illuminance_lux
+    below: '5'
+  - condition: state
+    entity_id: sensor.daytime
+    state: 'on'
+  - service: script.turn_on
+    target:
+      entity_id: script.1599944056170
+    data: {}
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  - service: cover.close_cover
+    data: {}
+    target:
+      entity_id: cover.shtora
+  mode: single
+- id: '1643210773948'
+  alias: Push Notify Open Curtain
+  description: ''
+  trigger:
+  - platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: OPENCURTAIN
+  condition: []
+  action:
+  - service: cover.open_cover
+    target:
+      entity_id: cover.shtora
+  mode: single
+- id: '1643211183839'
+  alias: Push Notify Close Curtain
+  description: ''
+  trigger:
+  - platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: CLOSECURTAIN
+  condition: []
+  action:
+  - service: cover.close_cover
+    target:
+      entity_id: cover.shtora
+  mode: single
+- id: '1643380255470'
+  alias: Включение автоматики освещения (таймаут)
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.manual_light_off
+    to: 'on'
+  condition: []
+  action:
+  - delay:
+      hours: 1
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.manual_light_off
+  mode: restart
+- id: '1643463448231'
+  alias: Opple управляет шторой
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.opple_action
+    to: button_1_single
+  - platform: state
+    entity_id: sensor.opple_action
+    to: button_2_single
+  condition:
+  - condition: template
+    value_template: '{{ trigger.from_state.state != "unavailable" and trigger.from_state.state
+      != "unknown" }}'
+  action:
+  - wait_for_trigger:
+    - platform: state
+      entity_id: sensor.opple_action
+    continue_on_timeout: false
+    timeout: 00:00:30
+  - service: cover.stop_cover
+    target:
+      entity_id: cover.shtora
+    data: {}
+  mode: single
+- id: '1645027916506'
+  alias: Звонок в домофон
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.domofon_state
+    from: Idle
+    to: Ring
+  condition: []
+  action:
+  - service: camera.snapshot
+    data:
+      filename: /media/domofon.jpg
+    target:
+      entity_id: camera.domru_domofon
+  - variables:
+      action_open: '{{ ''OPEN_'' ~ context.id }}'
+      action_drop: '{{ ''DROP_'' ~ context.id }}'
+  - parallel:
+    - service: notify.mobile_app_iphone_ans
+      data:
+        title: Домофон
+        message: Кто-то звонит в квартиру!
+        data:
+          entity_id: camera.domru_domofon
+          actions:
+          - action: '{{ action_open }}'
+            title: Открыть дверь
+            destructive: true
+          - action: '{{ action_drop }}'
+            title: Сгинь
+      enabled: false
+    - service: notify.mobile_app_iphone_ans
+      data:
+        title: Домофон
+        message: Кто-то звонит в квартиру!
+        data:
+          image: /media/local/domofon.jpg
+          actions:
+          - action: '{{ action_open }}'
+            title: Открыть дверь
+            destructive: true
+          - action: '{{ action_drop }}'
+            title: Сгинь
+    - service: notify.tv
+      data:
+        message: Кто-то звонит в домофон!
+  - service: telegram_bot.send_photo
+    data:
+      url: http://127.0.0.1:5000/api/events/{{states('input_text.frigate_event')}}/snapshot.jpg?bbox=1&crop=1&timestamp=1
+      target:
+      - 116325704
+      parse_mode: html
+      timeout: 1000
+      message_tag: msg_to_edit
+      disable_notification: true
+      caption: Кто стучится в дверь моя?
+  - service: telegram_bot.send_photo
+    data:
+      file: /media/domofon.jpg
+      caption: 🚨 {{ [ "Кто-то звонит в дверь", "Кто-то ломится в дверь", "Опять припёрлись",
+        "Дзинь-дзинь", "Тук-тук", "Гости на пороге", "Живые наступают!", "Это случайно
+        не доставка пиццы?", "Кожаный мешок у ворот"] | random }}
+      target:
+      - 116325704
+      parse_mode: html
+      timeout: 1000
+      inline_keyboard:
+      - '{{"\U0001F6AA"}} Открыть дверь:/open_door'
+      - ⛔️ Сбросить:/drop_domofon
+      - 📸 Показать:/photo_entrance,  🕵️‍♂️ Детект:/person_entrance
+      message_tag: msg_to_edit
+  - wait_for_trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: '{{ action_open }}'
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: '{{ action_drop }}'
+    continue_on_timeout: false
+    timeout: 00:01:00
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ wait.trigger.event.data.action == action_open }}'
+      - condition: template
+        value_template: '{{ states.sensor.domofon_state.state != "Idle" }}'
+      sequence:
+      - parallel:
+        - service: switch.turn_on
+          data: {}
+          target:
+            entity_id: switch.domofon_once
+        - service: script.turn_on
+          data: {}
+          target:
+            entity_id: script.domru_open_door_657617
+        - service: logbook.log
+          data:
+            name: Звонок в домофон
+            message: Открытие двери парадной с телефона
+            entity_id: automation.zvonok_v_domofon
+    - conditions:
+      - condition: template
+        value_template: '{{ wait.trigger.event.data.action == action_drop }}'
+      - condition: template
+        value_template: '{{ states.sensor.domofon_state.state != "Idle" }}'
+      sequence:
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id: switch.domofon_drop
+      - service: logbook.log
+        data:
+          name: Звонок в домофон
+          message: Сброс звонка с телефона
+          entity_id: automation.zvonok_v_domofon
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id: switch.domofon_drop
+    default:
+    - parallel:
+      - service: notify.mobile_app_iphone_ans
+        data:
+          message: Просрал полимеры
+          title: Домофон
+      - service: telegram_bot.send_message
+        data:
+          target:
+          - 116325704
+          parse_mode: html
+          disable_notification: true
+          title: Домофон
+          message: Ваша лошадь тихо ходит. Статус домофона {{ states.sensor.domofon_state.state
+            }}. Запрос на действие не выполнен.
+      - service: logbook.log
+        data:
+          name: Звонок в домофон
+          entity_id: automation.zvonok_v_domofon
+          message: Запрос не выполнен - не проходит по условиям. Полимеры просраны.
+            Статус домофона {{ states.sensor.domofon_state.state }}.
+  mode: single
+- id: '1645086792531'
+  alias: Фото с домофона по команде
+  description: ''
+  trigger:
+  - platform: event
+    event_type: telegram_command
+    event_data:
+      command: /photo_entrance
+    id: command
+  - platform: event
+    event_type: telegram_callback
+    event_data:
+      data: /photo_entrance
+    id: callback
+  condition: []
+  action:
+  - service: camera.snapshot
+    target:
+      entity_id: camera.domru_domofon
+    data:
+      filename: /media/domofon.jpg
+  - service: telegram_bot.send_photo
+    data:
+      file: /media/domofon.jpg
+      target: '{{ trigger.event.data.chat_id }}'
+      parse_mode: html
+      disable_notification: true
+      timeout: 1000
+      inline_keyboard:
+      - '{{"\U0001F6AA"}} Открыть дверь:/open_door'
+      - 📸 Показать:/photo_entrance,  🕵️‍♂️ Детект:/person_entrance
+      message_tag: msg_to_edit
+  mode: single
+- id: '1645086906100'
+  alias: Открыть или сбросить домофон по команде
+  description: ''
+  trigger:
+  - platform: event
+    event_type: telegram_callback
+    event_data:
+      data: /open_door
+    id: open
+  - platform: event
+    event_type: telegram_callback
+    event_data:
+      data: /drop_domofon
+    id: drop
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: open
+      - condition: template
+        value_template: '{{ states.sensor.domofon_state.state != "Idle" }}'
+      sequence:
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id: switch.domofon_once
+      - service: script.turn_on
+        data: {}
+        target:
+          entity_id: script.domru_open_door_657617
+      - service: logbook.log
+        data:
+          name: Звонок в домофон
+          message: Открытие домофона из Telegram
+          entity_id: automation.zvonok_v_domofon
+    - conditions:
+      - condition: trigger
+        id: drop
+      - condition: template
+        value_template: '{{ states.sensor.domofon_state.state != "Idle" }}'
+      sequence:
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id: switch.domofon_drop
+      - service: logbook.log
+        data:
+          name: Звонок в домофон
+          message: Сброс звонка из Telegram
+          entity_id: automation.zvonok_v_domofon
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id: switch.domofon_drop
+    default:
+    - service: telegram_bot.send_message
+      data:
+        target:
+        - 116325704
+        parse_mode: html
+        disable_notification: true
+        message: Звонок в домофон пропущен или неактуален, домофон (уже) не звонит.
+    - service: logbook.log
+      data:
+        name: Звонок в домофон
+        entity_id: automation.zvonok_v_domofon
+        message: Запрос не выполнен - не проходит по условиям. Статус домофона {{
+          states.sensor.domofon_state.state }}, вызванный триггер {{ trigger.id }}.
+  mode: single
+- id: '1645117603050'
+  alias: Звонок в домофон (видео в телеграм)
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.domofon_state
+    from: Idle
+    to: Ring
+  - platform: event
+    event_type: telegram_command
+    event_data:
+      command: /video
+  condition: []
+  action:
+  - service: telegram_bot.send_video
+    data:
+      caption: Тестовый (по ивенту)
+      url: http://127.0.0.1:5000/api/events/{{states('input_text.frigate_event')}}/clip.mp4
+      target:
+      - 116325704
+      parse_mode: html
+      timeout: 1000
+      message_tag: msg_to_edit
+      disable_notification: true
+  - service: camera.record
+    data:
+      filename: /media/record.mp4
+      duration: 5
+    target:
+      entity_id: camera.domru_domofon
+  - wait_for_trigger:
+    - platform: event
+      event_type: folder_watcher
+      event_data:
+        event_type: closed
+        file: record.mp4
+    continue_on_timeout: false
+    timeout: 00:02:00
+  - service: telegram_bot.send_video
+    data:
+      file: /media/record.mp4
+      target:
+      - 116325704
+      parse_mode: html
+      timeout: 1000
+      message_tag: msg_to_edit
+      disable_notification: true
+      caption: А вот и видосик подъехал
+  mode: single
+- id: '1645168133405'
+  alias: Звонок в дверь
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.zvonok
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - parallel:
+    - data:
+        message: ' '
+        title: 🔔 Звонок в дверь! 🔔
+        data:
+          push:
+            interruption-level: time-sensitive
+            sound:
+              name: alarm.caf
+              critical: 1
+              volume: 1
+      service: notify.mobile_app_iphone_ans
+    - service: telegram_bot.send_message
+      data:
+        target:
+        - 116325704
+        parse_mode: markdown
+        message: 🔔 *Звонят в дверь!* 🔔
+    - service: notify.tv
+      data:
+        message: Звонок в дверь!
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  mode: single
+- id: '1645189263720'
+  alias: Фото персоны с домофона по команде
+  description: ''
+  trigger:
+  - platform: event
+    event_type: telegram_command
+    event_data:
+      command: /person_entrance
+  - platform: event
+    event_type: telegram_callback
+    event_data:
+      data: /person_entrance
+  condition: []
+  action:
+  - service: telegram_bot.send_photo
+    data:
+      url: http://127.0.0.1:5000/api/events/{{states.input_text.frigate_event.state}}/snapshot.jpg?bbox=1&crop=1&timestamp=1
+      target: '{{ trigger.event.data.chat_id }}'
+      parse_mode: html
+      disable_notification: true
+      timeout: 1000
+      message_tag: msg_to_edit
+      inline_keyboard:
+      - '{{"\U0001F6AA"}} Открыть дверь:/open_door'
+      - 📸 Показать:/photo_entrance,  🕵️‍♂️ Детект:/person_entrance
+      - 🔙 Основное меню:/back
+  mode: single
+- id: '1645552823469'
+  alias: Звонок в домофон (информирование о статусе)
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.domofon_state
+    from: Open
+    to: Idle
+    id: opened
+  - platform: state
+    entity_id: sensor.domofon_state
+    from: Drop
+    to: Idle
+    id: dropped
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: opened
+      sequence:
+      - service: notify.mobile_app_iphone_ans
+        data:
+          message: Дверь открыта
+          title: Домофон
+      - service: telegram_bot.send_message
+        data:
+          target:
+          - 116325704
+          parse_mode: html
+          disable_notification: true
+          message: Дверь открыта
+          title: Домофон
+    - conditions:
+      - condition: trigger
+        id: dropped
+      sequence:
+      - service: notify.mobile_app_iphone_ans
+        data:
+          message: Звонок сброшен
+          title: Домофон
+      - service: telegram_bot.send_message
+        data:
+          target:
+          - 116325704
+          parse_mode: html
+          disable_notification: true
+          message: Звонок домофона сброшен
+          title: Домофон
+    default: []
+  mode: single
+- id: '1646123055658'
+  alias: Frigate event
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: frigate/events
+  condition:
+  - condition: template
+    value_template: '{{ trigger.payload_json[''after''][''camera''] == ''domru_domofon''
+      }}'
+  action:
+  - service: input_text.set_value
+    target:
+      entity_id: input_text.frigate_event
+    data:
+      value: '{{trigger.payload_json["after"]["id"]}}'
+  mode: parallel
+- id: '1646401197588'
+  alias: Radiacode унюхал проблему
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.radiacode_dose_rate
+    above: '0.5'
+  - platform: numeric_state
+    entity_id: sensor.radiacode_dose_rate
+    above: '1'
+  - platform: numeric_state
+    entity_id: sensor.geiger_dose_rate
+    above: '0.5'
+  - platform: numeric_state
+    entity_id: sensor.geiger_dose_rate
+    above: '1'
+  condition: []
+  action:
+  - service: notify.telegram
+    data:
+      title: ☢️ *Радиационный мониторинг*
+      message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:\
+        \ *{{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n\
+        }}* \nОбнаружено устройством {{ states[trigger.entity_id.split(\".\")[0]][\n\
+        trigger.entity_id.split(\".\")[1]].name }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value')\
+        \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
+        \ }}. \n"
+  - service: notify.mobile_app_iphone_ans
+    data:
+      title: ☢️ Радиационный мониторинг
+      message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:\
+        \ {{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n\
+        }}\nОбнаружено устройством {{ states[trigger.entity_id.split(\".\")[0]][\n\
+        trigger.entity_id.split(\".\")[1]].name }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value')\
+        \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
+        \ }}. \n"
+  mode: parallel
+- id: '1648154272024'
+  alias: Открыть домофон с приложения
+  description: ''
+  trigger:
+  - platform: event
+    event_type: ios.action_fired
+    event_data:
+      actionID: 23448B64-1AF0-498C-98D9-158B8B6F923D
+      actionName: Open-door
+      sourceDeviceID: iphoneans
+      sourceDeviceName: iPhone_ANS
+      sourceDevicePermanentID: E589AD6D-665A-494A-88A7-B466809EB9DE
+  condition: []
+  action:
+  - service: script.domru_open_door_657617
+    data: {}
+  - service: notify.mobile_app_iphone_ans
+    data:
+      message: Дверь открыта
+      title: 'Домофон '
+  mode: single
+- id: '1648212086564'
+  alias: Radiacode отвалился, перезапуск
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /2
+  - platform: state
+    entity_id: device_tracker.ble_tracker_radiacode
+    to: home
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: device_tracker.ble_tracker_radiacode
+      state: home
+    - condition: state
+      entity_id: person.ans
+      state: home
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+  - condition: template
+    value_template: '{% if states(''sensor.radiacode'') != "unknown" %}
+
+      {{ (as_timestamp(now()) - as_timestamp(states.sensor.radiacode.last_updated))
+      > 60 }}
+
+      {% elif states(''sensor.radiacode'') == "unknown" %}
+
+      true
+
+      {% else %}
+
+      false
+
+      {% endif %}'
+  action:
+  - service: shell_command.radiacode_kill
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: shell_command.radiacode_start
+    data: {}
+  mode: single
+- id: '1648396428257'
+  alias: Radiacode - информация по запросу в Telegram
+  description: ''
+  trigger:
+  - platform: event
+    event_type: telegram_command
+    event_data:
+      command: /radiation
+    id: command
+  - platform: event
+    event_type: telegram_callback
+    event_data:
+      data: /radiation
+    id: callback
+  condition: []
+  action:
+  - if:
+    - condition: trigger
+      id: command
+    then:
+    - service: telegram_bot.send_message
+      data:
+        title: ☢️ *Радиационный мониторинг*
+        message: "Значение радиационного фона на текущий момент: \n\nСтационарный\
+          \ пост: *{{ states('sensor.geiger_dose_rate') }} {{\nstate_attr('sensor.geiger_dose_rate',\
+          \ 'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')\
+          \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
+          \ }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)\
+          \ }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:\
+          \ *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')\
+          \ }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',\
+          \ 'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')\
+          \ }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\
+          \nОбновление данных ПП было {{relative_time(states.sensor.radiacode.last_updated)\
+          \ }} назад.\n\n{% else %}\nСенсор Radiacode недоступен.\n\n{% endif %}\n"
+        target: '{{ trigger.event.data.chat_id }}'
+        parse_mode: markdown
+        disable_notification: true
+    else: []
+  - if:
+    - condition: trigger
+      id: callback
+    then:
+    - service: telegram_bot.edit_message
+      data:
+        title: ☢️ *Радиационный мониторинг*
+        message: "Значение радиационного фона на текущий момент: \n\nСтационарный\
+          \ пост: *{{ states('sensor.geiger_dose_rate') }} {{\nstate_attr('sensor.geiger_dose_rate',\
+          \ 'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')\
+          \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
+          \ }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)\
+          \ }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:\
+          \ *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')\
+          \ }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',\
+          \ 'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')\
+          \ }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\
+          \nОбновление данных ПП было {{relative_time(states.sensor.radiacode.last_updated)\
+          \ }} назад.\n\n{% else %}\nСенсор Radiacode недоступен.\n\n{% endif %}\n"
+        message_id: last
+        chat_id: '{{ trigger.event.data.chat_id }}'
+        inline_keyboard:
+        - Назад:/back
+  mode: single
+- id: '1653466659164'
+  alias: Звонок в домофон (видео в телеграм) (TEST)
+  description: ''
+  trigger:
+  - platform: event
+    event_type: telegram_command
+    event_data:
+      command: /video
+  condition: []
+  action:
+  - service: telegram_bot.send_message
+    data:
+      message: Запущено в {{now().strftime("%H:%M:%S")}}
+  - service: camera.record
+    data:
+      filename: /media/record.mp4
+      lookback: 5
+      duration: 10
+    target:
+      entity_id: camera.domru_domofon
+  - wait_for_trigger:
+    - platform: event
+      event_type: folder_watcher
+      event_data:
+        event_type: closed
+        file: record.mp4
+    continue_on_timeout: false
+    timeout: 00:02:00
+  - service: telegram_bot.send_message
+    data:
+      message: Закончено в {{now().strftime("%H:%M:%S")}}
+  - service: telegram_bot.send_video
+    data:
+      file: /media/record.mp4
+      target:
+      - 116325704
+      parse_mode: html
+      timeout: 1000
+      message_tag: msg_to_edit
+      disable_notification: true
+      caption: Тестовый видосик
+  mode: single
+- id: '1654280445528'
+  alias: 'Read Nut Mini battery '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: device_tracker.ble_tracker_nut
+    from: not_home
+    to: home
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  condition: []
+  action:
+  - service: shell_command.nut_battery_parse
+    data: {}
+  mode: single
+- id: '1655208369646'
+  alias: Что-то отвалилось
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.meshtastic
+    - binary_sensor.meshtastic_usb_power
+    - binary_sensor.xg3
+    - binary_sensor.google
+    - binary_sensor.yandex
+    - binary_sensor.yeelight
+    not_from:
+    - unknown
+    - unavailable
+    to:
+    - 'on'
+    - 'off'
+  - platform: numeric_state
+    entity_id: sensor.meshtastic_battery
+    below: '75'
+  - platform: numeric_state
+    entity_id: sensor.meshtastic_battery
+    below: '50'
+  - platform: numeric_state
+    entity_id: sensor.meshtastic_battery
+    below: '25'
+  condition: []
+  action:
+  - service: notify.telegram
+    data:
+      title: ⚠️ *Что-то пошло не так*
+      message: 'Устройство {{ states[trigger.entity_id.split(".")[0]][trigger.entity_id.split(".")[1]].name
+        }} сообщает: {{ trigger.to_state.state }}
+
+        '
+  mode: parallel
+- id: '1655236746321'
+  alias: Открыть домофон по команде Telegram
+  description: ''
+  trigger:
+  - platform: event
+    event_type: telegram_command
+    event_data:
+      command: /open_door
+  condition: []
+  action:
+  - service: script.turn_on
+    data: {}
+    target:
+      entity_id: script.domru_open_door_657617
+  - service: notify.telegram
+    data:
+      message: 'Дверь открыта '
+  mode: single
