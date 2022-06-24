@@ -1524,3 +1524,113 @@
     data:
       message: 'Дверь открыта '
   mode: single
+- id: '1656081010980'
+  alias: Просмотр ТВ
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 18b05968f19307356eb4c46ae540cbe3
+    domain: media_player
+    entity_id: media_player.tv
+    type: turned_on
+  condition:
+  - condition: numeric_state
+    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+    above: '20'
+  action:
+  - parallel:
+    - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id: input_boolean.manual_light_off
+    - if:
+      - condition: device
+        device_id: 00113b2b18e9fc886e10987ed5635044
+        domain: cover
+        entity_id: cover.shtora
+        type: is_open
+      - condition: numeric_state
+        entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
+        above: '100'
+      - condition: device
+        device_id: 00113b2b18e9fc886e10987ed5635044
+        domain: cover
+        entity_id: cover.shtora
+        type: is_position
+        above: 30
+      then:
+      - device_id: 00113b2b18e9fc886e10987ed5635044
+        domain: cover
+        entity_id: cover.shtora
+        type: set_position
+        position: 30
+    - if:
+      - condition: device
+        type: is_on
+        device_id: fa3818f9a75a0704698062d67b597aba
+        entity_id: light.torsher_2
+        domain: light
+      then:
+      - service: script.light_tosleep
+        data: {}
+  mode: restart
+- id: '1656081690599'
+  alias: Просмотр ТВ закончен
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 18b05968f19307356eb4c46ae540cbe3
+    domain: media_player
+    entity_id: media_player.tv
+    type: turned_off
+  condition: []
+  action:
+  - parallel:
+    - if:
+      - type: is_illuminance
+        condition: device
+        device_id: 1e40bd2be5d00d484d8f8284528b2626
+        entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
+        domain: sensor
+        above: 50
+      - condition: state
+        entity_id: sensor.daytime
+        state: 'on'
+      - condition: device
+        device_id: 00113b2b18e9fc886e10987ed5635044
+        domain: cover
+        entity_id: cover.shtora
+        type: is_position
+        above: 25
+        below: 35
+      then:
+      - device_id: 00113b2b18e9fc886e10987ed5635044
+        domain: cover
+        entity_id: cover.shtora
+        type: set_position
+        position: 100
+      else: []
+    - if:
+      - condition: device
+        type: is_on
+        device_id: fa3818f9a75a0704698062d67b597aba
+        entity_id: light.torsher_2
+        domain: light
+      - condition: state
+        entity_id: sensor.daytime
+        state: 'on'
+      then:
+      - service: script.1599944056170
+        data: {}
+    - wait_for_trigger:
+      - platform: device
+        device_id: 00113b2b18e9fc886e10987ed5635044
+        domain: cover
+        entity_id: cover.shtora
+        type: opened
+      continue_on_timeout: true
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.manual_light_off
+  mode: restart

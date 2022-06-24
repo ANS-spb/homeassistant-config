@@ -1189,30 +1189,41 @@
                     "badges": [],
                     "cards": [
                         {
-                            "type": "custom:auto-entities",
-                            "card": {
-                                "type": "entities",
-                                "state_color": true,
-                                "title": "\u0412\u0435\u0441\u044c \u0441\u0432\u0435\u0442 \u0432 \u0434\u043e\u043c\u0435"
-                            },
-                            "filter": {
-                                "include": [
-                                    {
-                                        "domain": "light",
-                                        "options": {
-                                            "secondary_info": "last-changed"
-                                        }
+                            "type": "vertical-stack",
+                            "cards": [
+                                {
+                                    "type": "entities",
+                                    "entities": [
+                                        "input_boolean.manual_light_off"
+                                    ]
+                                },
+                                {
+                                    "type": "custom:auto-entities",
+                                    "card": {
+                                        "type": "entities",
+                                        "state_color": true,
+                                        "title": "\u0412\u0435\u0441\u044c \u0441\u0432\u0435\u0442 \u0432 \u0434\u043e\u043c\u0435"
+                                    },
+                                    "filter": {
+                                        "include": [
+                                            {
+                                                "domain": "light",
+                                                "options": {
+                                                    "secondary_info": "last-changed"
+                                                }
+                                            }
+                                        ],
+                                        "exclude": [
+                                            {
+                                                "state": "unavailable"
+                                            }
+                                        ]
+                                    },
+                                    "sort": {
+                                        "method": "name"
                                     }
-                                ],
-                                "exclude": [
-                                    {
-                                        "state": "unavailable"
-                                    }
-                                ]
-                            },
-                            "sort": {
-                                "method": "name"
-                            }
+                                }
+                            ]
                         },
                         {
                             "type": "entities",
