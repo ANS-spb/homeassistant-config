@@ -590,7 +590,7 @@
   description: ''
   trigger:
   - platform: numeric_state
-    entity_id: sensor.0x04cf8cdf3c76548d_power
+    entity_id: sensor.lumi_lumi_plug_maeu01_8d54763c_electrical_measurement
     below: '3.7'
     for:
       hours: 1
@@ -598,14 +598,15 @@
       seconds: 0
   condition:
   - condition: state
-    entity_id: switch.0x04cf8cdf3c76548d_plug
+    entity_id: switch.lumi_lumi_plug_maeu01_8d54763c_on_off
     state: 'on'
   action:
   - parallel:
     - service: switch.turn_off
       data: {}
       target:
-        entity_id: switch.0x04cf8cdf3c76548d_plug
+        entity_id:
+        - switch.lumi_lumi_plug_maeu01_8d54763c_on_off
     - service: notify.mobile_app_iphone_ans
       data:
         message: Колесо зарядилось
@@ -650,11 +651,11 @@
       seconds: 0
   condition:
   - condition: template
-    value_template: '{{ state(light.prikhozhaia) != on }}'
+    value_template: '{{ states(light.prikhozhaia) != on }}'
   - condition: template
-    value_template: '{{ state(light.kukhnia_hue) != on }}'
+    value_template: '{{ states(light.kukhnia_hue) != on }}'
   - condition: template
-    value_template: '{{ state(light.torsher) != on }}'
+    value_template: '{{ states(light.torsher) != on }}'
   - condition: numeric_state
     entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
     below: '5'
@@ -1077,10 +1078,12 @@
       timeout: 1000
       message_tag: msg_to_edit
       disable_notification: true
+    enabled: false
   - service: camera.record
     data:
       filename: /media/record.mp4
       duration: 5
+      lookback: 15
     target:
       entity_id: camera.domru_domofon
   - wait_for_trigger:
@@ -1419,8 +1422,8 @@
   - service: camera.record
     data:
       filename: /media/record.mp4
-      lookback: 5
       duration: 10
+      lookback: 10
     target:
       entity_id: camera.domru_domofon
   - wait_for_trigger:
@@ -1444,6 +1447,10 @@
       message_tag: msg_to_edit
       disable_notification: true
       caption: Тестовый видосик
+  - service: homeassistant.reload_config_entry
+    data: {}
+    target:
+      entity_id: camera.domru_domofon
   mode: single
 - id: '1654280445528'
   alias: 'Read Nut Mini battery '

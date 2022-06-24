@@ -503,6 +503,12 @@
                                             }
                                         }
                                     ]
+                                },
+                                {
+                                    "entity": "sensor.pressure_indicator"
+                                },
+                                {
+                                    "entity": "sensor.pressure_weather_forecast"
                                 }
                             ]
                         },
@@ -2102,6 +2108,60 @@
                                         "th.left": "padding: 0px 10px 0px 10px",
                                         "thead th": "text-align: left"
                                     }
+                                },
+                                {
+                                    "type": "markdown",
+                                    "content": "### <center> ZigBee Home Automation </center>"
+                                },
+                                {
+                                    "type": "custom:zha-network-card",
+                                    "sort_by": "available",
+                                    "clickable": false,
+                                    "columns": [
+                                        {
+                                            "name": "Friendly Name",
+                                            "prop": "name"
+                                        },
+                                        {
+                                            "attr": "available",
+                                            "id": "available",
+                                            "modify": "x || \"false\"",
+                                            "name": "Online"
+                                        },
+                                        {
+                                            "attr": "manufacturer",
+                                            "name": "Manufacturer"
+                                        },
+                                        {
+                                            "attr": "model",
+                                            "name": "Model"
+                                        },
+                                        {
+                                            "attr": "ieee",
+                                            "name": "IEEE"
+                                        },
+                                        {
+                                            "name": "NWK",
+                                            "prop": "nwk"
+                                        },
+                                        {
+                                            "name": "Type",
+                                            "attr": "device_type"
+                                        },
+                                        {
+                                            "attr": "lqi",
+                                            "name": "LQI"
+                                        },
+                                        {
+                                            "attr": "rssi",
+                                            "name": "RSSI"
+                                        },
+                                        {
+                                            "attr": "last_seen",
+                                            "name": "Last Seen",
+                                            "modify": "var dt = new Date(0,0,0,0,0,0,(Date.now()-Date.parse(x))); isFinite(dt) ? dt.toTimeString().split(\" \")[0] : \"\"\n"
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -2350,7 +2410,7 @@
                                     "type": "history-graph",
                                     "entities": [
                                         {
-                                            "entity": "sensor.0x04cf8cdf3c76548d_power"
+                                            "entity": "sensor.lumi_lumi_plug_maeu01_8d54763c_electrical_measurement"
                                         }
                                     ],
                                     "refresh_interval": 0,

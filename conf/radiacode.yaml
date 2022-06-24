@@ -15,7 +15,7 @@ template:
     sensor:
       - name: "Geiger counter dose rate"
         unique_id: geiger-dr
-        state: "{% set drmr = trigger.to_state.state | float(0) / 114 %} {{ drmr | round(2) }}"
+        state: "{% set drmr = trigger.to_state.state | float(0) / 114.025 %} {{ drmr | round(2) }}"
         unit_of_measurement: "μSv/h"
         icon: mdi:radioactive
 
