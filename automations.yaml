@@ -204,22 +204,34 @@
       entity_id: input_boolean.manual_light_off
       state: 'off'
   action:
-  - service: script.turn_on
-    data: {}
-    target:
-      entity_id: script.1599944056170
-  - condition: and
-    conditions:
-    - condition: sun
-      after: sunset
-    - condition: state
-      entity_id: cover.shtora
-      state: open
-  - service: script.turn_on
-    target:
-      entity_id:
-      - script.push_for_closing_curtain
-    data: {}
+  - if:
+    - condition: device
+      device_id: 18b05968f19307356eb4c46ae540cbe3
+      domain: media_player
+      entity_id: media_player.tv
+      type: is_on
+    then:
+    - service: script.light_tosleep
+      data: {}
+    - stop: 'Телевизор включён '
+      error: false
+    else:
+    - service: script.turn_on
+      data: {}
+      target:
+        entity_id: script.1599944056170
+    - condition: and
+      conditions:
+      - condition: sun
+        after: sunset
+      - condition: state
+        entity_id: cover.shtora
+        state: open
+    - service: script.turn_on
+      target:
+        entity_id:
+        - script.push_for_closing_curtain
+      data: {}
   mode: single
 - id: '1603558751540'
   alias: Выключить лампу, если стало светло
@@ -1551,7 +1563,7 @@
         type: is_open
       - condition: numeric_state
         entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
-        above: '100'
+        above: '50'
       - condition: device
         device_id: 00113b2b18e9fc886e10987ed5635044
         domain: cover
@@ -1596,19 +1608,43 @@
       - condition: state
         entity_id: sensor.daytime
         state: 'on'
-      - condition: device
-        device_id: 00113b2b18e9fc886e10987ed5635044
-        domain: cover
-        entity_id: cover.shtora
-        type: is_position
-        above: 25
-        below: 35
+      - condition: template
+        value_template: '{{ states.cover.shtora.context.id == states.automation.prosmotr_tv.context.id
+          }}'
       then:
       - device_id: 00113b2b18e9fc886e10987ed5635044
         domain: cover
         entity_id: cover.shtora
         type: set_position
         position: 100
+      else: []
+    - if:
+      - type: is_illuminance
+        condition: device
+        device_id: 1e40bd2be5d00d484d8f8284528b2626
+        entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
+        domain: sensor
+        below: 50
+      - condition: state
+        entity_id: sensor.daytime
+        state: 'on'
+      then:
+      - service: script.1599944056170
+        data: {}
+      else: []
+    - if:
+      - type: is_illuminance
+        condition: device
+        device_id: 1e40bd2be5d00d484d8f8284528b2626
+        entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
+        domain: sensor
+        below: 50
+      - condition: state
+        entity_id: sensor.daytime
+        state: 'off'
+      then:
+      - service: script.light_tosleep
+        data: {}
       else: []
     - if:
       - condition: device
