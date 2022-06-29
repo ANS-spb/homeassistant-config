@@ -244,6 +244,8 @@ dynamic_update_all_light_group:
   - service: group.set
     data_template:
       object_id: dyn_all_lights
+      name: Весь свет
+      icon: mdi:lamp
       entities: '{{ states.light | rejectattr(''entity_id'', ''in'', [''light.50ec50dfc9c5_light'',
         ''light.50ec50e1b80d_light'']) | map(attribute=''entity_id'') | join('','')
         }}'
