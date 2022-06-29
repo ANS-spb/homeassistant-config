@@ -4,11 +4,13 @@
 # Аппаратура
 **Intel NUC6i3SYH** 
   - Intel Core i3-6100U (4 ядра)
-  - 1*8 Gb Hynix DDR3 SODIMM
+  - 1*8 Gb Hynix DDR4 SODIMM
   - 120 Gb Intel SSDSCKJW120H6
   - 1 Tb Western Digital Black Mobile (WDC WD10JPLX-00MBPT0)
   - Sonoff Zigbee 3.0 USB Dongle Plus
   - Buro BU-BT40C
+  - Debian 11
+  - Home Assistant Supervised
 
 # Устройства
 
@@ -28,8 +30,9 @@
   - WLED DIY лента на 30 диодов WS2813
   - Xiaomi E27 Mesh Bulb MJDP09YL - 2 шт
   - Реле Aqara Single switch module T1 SSM-U01
-  - не используется - TRÅDFRI светодиод E14 470 лм 704.243.12
   - Привод штор Aqara ZNCLDJ11LM
+  - не используется - TRÅDFRI светодиод E14 470 лм 704.243.12
+
 
 **Управление:**
   - Philips Hue Dimmer Switch RWL022
@@ -73,12 +76,14 @@
   
 # Благодарности
   - [to4ko](https://github.com/to4ko) - отдельная благодарность Диме, у которого я покрал добрую половину идей для своей конфигурации :)
-  - [Alexxit](https://github.com/alexxit) - замечательный разработчик компонентов для Home Assistant
+  - [Alexxit](https://github.com/alexxit) - замечательный разработчик компонентов для Home Assistant.
+
+
 Также благодарю людей, внесших свой вклад в русскоязычное сообщество Home Assistant, в числе которых (но не ограничиваясь ими):
   - [Vtel](https://github.com/zvldz)
   - [AVBor](https://github.com/avbor)
   - [Andrew](https://github.com/andrewjswan)
 
-# Chats
+# Сообщества
   - [Home Assistant RU](https://t.me/homassistant)
   - [Home Assistant - Hardware](https://t.me/homeassistant_hardware)
