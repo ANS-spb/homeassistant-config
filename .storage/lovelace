@@ -134,16 +134,40 @@
                                             ]
                                         },
                                         {
-                                            "type": "entity-filter",
-                                            "entities": [
-                                                "binary_sensor.dd_na_kukhne_occupancy",
-                                                "binary_sensor.ble_dd_motion",
-                                                "timer.dvizhenie_na_kukhne"
-                                            ],
-                                            "state_filter": [
-                                                "on",
-                                                "active"
-                                            ]
+                                            "type": "custom:auto-entities",
+                                            "show_empty": false,
+                                            "card": {
+                                                "type": "entities",
+                                                "show_header_toggle": false,
+                                                "state_color": true
+                                            },
+                                            "filter": {
+                                                "include": [
+                                                    {
+                                                        "entity_id": "binary_sensor.dd_na_kukhne_occupancy"
+                                                    },
+                                                    {
+                                                        "entity_id": "binary_sensor.ble_dd_motion"
+                                                    },
+                                                    {
+                                                        "entity_id": "timer.dvizhenie_na_kukhne"
+                                                    }
+                                                ],
+                                                "exclude": [
+                                                    {
+                                                        "state": "off"
+                                                    },
+                                                    {
+                                                        "state": "idle"
+                                                    },
+                                                    {
+                                                        "state": "unavailable"
+                                                    }
+                                                ]
+                                            },
+                                            "sort": {
+                                                "method": "none"
+                                            }
                                         },
                                         {
                                             "type": "custom:auto-entities",
