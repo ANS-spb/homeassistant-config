@@ -53,7 +53,7 @@ wakeup_bedroom:
   - choose:
     - conditions:
       - condition: numeric_state
-        entity_id: sensor.osveshchionnost_snaruzhi_battery
+        entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
         above: '40'
       sequence:
       - condition: state
@@ -66,8 +66,8 @@ wakeup_bedroom:
         position: 25
       - delay:
           hours: 0
-          minutes: 1
-          seconds: 10
+          minutes: 0
+          seconds: 30
           milliseconds: 0
       - condition: numeric_state
         entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
@@ -79,8 +79,8 @@ wakeup_bedroom:
         position: 35
       - delay:
           hours: 0
-          minutes: 1
-          seconds: 10
+          minutes: 0
+          seconds: 30
           milliseconds: 0
       - condition: numeric_state
         entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
@@ -92,8 +92,8 @@ wakeup_bedroom:
         position: 45
       - delay:
           hours: 0
-          minutes: 1
-          seconds: 10
+          minutes: 0
+          seconds: 30
           milliseconds: 0
       - condition: numeric_state
         entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
@@ -103,6 +103,19 @@ wakeup_bedroom:
         entity_id: cover.shtora
         type: set_position
         position: 55
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 30
+          milliseconds: 0
+      - condition: numeric_state
+        entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+        below: '10'
+      - device_id: 00113b2b18e9fc886e10987ed5635044
+        domain: cover
+        entity_id: cover.shtora
+        type: set_position
+        position: 65
     default: []
   - condition: state
     entity_id: binary_sensor.workday

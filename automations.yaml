@@ -26,6 +26,8 @@
     target:
       entity_id: input_boolean.manual_light_off
     data: {}
+  - service: script.dynamic_update_all_light_group
+    data: {}
   - choose:
     - conditions:
       - condition: state
@@ -103,7 +105,7 @@
   trigger:
   - platform: numeric_state
     entity_id: sensor.cpu_temp
-    above: '70'
+    above: '80'
     for:
       hours: 0
       minutes: 5
@@ -1670,3 +1672,19 @@
       target:
         entity_id: input_boolean.manual_light_off
   mode: restart
+- id: '1657219950895'
+  alias: Обновление супервизора
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - update.home_assistant_supervisor_update
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - service: telegram_bot.send_message
+    data:
+      message: Супер обновился до версии {{ state_attr('update.home_assistant_supervisor_update',
+        'installed_version') }}
+  mode: single
