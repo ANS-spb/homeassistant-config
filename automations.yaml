@@ -19,8 +19,8 @@
   condition: []
   action:
   - data:
-      message: 🏁 Cервер запущен в {{ states('sensor.time') }}
-      title: 🆗 Системное уведомление
+      message: "\U0001F3C1 Cервер запущен в {{ states('sensor.time') }}"
+      title: "\U0001F197 Системное уведомление"
     service: notify.mobile_app_iphone_ans
   - service: input_boolean.turn_off
     target:
@@ -51,7 +51,7 @@
   action:
   - data:
       message: ❗️Сервер остановлен в {{ states('sensor.time') }}
-      title: 🆗 Системное уведомление
+      title: "\U0001F197 Системное уведомление"
     service: notify.mobile_app_iphone_ans
   mode: single
 - id: '1601829228272'
@@ -64,18 +64,18 @@
     entity_id: group.devices
   condition:
   - condition: template
-    value_template: "{{states.light |\n    rejectattr('entity_id', 'in', ['light.50ec50dfc9c5_light',\n\
-      \    'light.50ec50e1b80d_light']) | selectattr('entity_id') |\n    selectattr('state','eq','on')\
-      \ | map(attribute='entity_id') | list | count > 0 }}"
+    value_template: "{{states.light |\n    rejectattr('entity_id', 'in', ['light.50ec50dfc9c5_light',\n
+      \   'light.50ec50e1b80d_light']) | selectattr('entity_id') |\n    selectattr('state','eq','on')
+      | map(attribute='entity_id') | list | count > 0 }}"
   action:
   - service: notify.mobile_app_iphone_ans
     data:
       title: Выключить свет?
-      message: '{% set filter = [''light.50ec50dfc9c5_light'', ''light.50ec50e1b80d_light'']
-        %} {{ ''💧'' }} Похоже, Вы ушли из дома. Есть {{states.light | rejectattr(''entity_id'',
-        ''in'', filter) | selectattr(''entity_id'') | selectattr(''state'',''eq'',''on'')
-        | map(attribute=''entity_id'') | list | count | format(morph=''работающий
-        светильник'', as_text=false)}}.'
+      message: "{% set filter = ['light.50ec50dfc9c5_light', 'light.50ec50e1b80d_light']
+        %} {{ '\U0001F4A7' }} Похоже, Вы ушли из дома. Есть {{states.light | rejectattr('entity_id',
+        'in', filter) | selectattr('entity_id') | selectattr('state','eq','on') |
+        map(attribute='entity_id') | list | count | format(morph='работающий светильник',
+        as_text=false)}}."
       data:
         actions:
         - action: LIGHTSOFF
@@ -421,20 +421,20 @@
   - choose:
     - conditions:
       - condition: template
-        value_template: "{% set min_battery_level = states('input_number.scale_minimal_battery')\
-          \ | int(0) -%} \n{% set ns = namespace(found=false) -%} \n{% for entity_id\
-          \ in states.group.dyn_all_batteries.attributes.entity_id -%}\n  {% set parts\
-          \ = entity_id.split('.') -%}\n  {% if (states(entity_id) | replace(\"%\"\
-          ,\"\") | int(0)) < min_battery_level -%}\n    {% set ns.found = true -%}\n\
-          \  {% endif -%}\n{% endfor -%} {{ ns.found }}"
+        value_template: "{% set min_battery_level = states('input_number.scale_minimal_battery')
+          | int(0) -%} \n{% set ns = namespace(found=false) -%} \n{% for entity_id
+          in states.group.dyn_all_batteries.attributes.entity_id -%}\n  {% set parts
+          = entity_id.split('.') -%}\n  {% if (states(entity_id) | replace(\"%\",\"\")
+          | int(0)) < min_battery_level -%}\n    {% set ns.found = true -%}\n  {%
+          endif -%}\n{% endfor -%} {{ ns.found }}"
       sequence:
       - data_template:
-          message: "{%- set min_battery_level = states('input_number.scale_minimal_battery')\
-            \ | int(0) -%}  {%- for entity_id in states.group.dyn_all_batteries.attributes.entity_id\
-            \ -%}\n  {%- set parts = entity_id.split('.') -%}\n  {%- if (states(entity_id)\
-            \ | replace(\"%\",\"\") | int(0)) < min_battery_level -%}\n    {{ states[parts[0]][parts[1]].name\
-            \ }} is {{ states(entity_id) }}%{{ '\\n' }}\n  {%- endif -%}\n{%- endfor\
-            \ -%}\n"
+          message: "{%- set min_battery_level = states('input_number.scale_minimal_battery')
+            | int(0) -%}  {%- for entity_id in states.group.dyn_all_batteries.attributes.entity_id
+            -%}\n  {%- set parts = entity_id.split('.') -%}\n  {%- if (states(entity_id)
+            | replace(\"%\",\"\") | int(0)) < min_battery_level -%}\n    {{ states[parts[0]][parts[1]].name
+            }} is {{ states(entity_id) }}%{{ '\\n' }}\n  {%- endif -%}\n{%- endfor
+            -%}\n"
         service: notify.mobile_app_iphone_ans
     default: []
   mode: single
@@ -454,16 +454,16 @@
     - choose:
       - conditions:
         - condition: template
-          value_template: "{{ states.binary_sensor \n   | selectattr('attributes.device_class',\
-            \ 'eq', 'window')\n   | selectattr('state', 'eq', 'on')\n   | list | length\
-            \ > 0 }}"
+          value_template: "{{ states.binary_sensor \n   | selectattr('attributes.device_class',
+            'eq', 'window')\n   | selectattr('state', 'eq', 'on')\n   | list | length
+            > 0 }}"
         sequence:
         - service: notify.mobile_app_iphone_ans
           data:
             title: Открыты окна!
-            message: "{{ states.binary_sensor \n | selectattr('attributes.device_class',\
-              \ 'eq', 'window')\n | selectattr('state', 'eq', 'on') | map(attribute='name')\n\
-              \ | join(\", \") }}\n"
+            message: "{{ states.binary_sensor \n | selectattr('attributes.device_class',
+              'eq', 'window')\n | selectattr('state', 'eq', 'on') | map(attribute='name')\n
+              | join(\", \") }}\n"
       default: []
   mode: single
 - id: '1610518233060'
@@ -880,9 +880,10 @@
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
-      caption: 🚨 {{ [ "Кто-то звонит в дверь", "Кто-то ломится в дверь", "Опять припёрлись",
-        "Дзинь-дзинь", "Тук-тук", "Гости на пороге", "Живые наступают!", "Это случайно
-        не доставка пиццы?", "Кожаный мешок у ворот"] | random }}
+      caption: "\U0001F6A8 {{ [ \"Кто-то звонит в дверь\", \"Кто-то ломится в дверь\",
+        \"Опять припёрлись\", \"Дзинь-дзинь\", \"Тук-тук\", \"Гости на пороге\", \"Живые
+        наступают!\", \"Это случайно не доставка пиццы?\", \"Кожаный мешок у ворот\"]
+        | random }}"
       target:
       - 116325704
       parse_mode: html
@@ -890,7 +891,7 @@
       inline_keyboard:
       - '{{"\U0001F6AA"}} Открыть дверь:/open_door'
       - ⛔️ Сбросить:/drop_domofon
-      - 📸 Показать:/photo_entrance,  🕵️‍♂️ Детект:/person_entrance
+      - "\U0001F4F8 Показать:/photo_entrance,  \U0001F575️‍♂️ Детект:/person_entrance"
       message_tag: msg_to_edit
   - wait_for_trigger:
     - platform: event
@@ -995,7 +996,7 @@
       timeout: 1000
       inline_keyboard:
       - '{{"\U0001F6AA"}} Открыть дверь:/open_door'
-      - 📸 Показать:/photo_entrance,  🕵️‍♂️ Детект:/person_entrance
+      - "\U0001F4F8 Показать:/photo_entrance,  \U0001F575️‍♂️ Детект:/person_entrance"
       message_tag: msg_to_edit
   mode: single
 - id: '1645086906100'
@@ -1132,7 +1133,7 @@
   - parallel:
     - data:
         message: ' '
-        title: 🔔 Звонок в дверь! 🔔
+        title: "\U0001F514 Звонок в дверь! \U0001F514"
         data:
           push:
             interruption-level: time-sensitive
@@ -1146,7 +1147,7 @@
         target:
         - 116325704
         parse_mode: markdown
-        message: 🔔 *Звонят в дверь!* 🔔
+        message: "\U0001F514 *Звонят в дверь!* \U0001F514"
     - service: notify.tv
       data:
         message: Звонок в дверь!
@@ -1180,8 +1181,8 @@
       message_tag: msg_to_edit
       inline_keyboard:
       - '{{"\U0001F6AA"}} Открыть дверь:/open_door'
-      - 📸 Показать:/photo_entrance,  🕵️‍♂️ Детект:/person_entrance
-      - 🔙 Основное меню:/back
+      - "\U0001F4F8 Показать:/photo_entrance,  \U0001F575️‍♂️ Детект:/person_entrance"
+      - "\U0001F519 Основное меню:/back"
   mode: single
 - id: '1645552823469'
   alias: Звонок в домофон (информирование о статусе)
@@ -1272,21 +1273,19 @@
   - service: notify.telegram
     data:
       title: ☢️ *Радиационный мониторинг*
-      message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:\
-        \ *{{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n\
-        }}* \nОбнаружено устройством {{ states[trigger.entity_id.split(\".\")[0]][\n\
-        trigger.entity_id.split(\".\")[1]].name }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value')\
-        \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
-        \ }}. \n"
+      message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:
+        *{{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n}}*
+        \nОбнаружено устройством {{ states[trigger.entity_id.split(\".\")[0]][\ntrigger.entity_id.split(\".\")[1]].name
+        }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value') }} {{\nstate_attr('sensor.geiger_dr_mean_value',
+        'unit_of_measurement') }}. \n"
   - service: notify.mobile_app_iphone_ans
     data:
       title: ☢️ Радиационный мониторинг
-      message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:\
-        \ {{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n\
-        }}\nОбнаружено устройством {{ states[trigger.entity_id.split(\".\")[0]][\n\
-        trigger.entity_id.split(\".\")[1]].name }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value')\
-        \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
-        \ }}. \n"
+      message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:
+        {{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n}}\nОбнаружено
+        устройством {{ states[trigger.entity_id.split(\".\")[0]][\ntrigger.entity_id.split(\".\")[1]].name
+        }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value') }} {{\nstate_attr('sensor.geiger_dr_mean_value',
+        'unit_of_measurement') }}. \n"
   mode: parallel
 - id: '1648154272024'
   alias: Открыть домофон с приложения
@@ -1380,18 +1379,18 @@
     - service: telegram_bot.send_message
       data:
         title: ☢️ *Радиационный мониторинг*
-        message: "Значение радиационного фона на текущий момент: \n\nСтационарный\
-          \ пост: *{{ states('sensor.geiger_dose_rate') }} {{\nstate_attr('sensor.geiger_dose_rate',\
-          \ 'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')\
-          \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
-          \ }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)\
-          \ }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:\
-          \ *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')\
-          \ }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',\
-          \ 'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')\
-          \ }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\
-          \nОбновление данных ПП было {{relative_time(states.sensor.radiacode.last_updated)\
-          \ }} назад.\n\n{% else %}\nСенсор Radiacode недоступен.\n\n{% endif %}\n"
+        message: "Значение радиационного фона на текущий момент: \n\nСтационарный
+          пост: *{{ states('sensor.geiger_dose_rate') }} {{\nstate_attr('sensor.geiger_dose_rate',
+          'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')
+          }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')
+          }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)
+          }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:
+          *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')
+          }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',
+          'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')
+          }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\nОбновление
+          данных ПП было {{relative_time(states.sensor.radiacode.last_updated) }}
+          назад.\n\n{% else %}\nСенсор Radiacode недоступен.\n\n{% endif %}\n"
         target: '{{ trigger.event.data.chat_id }}'
         parse_mode: markdown
         disable_notification: true
@@ -1403,18 +1402,18 @@
     - service: telegram_bot.edit_message
       data:
         title: ☢️ *Радиационный мониторинг*
-        message: "Значение радиационного фона на текущий момент: \n\nСтационарный\
-          \ пост: *{{ states('sensor.geiger_dose_rate') }} {{\nstate_attr('sensor.geiger_dose_rate',\
-          \ 'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')\
-          \ }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')\
-          \ }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)\
-          \ }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:\
-          \ *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')\
-          \ }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',\
-          \ 'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')\
-          \ }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\
-          \nОбновление данных ПП было {{relative_time(states.sensor.radiacode.last_updated)\
-          \ }} назад.\n\n{% else %}\nСенсор Radiacode недоступен.\n\n{% endif %}\n"
+        message: "Значение радиационного фона на текущий момент: \n\nСтационарный
+          пост: *{{ states('sensor.geiger_dose_rate') }} {{\nstate_attr('sensor.geiger_dose_rate',
+          'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')
+          }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')
+          }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)
+          }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:
+          *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')
+          }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',
+          'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')
+          }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\nОбновление
+          данных ПП было {{relative_time(states.sensor.radiacode.last_updated) }}
+          назад.\n\n{% else %}\nСенсор Radiacode недоступен.\n\n{% endif %}\n"
         message_id: last
         chat_id: '{{ trigger.event.data.chat_id }}'
         inline_keyboard:
@@ -1547,10 +1546,7 @@
     domain: media_player
     entity_id: media_player.tv
     type: turned_on
-  condition:
-  - condition: numeric_state
-    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
-    above: '20'
+  condition: []
   action:
   - parallel:
     - service: input_boolean.turn_on
@@ -1571,13 +1567,13 @@
         domain: cover
         entity_id: cover.shtora
         type: is_position
-        above: 30
+        above: 40
       then:
       - device_id: 00113b2b18e9fc886e10987ed5635044
         domain: cover
         entity_id: cover.shtora
         type: set_position
-        position: 30
+        position: 40
     - if:
       - condition: device
         type: is_on
