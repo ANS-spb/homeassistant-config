@@ -23,5 +23,5 @@
 - platform: template
   sensors:
     internet:
-      value_template: "{{ states('binary_sensor.google') == 'on' or states('binary_sensor.yandex') == 'on' }}"
+      value_template: "{{ bool(states('binary_sensor.google'), false) or bool(states('binary_sensor.yandex'), false) }}"
       device_class: connectivity

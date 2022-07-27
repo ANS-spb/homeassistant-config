@@ -3,36 +3,44 @@
 ###################################
 
 input_boolean:
+
   wakeup_enabled:
     name: "Световой будильник"
     icon: mdi:theme-light-dark
+
   wakeup_weekend:
     name: "Будильник по выходным"
     initial: off ## По умолчанию будильник для выходных дней выключен
     icon: mdi:calendar-blank
+
   sleep_enabled:
     name: "Вечерний свет"
     initial: on
     icon: mdi:weather-night
+
   wakeup_disabled:
     name: "У меня отпуск"
     icon: mdi:emoticon-cool-outline
 
 input_datetime:
+
   wakeup_time:
     name: "Время пробуждения"
     has_time: true
     has_date: false
+
   wakeup_weekend_time:
     name: "Время пробуждения по выходным"
     has_time: true
     has_date: false
+
   sleep_time:
     name: "Время ложиться спать"
     has_time: true
     has_date: false
 
 automation:
+
   - id: light_wakeup
     alias: Световой будильник
     trigger:

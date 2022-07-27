@@ -4,6 +4,7 @@
 
 - platform: template
   sensors:
+
       total_input_datetime:
         friendly_name: 'Ввод Даты и Времени'
         icon_template: mdi:eye

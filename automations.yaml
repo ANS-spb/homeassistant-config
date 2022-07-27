@@ -111,7 +111,10 @@
       minutes: 5
       seconds: 0
       milliseconds: 0
-  condition: []
+  condition:
+  - condition: template
+    value_template: '{{ iif(this.attributes.last_triggered == none, 9999, as_timestamp(now())
+      - as_timestamp(this.attributes.last_triggered) ) >= 600 }}'
   action:
   - service: notify.mobile_app_iphone_ans
     data:
@@ -139,7 +142,10 @@
       seconds: 0
       milliseconds: 0
     id: Температура на кухне
-  condition: []
+  condition:
+  - condition: template
+    value_template: '{{ iif(this.attributes.last_triggered == none, 9999, as_timestamp(now())
+      - as_timestamp(this.attributes.last_triggered) ) >= 3600 }}'
   action:
   - service: notify.mobile_app_iphone_ans
     data:
@@ -155,11 +161,6 @@
       verify_ssl: false
       caption: '{{ trigger.id }} слишком высокая и составляет {{ trigger.to_state.state
         }} {{ trigger.to_state.attributes.unit_of_measurement }}!'
-  - delay:
-      hours: 1
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
   mode: parallel
   max: 5
 - id: '1601889021443'
@@ -184,7 +185,10 @@
       milliseconds: 0
     below: input_number.scale_min_temp
     id: Температура на кухне
-  condition: []
+  condition:
+  - condition: template
+    value_template: '{{ iif(this.attributes.last_triggered == none, 9999, as_timestamp(now())
+      - as_timestamp(this.attributes.last_triggered) ) >= 3600 }}'
   action:
   - service: notify.mobile_app_iphone_ans
     data:
@@ -200,11 +204,6 @@
       verify_ssl: false
       caption: '{{ trigger.id }} слишком низкая и составляет {{ trigger.to_state.state
         }} {{ trigger.to_state.attributes.unit_of_measurement }}!'
-  - delay:
-      hours: 1
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
   mode: single
 - id: '1603558647104'
   alias: Включить лампу, если стало темно
@@ -1151,7 +1150,10 @@
     entity_id: binary_sensor.zvonok
     from: 'on'
     to: 'off'
-  condition: []
+  condition:
+  - condition: template
+    value_template: '{{ iif(this.attributes.last_triggered == none, 9999, as_timestamp(now())
+      - as_timestamp(this.attributes.last_triggered) ) >= 10 }}'
   action:
   - parallel:
     - data:
@@ -1174,11 +1176,6 @@
     - service: notify.tv
       data:
         message: Звонок в дверь!
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 10
-      milliseconds: 0
   mode: single
 - id: '1645189263720'
   alias: Фото персоны с домофона по команде

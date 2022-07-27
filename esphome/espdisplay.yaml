@@ -6,8 +6,6 @@ esphome:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_pass
- 
-
 
 remote_transmitter:
   - id: azur
@@ -21,7 +19,132 @@ remote_receiver:
   pin: 1
   dump: all
 
+button:
+  - platform: template
+    name: "Azur ON"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x0F
+  - platform: template
+    name: "Azur OFF"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x0F
+  
+  - platform: template
+    name: "Azur Standby"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x0C
+  
+  - platform: template
+    name: "Azur Aux Source"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x04
+          
+  - platform: template
+    name: "Azur CD Source"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x05
+  
+  - platform: template
+    name: "Azur Tuner Source"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x03
+  
+  - platform: template
+    name: "Azur DVD Source"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x01
+  - platform: template
+    name: "Azur AV Source"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x02
+  
+  - platform: template
+    name: "Azur Tape Mon Source"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x00
+  
+  - platform: template
+    name: "Azur VOL+"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x10
+  
+  - platform: template
+    name: "Azur VOL-"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x11
+   
+  - platform: template
+    name: "Azur Mute OFF"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x33
+          
+  - platform: template
+    name: "Azur Mute ON"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x32
+          
+  - platform: template
+    name: "Azur Mute toggle"
+    on_press:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x0D
+
 switch:
+  - platform: template
+    name: "Amplifier"
+    optimistic: true
+    turn_on_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x0E
+    turn_off_action:
+      - remote_transmitter.transmit_rc5:
+          transmitter_id: azur
+          address: 0x10
+          command: 0x0F
+          
   - platform: template
     name: "Azur ON"
     turn_on_action:

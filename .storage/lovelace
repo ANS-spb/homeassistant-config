@@ -1211,7 +1211,8 @@
                       "line_width": 2,
                       "entities": [
                         {
-                          "entity": "sensor.adaptive_brt"
+                          "entity": "switch.adaptive_lighting_room",
+                          "attribute": "brightness_pct"
                         }
                       ],
                       "show": {
@@ -1226,7 +1227,8 @@
                       "line_width": 2,
                       "entities": [
                         {
-                          "entity": "sensor.adaptive_ct"
+                          "entity": "switch.adaptive_lighting_room",
+                          "attribute": "color_temp_kelvin"
                         }
                       ],
                       "show": {

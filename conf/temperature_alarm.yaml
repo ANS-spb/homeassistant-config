@@ -3,6 +3,7 @@
 ###################################
 
 input_number:
+
   scale_min_temp:
     name: "Мин Т"
     min: 10
@@ -11,6 +12,7 @@ input_number:
     mode: slider
     unit_of_measurement: "°C"
     icon: mdi:thermometer-low
+
   scale_max_temp:
     name: "Макс Т"
     min: 25

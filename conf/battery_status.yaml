@@ -3,6 +3,7 @@
 ######################################
 
 input_number:
+
   scale_minimal_battery:
     name: "Уровень заряда"
     min: 5
@@ -13,6 +14,7 @@ input_number:
     icon: mdi:battery-alert
 
 automation:
+
   - id: alarm_battery
     alias: "Alarm battery"
     initial_state: true

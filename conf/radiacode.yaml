@@ -66,6 +66,7 @@ sensor:
     state_characteristic: mean
     max_age:
       hours: 24
+
   - platform: statistics
     name: radiacode_cr_mean_value
     entity_id: sensor.radiacode_count_rate
@@ -73,6 +74,7 @@ sensor:
     state_characteristic: mean
     max_age:
       hours: 24
+
   - platform: statistics
     name: geiger_dr_mean_value
     entity_id: sensor.geiger_dose_rate
@@ -80,6 +82,7 @@ sensor:
     state_characteristic: mean
     max_age:
       hours: 24
+
   - platform: statistics
     name: geiger_cr_mean_value
     entity_id: sensor.geiger_counter_radioactive_events_per_minute

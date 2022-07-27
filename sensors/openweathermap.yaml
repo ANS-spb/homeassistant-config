@@ -17,36 +17,47 @@
 
 - platform: template
   sensors:
+
     owm_weather:
       value_template: "{{ state_attr('sensor.owm_report', 'current')['weather'][0]['description'].capitalize()}}"
       entity_picture_template: "{{ 'https://openweathermap.org/img/w/'+state_attr('sensor.owm_report', 'current')['weather'][0]['icon'].lower()+'.png' }}"
+
     owm_temp:
       friendly_name: "Outside temp"
       value_template: "{{ state_attr('sensor.owm_report', 'current')['temp'] }}"
       unit_of_measurement: "°C"
+
     owm_pressure:
       friendly_name: "Outside pressure"
       value_template: "{{ state_attr('sensor.owm_report', 'current')['pressure'] }}"
       unit_of_measurement: "hPa"
+
     owm_humidity:
       friendly_name: "Outside humidity"
       value_template: "{{ state_attr('sensor.owm_report', 'current')['humidity'] }}"
       unit_of_measurement: "%"
+
     owm_clouds:
       friendly_name: "Outside clouds"
       value_template: "{{ state_attr('sensor.owm_report', 'current')['clouds'] }}"
       unit_of_measurement: "%"
+
     openweather_weather_desc_today:
       value_template: "{{ state_attr('sensor.owm_report', 'daily')[0].weather[0].description.capitalize() }}"
       entity_picture_template: "{{ 'https://openweathermap.org/img/w/'+state_attr('sensor.owm_report', 'daily')[0]['weather'][0]['icon'].lower()+'.png' }}"
+
     openweather_weather_desc_tomorrow:
       value_template: "{{ state_attr('sensor.owm_report', 'daily')[1].weather[0].description.capitalize() }}"
       entity_picture_template: "{{ 'https://openweathermap.org/img/w/'+state_attr('sensor.owm_report', 'daily')[1]['weather'][0]['icon'].lower()+'.png' }}"
+
     openweather_temp_day_today:
       value_template: "{{ state_attr('sensor.owm_report', 'daily')[0].temp.day }}"
+
     openweather_temp_night_today:
       value_template: "{{ state_attr('sensor.owm_report', 'daily')[0].temp.night }}"
+
     openweather_temp_day_tomorrow:
       value_template: "{{ state_attr('sensor.owm_report', 'daily')[1].temp.day }}"
+
     openweather_temp_night_tomorrow:
       value_template: "{{ state_attr('sensor.owm_report', 'daily')[1].temp.night }}"
