@@ -27,6 +27,7 @@ homeassistant:
 
 morph_numbers:
 start_time:
+powercalc:
 
 discovery:
   ignore:

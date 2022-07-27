@@ -216,26 +216,10 @@
               "show_header_toggle": false
             },
             {
-              "type": "custom:slider-button-card",
+              "type": "custom:mushroom-cover-card",
               "entity": "cover.shtora",
-              "slider": {
-                "direction": "left-right",
-                "background": "striped"
-              },
-              "icon": {
-                "show": true,
-                "tap_action": {
-                  "action": "more-info"
-                }
-              },
-              "action_button": {
-                "tap_action": {
-                  "action": "toggle"
-                },
-                "mode": "custom",
-                "icon": "mdi:swap-horizontal"
-              },
-              "name": "Штора"
+              "show_position_control": true,
+              "show_buttons_control": true
             },
             {
               "type": "vertical-stack",
@@ -427,14 +411,18 @@
               ]
             },
             {
-              "type": "glance",
-              "show_name": true,
-              "show_state": true,
-              "state_color": true,
-              "columns": 4,
-              "entities": [
-                "person.ans",
-                "person.lisitsa"
+              "type": "horizontal-stack",
+              "cards": [
+                {
+                  "type": "custom:mushroom-person-card",
+                  "entity": "person.ans",
+                  "icon_type": "entity-picture"
+                },
+                {
+                  "type": "custom:mushroom-person-card",
+                  "entity": "person.lisitsa",
+                  "icon_type": "entity-picture"
+                }
               ]
             },
             {
