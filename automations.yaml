@@ -146,6 +146,15 @@
       title: Внимание!
       message: '{{ trigger.id }} слишком высокая и составляет {{ trigger.to_state.state
         }} {{ trigger.to_state.attributes.unit_of_measurement }}!'
+  - service: telegram_bot.send_photo
+    data:
+      url: https://localhost:3000/api/hassio_ingress/AtPG8gEipnIQEga1FJuzQktnNVhQ7LRDYX1ZFDAxy4I/render/d-solo/MGkPNBAMz/home?orgId=1&from=now-1h&to=now&panelId=2&width=1000&height=500&tz=Europe%2FMoscow
+      username: admin
+      password: hassio
+      timeout: 30
+      verify_ssl: false
+      caption: '{{ trigger.id }} слишком высокая и составляет {{ trigger.to_state.state
+        }} {{ trigger.to_state.attributes.unit_of_measurement }}!'
   - delay:
       hours: 1
       minutes: 0
@@ -182,6 +191,20 @@
       title: Внимание!
       message: '{{ trigger.id }} слижком низкая и составляет {{ trigger.to_state.state
         }} {{ trigger.to_state.attributes.unit_of_measurement }}!'
+  - service: telegram_bot.send_photo
+    data:
+      url: https://localhost:3000/api/hassio_ingress/AtPG8gEipnIQEga1FJuzQktnNVhQ7LRDYX1ZFDAxy4I/render/d-solo/MGkPNBAMz/home?orgId=1&from=now-1h&to=now&panelId=2&width=1000&height=500&tz=Europe%2FMoscow
+      username: admin
+      password: hassio
+      timeout: 30
+      verify_ssl: false
+      caption: '{{ trigger.id }} слишком низкая и составляет {{ trigger.to_state.state
+        }} {{ trigger.to_state.attributes.unit_of_measurement }}!'
+  - delay:
+      hours: 1
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
   mode: single
 - id: '1603558647104'
   alias: Включить лампу, если стало темно
@@ -1270,14 +1293,6 @@
     above: '1'
   condition: []
   action:
-  - service: notify.telegram
-    data:
-      title: ☢️ *Радиационный мониторинг*
-      message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:
-        *{{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n}}*
-        \nОбнаружено устройством {{ states[trigger.entity_id.split(\".\")[0]][\ntrigger.entity_id.split(\".\")[1]].name
-        }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value') }} {{\nstate_attr('sensor.geiger_dr_mean_value',
-        'unit_of_measurement') }}. \n"
   - service: notify.mobile_app_iphone_ans
     data:
       title: ☢️ Радиационный мониторинг
@@ -1286,6 +1301,21 @@
         устройством {{ states[trigger.entity_id.split(\".\")[0]][\ntrigger.entity_id.split(\".\")[1]].name
         }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value') }} {{\nstate_attr('sensor.geiger_dr_mean_value',
         'unit_of_measurement') }}. \n"
+  - service: notify.telegram
+    data:
+      title: ☢️ *Радиационный мониторинг*
+      message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:
+        *{{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n}}*
+        \nОбнаружено устройством {{ states[trigger.entity_id.split(\".\")[0]][\ntrigger.entity_id.split(\".\")[1]].name
+        }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value') }} {{\nstate_attr('sensor.geiger_dr_mean_value',
+        'unit_of_measurement') }}. \n"
+  - service: telegram_bot.send_photo
+    data:
+      url: https://localhost:3000/api/hassio_ingress/AtPG8gEipnIQEga1FJuzQktnNVhQ7LRDYX1ZFDAxy4I/render/d-solo/J_EkXzk4z/for-sending?orgId=1&from=now-5m&to=now&panelId=2&width=1000&height=500&tz=Europe%2FMoscow
+      username: admin
+      password: hassio
+      verify_ssl: false
+      timeout: 10
   mode: parallel
 - id: '1648154272024'
   alias: Открыть домофон с приложения
@@ -1301,12 +1331,26 @@
       sourceDevicePermanentID: E589AD6D-665A-494A-88A7-B466809EB9DE
   condition: []
   action:
+  - service: camera.snapshot
+    data:
+      filename: /media/domofon.jpg
+    target:
+      entity_id: camera.domru_domofon
   - service: script.domru_open_door_657617
     data: {}
   - service: notify.mobile_app_iphone_ans
     data:
       message: Дверь открыта
       title: 'Домофон '
+  - service: telegram_bot.send_photo
+    data:
+      file: /media/domofon.jpg
+      caption: Домофон открыт из приложения
+      target:
+      - 116325704
+      parse_mode: html
+      timeout: 1000
+      message_tag: msg_to_edit
   mode: single
 - id: '1648212086564'
   alias: Radiacode отвалился, перезапуск
@@ -1393,6 +1437,15 @@
           назад.\n\n{% else %}\nСенсор Radiacode недоступен.\n\n{% endif %}\n"
         target: '{{ trigger.event.data.chat_id }}'
         parse_mode: markdown
+        disable_notification: true
+    - service: telegram_bot.send_photo
+      data:
+        url: https://localhost:3000/api/hassio_ingress/AtPG8gEipnIQEga1FJuzQktnNVhQ7LRDYX1ZFDAxy4I/render/d-solo/J_EkXzk4z/for-sending?orgId=1&from=now-5m&to=now&panelId=2&width=1000&height=500&tz=Europe%2FMoscow
+        username: admin
+        password: hassio
+        verify_ssl: false
+        timeout: 10
+        target: '{{ trigger.event.data.chat_id }}'
         disable_notification: true
     else: []
   - if:
@@ -1529,13 +1582,22 @@
       command: /open_door
   condition: []
   action:
-  - service: script.turn_on
-    data: {}
-    target:
-      entity_id: script.domru_open_door_657617
-  - service: notify.telegram
+  - service: camera.snapshot
     data:
-      message: 'Дверь открыта '
+      filename: /media/domofon.jpg
+    target:
+      entity_id: camera.domru_domofon
+  - service: script.domru_open_door_657617
+    data: {}
+  - service: telegram_bot.send_photo
+    data:
+      file: /media/domofon.jpg
+      caption: Домофон открыт из Telegram
+      target:
+      - 116325704
+      parse_mode: html
+      timeout: 1000
+      message_tag: msg_to_edit
   mode: single
 - id: '1656081010980'
   alias: Просмотр ТВ
