@@ -24,6 +24,7 @@
   - Philips Hue E27 2700K 9 Вт (60 Вт) 929001821618 - 3 шт
   - Лампа Philips Hue GU10 2700K 5.2 Вт (57 Вт) LWG004 - 4 шт
   - Mijia Bedside Lamp 1 WiFi MJCTD01YL
+  - TRADFRI driver for wireless control (30 watt) - 1 шт
   - TRADFRI bulb E27 W opal 1000lm - 2 шт
   - WLED DIY лента на 196 диодов WS2813
   - WLED DIY гибкая гирлянда на 50 диодов WS2812
@@ -73,7 +74,7 @@
 
  **Скрипты:**
   - **nutbattery.sh**  Забирает батарейку у BLE метки через gattool на хосте.
-  
+
 # Благодарности
   - [to4ko](https://github.com/to4ko) - отдельная благодарность Диме, у которого я покрал добрую половину идей для своей конфигурации :)
   - [Alexxit](https://github.com/alexxit) - замечательный разработчик компонентов для Home Assistant.
