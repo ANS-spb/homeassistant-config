@@ -321,15 +321,10 @@
     to: playing
   condition: []
   action:
-  - service: switch.turn_on
+  - service: button.press
     data: {}
-    entity_id: switch.azur_on
-  - wait_template: ''
-    continue_on_timeout: true
-    timeout: 00:00:03
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.azur_aux_source
+    target:
+      entity_id: button.azur_aux_source
   mode: single
 - id: '1607706912213'
   alias: Кнопка в комнате выключает всё
@@ -417,15 +412,10 @@
     to: 'on'
   condition: []
   action:
-  - service: switch.turn_on
+  - service: button.press
     data: {}
-    entity_id: switch.azur_on
-  - wait_template: ''
-    continue_on_timeout: true
-    timeout: 00:00:03
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.azur_cd_source
+    target:
+      entity_id: button.azur_cd_source
   mode: single
 - id: '1610362570344'
   alias: Notification Alert That Batteries Are Low (dynamic)
@@ -545,15 +535,19 @@
     to: paused
     for: 00:05
   - platform: state
-    entity_id: media_player.volumio
+    entity_id:
+    - media_player.volumio
     to: idle
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
   condition: []
   action:
-  - service: switch.turn_on
+  - service: button.press
     data: {}
     target:
-      entity_id:
-      - switch.azur_off
+      entity_id: button.azur_off
   mode: single
 - id: '1622805950446'
   alias: Тестовая - контексты
