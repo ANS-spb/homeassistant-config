@@ -25,13 +25,13 @@
   - Лампа Philips Hue GU10 2700K 5.2 Вт (57 Вт) LWG004 - 4 шт
   - Mijia Bedside Lamp 1 WiFi MJCTD01YL
   - TRADFRI driver for wireless control (30 watt) - 1 шт
-  - TRADFRI bulb E27 W opal 1000lm - 2 шт
   - WLED DIY лента на 196 диодов WS2813
   - WLED DIY гибкая гирлянда на 50 диодов WS2812
   - WLED DIY лента на 30 диодов WS2813
   - Xiaomi E27 Mesh Bulb MJDP09YL - 2 шт
   - Реле Aqara Single switch module T1 SSM-U01
   - Привод штор Aqara ZNCLDJ11LM
+  - не используется - TRADFRI bulb E27 W opal 1000lm - 2 шт
   - не используется - TRÅDFRI светодиод E14 470 лм 704.243.12
 
 
