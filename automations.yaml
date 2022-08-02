@@ -1620,13 +1620,13 @@
         domain: cover
         entity_id: cover.shtora
         type: is_position
-        above: 40
+        above: 45
       then:
       - device_id: 00113b2b18e9fc886e10987ed5635044
         domain: cover
         entity_id: cover.shtora
         type: set_position
-        position: 40
+        position: 45
     - if:
       - condition: device
         type: is_on

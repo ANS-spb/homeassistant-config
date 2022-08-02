@@ -2123,6 +2123,48 @@
                 },
                 {
                   "type": "markdown",
+                  "content": "### <center> Philips Hue </center>"
+                },
+                {
+                  "type": "custom:flex-table-card",
+                  "clickable": false,
+                  "entities": {
+                    "include": [
+                      "sensor.*_zigbee_connectivity"
+                    ]
+                  },
+                  "sort_by": "friendly_name-",
+                  "columns": [
+                    {
+                      "data": "icon",
+                      "name": " ",
+                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:zigbee\" + \"\\\"></ha-icon>\""
+                    },
+                    {
+                      "data": "friendly_name",
+                      "name": "Friendly Name",
+                      "modify": "x.replace(/ Zigbee Connectivity$/,\"\")"
+                    },
+                    {
+                      "data": "mac_address",
+                      "name": "MAC address"
+                    },
+                    {
+                      "data": "state",
+                      "name": "State",
+                      "modify": "x.replace(/connectivity_issue$/,\"⚠️\")"
+                    }
+                  ],
+                  "css": {
+                    "table+": "padding-top: 0px;",
+                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
+                    "td.left": "padding: 0px 10px 0px 10px",
+                    "th.left": "padding: 0px 10px 0px 10px",
+                    "thead th": "text-align: left"
+                  }
+                },
+                {
+                  "type": "markdown",
                   "content": "### <center> BLE Monitor </center>"
                 },
                 {
