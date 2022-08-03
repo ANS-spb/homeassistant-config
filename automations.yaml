@@ -1737,3 +1737,95 @@
       message: Супер обновился до версии {{ state_attr('update.home_assistant_supervisor_update',
         'installed_version') }}
   mode: single
+- id: '1659508235142'
+  alias: Что-то отвалилось, послать SMS
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.google
+    - binary_sensor.yandex
+    - binary_sensor.gateway
+    not_from:
+    - unknown
+    - unavailable
+    to:
+    - 'on'
+    - 'off'
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.sms_ans
+    data:
+      message: 'Network Status: {{ states[trigger.entity_id.split(".")[0]][trigger.entity_id.split(".")[1]].name
+        }} is {{ trigger.to_state.state }}
+
+        '
+  mode: parallel
+- id: '1659509811099'
+  alias: SMS ping reply
+  description: ''
+  trigger:
+  - platform: event
+    event_type: sms.incoming_sms
+  condition:
+  - condition: template
+    value_template: '{{ trigger.event.data.phone == states(''input_text.ans_phone_number'')
+      }}'
+  - condition: template
+    value_template: '{{ trigger.event.data.text.strip().lower() in [''ping'', ''check'']
+      }}'
+  action:
+  - service: notify.sms_ans
+    data:
+      message: I am alive and {{ states('binary_sensor.internet') }}line. IP {{ states('sensor.d7160cc8a60d_sn_mynetname_net')
+        }}
+  mode: queued
+- id: '1659513453981'
+  alias: SMS status reply
+  description: ''
+  trigger:
+  - platform: event
+    event_type: sms.incoming_sms
+  condition:
+  - condition: template
+    value_template: '{{ trigger.event.data.phone == states(''input_text.ans_phone_number'')
+      }}'
+  - condition: template
+    value_template: '{{ trigger.event.data.text.strip().lower() in [''status''] }}'
+  action:
+  - service: notify.sms_ans
+    data:
+      message: '{% if is_state("binary_sensor.okno_v_komnate_contact", "off") and
+        is_state("binary_sensor.okno_na_kukhne_contact", "off") %} All windows are
+        closed. {% else %}{{ states.binary_sensor| selectattr(''entity_id'', ''in'',  [''binary_sensor.okno_v_komnate_contact'',''binary_sensor.okno_v_komnate_contact''])
+        | selectattr("state", "eq", "on")  | map(attribute  = "name") | join(", ")
+        }} {% endif %} {%if states.light | rejectattr(''entity_id'', ''in'',  [''light.50ec50dfc9c5_light'',''light.50ec50e1b80d_light''])
+        | selectattr(''entity_id'') | selectattr(''state'',''eq'',''on'') | map(attribute=''entity_id'')
+        | list | count == 0 %} All lights are off. {% else %} {{ states.light | rejectattr(''entity_id'',
+        ''in'',  [''light.50ec50dfc9c5_light'',''light.50ec50e1b80d_light'']) | selectattr(''entity_id'')
+        | selectattr(''state'',''eq'',''on'') | map(attribute=''entity_id'') | list
+        | count }} light(s) are on. {% endif %}
+
+        '
+  mode: queued
+- id: '1659513881526'
+  alias: SMS spam to Telegram
+  description: ''
+  trigger:
+  - platform: event
+    event_type: sms.incoming_sms
+  condition:
+  - condition: template
+    value_template: '{{ trigger.event.data.phone != states(''input_text.ans_phone_number'')
+      }}'
+  action:
+  - service: notify.telegram
+    data:
+      Title: SMS message received
+      message: "{{ trigger.event.data.phone }} прислал мессагу: \n{{ trigger.event.data.text
+        }}"
+  mode: queued

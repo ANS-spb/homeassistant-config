@@ -1,0 +1,4 @@
+notify:
+  - platform: sms
+    name: sms_ans
+    recipient: !secret sms_ans
