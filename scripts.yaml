@@ -19,6 +19,14 @@
       target:
         entity_id:
         - light.living_room
+    - service: light.turn_on
+      data:
+        transition: 10
+      target:
+        entity_id:
+        - light.wled_table
+        - light.wled
+        - light.wled_2
   - delay:
       hours: 0
       minutes: 0
@@ -164,25 +172,33 @@ light_tosleep:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 3
+      seconds: 10
       milliseconds: 0
-  - service: input_boolean.turn_off
-    data: {}
-    target:
-      entity_id: input_boolean.manual_effects_on
-  - choose:
-    - conditions:
-      - condition: device
-        type: is_on
-        device_id: d9631ea87a6b46b5e7e5fadb00518bb8
-        entity_id: light.wled
-        domain: light
-      sequence:
-      - service: script.turn_on
-        data: {}
-        target:
-          entity_id: script.wled_static_effect
-    default: []
+  - parallel:
+    - service: light.turn_off
+      data:
+        transition: 5
+      target:
+        entity_id:
+        - light.wled_table
+        - light.wled_2
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.manual_effects_on
+    - choose:
+      - conditions:
+        - condition: device
+          type: is_on
+          device_id: d9631ea87a6b46b5e7e5fadb00518bb8
+          entity_id: light.wled
+          domain: light
+        sequence:
+        - service: script.turn_on
+          data: {}
+          target:
+            entity_id: script.wled_static_effect
+      default: []
   mode: single
   icon: mdi:sleep
 power_off_all:
@@ -354,6 +370,8 @@ push_for_closing_curtain:
       target:
         entity_id:
         - light.living_room
+        - light.wled_2
+        - light.wled
     - service: light.turn_off
       data:
         transition: 5

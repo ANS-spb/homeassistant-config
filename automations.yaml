@@ -1431,7 +1431,7 @@
         disable_notification: true
     - service: telegram_bot.send_photo
       data:
-        url: https://localhost:3000/api/hassio_ingress/AtPG8gEipnIQEga1FJuzQktnNVhQ7LRDYX1ZFDAxy4I/render/d-solo/J_EkXzk4z/for-sending?orgId=1&from=now-5m&to=now&panelId=2&width=1000&height=500&tz=Europe%2FMoscow
+        url: https://localhost:3000/api/hassio_ingress/AtPG8gEipnIQEga1FJuzQktnNVhQ7LRDYX1ZFDAxy4I/render/d-solo/J_EkXzk4z/for-sending?orgId=1&from=now-1h&to=now&panelId=2&width=1000&height=500&tz=Europe%2FMoscow
         username: admin
         password: hassio
         verify_ssl: false
