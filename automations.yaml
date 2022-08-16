@@ -893,6 +893,7 @@
       message_tag: msg_to_edit
       disable_notification: true
       caption: Кто стучится в дверь моя?
+    enabled: false
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
