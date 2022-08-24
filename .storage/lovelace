@@ -2523,24 +2523,6 @@
                     }
                   ],
                   "hours_to_show": 24
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "entity": "switch.lumi_lumi_plug_maeu01_8d54763c_on_off"
-                    }
-                  ]
-                },
-                {
-                  "type": "history-graph",
-                  "entities": [
-                    {
-                      "entity": "sensor.lumi_lumi_plug_maeu01_8d54763c_electrical_measurement"
-                    }
-                  ],
-                  "refresh_interval": 0,
-                  "hours_to_show": 24
                 }
               ]
             }

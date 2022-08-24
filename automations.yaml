@@ -1000,10 +1000,17 @@
   condition: []
   action:
   - service: camera.snapshot
-    target:
-      entity_id: camera.domru_domofon
     data:
       filename: /media/domofon.jpg
+    target:
+      entity_id: camera.domru_domofon
+  - wait_for_trigger:
+    - platform: event
+      event_type: folder_watcher
+      event_data:
+        event_type: closed
+        file: domofon.jpg
+    continue_on_timeout: false
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
@@ -1323,17 +1330,24 @@
       sourceDevicePermanentID: E589AD6D-665A-494A-88A7-B466809EB9DE
   condition: []
   action:
-  - service: camera.snapshot
-    data:
-      filename: /media/domofon.jpg
-    target:
-      entity_id: camera.domru_domofon
   - service: script.domru_open_door_657617
     data: {}
   - service: notify.mobile_app_iphone_ans
     data:
       message: Дверь открыта
       title: 'Домофон '
+  - service: camera.snapshot
+    data:
+      filename: /media/domofon.jpg
+    target:
+      entity_id: camera.domru_domofon
+  - wait_for_trigger:
+    - platform: event
+      event_type: folder_watcher
+      event_data:
+        event_type: closed
+        file: domofon.jpg
+    continue_on_timeout: false
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
@@ -1574,13 +1588,20 @@
       command: /open_door
   condition: []
   action:
+  - service: script.domru_open_door_657617
+    data: {}
   - service: camera.snapshot
     data:
       filename: /media/domofon.jpg
     target:
       entity_id: camera.domru_domofon
-  - service: script.domru_open_door_657617
-    data: {}
+  - wait_for_trigger:
+    - platform: event
+      event_type: folder_watcher
+      event_data:
+        event_type: closed
+        file: domofon.jpg
+    continue_on_timeout: false
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
@@ -1830,3 +1851,23 @@
       message: "{{ trigger.event.data.phone }} прислал мессагу: \n{{ trigger.event.data.text
         }}"
   mode: queued
+- id: '1661237353968'
+  alias: Выключить ленты при выключении торшера
+  description: ''
+  trigger:
+  - device_id: 2fc5430ae34c11e5cd535f36d767ee7e
+    domain: hue
+    platform: device
+    type: initial_press
+    subtype: 4
+    unique_id: 8af312d4-12ba-4e5e-8593-6c33cdec3391
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.wled_2
+      - light.wled
+      - light.wled_table
+  mode: single

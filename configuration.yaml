@@ -89,6 +89,7 @@ folder_watcher:
   - folder: /media
     patterns:
       - '*.mp4'
+      - '*.jpg'
 
 stream:
   ll_hls: true

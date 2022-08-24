@@ -62,7 +62,7 @@ wakeup_bedroom:
     - conditions:
       - condition: numeric_state
         entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
-        above: '40'
+        above: '30'
       sequence:
       - condition: numeric_state
         entity_id: cover.shtora
@@ -172,12 +172,11 @@ light_tosleep:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 10
+      seconds: 12
       milliseconds: 0
   - parallel:
     - service: light.turn_off
-      data:
-        transition: 5
+      data: {}
       target:
         entity_id:
         - light.wled_table
