@@ -291,6 +291,13 @@
       device_id: fa3818f9a75a0704698062d67b597aba
       entity_id: light.torsher_2
       domain: light
+    - service: light.turn_off
+      data: {}
+      target:
+        entity_id:
+        - light.wled_table
+        - light.wled
+        - light.wled_2
   mode: single
 - id: '1603735395693'
   alias: Угасание света перед сном
@@ -715,6 +722,11 @@
   - condition: state
     entity_id: sun.sun
     state: below_horizon
+  - type: is_not_open
+    condition: device
+    device_id: 1bd084cf04eca1b2119dbe6a51092f19
+    entity_id: binary_sensor.okno_v_komnate_contact
+    domain: binary_sensor
   - service: cover.close_cover
     data: {}
     target:
@@ -760,6 +772,11 @@
   - condition: state
     entity_id: sun.sun
     state: below_horizon
+  - type: is_not_open
+    condition: device
+    device_id: 1bd084cf04eca1b2119dbe6a51092f19
+    entity_id: binary_sensor.okno_v_komnate_contact
+    domain: binary_sensor
   - service: cover.close_cover
     data: {}
     target:
@@ -1871,3 +1888,22 @@
       - light.wled
       - light.wled_table
   mode: single
+- id: '1661706414333'
+  alias: Выключить ленты вместе с торшером
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: 1b788ea3d24640c4765af9db21a3d897
+    entity_id: light.torsher
+    domain: light
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.wled_table
+      - light.wled
+      - light.wled_2
+  mode: restart

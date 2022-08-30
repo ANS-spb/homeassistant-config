@@ -107,6 +107,11 @@
       type: initial_press
       subtype: 4
       unique_id: eab0a07c-82b1-4542-8b4d-0301a5422ed6
+    - platform: state
+      entity_id:
+        - light.kukhnia_potolok
+      from: "on"
+      to: "off"
   action:
     - service: timer.cancel
       target:

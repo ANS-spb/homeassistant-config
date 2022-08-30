@@ -1016,14 +1016,10 @@
                 {
                   "entity": "sensor.geiger_dose_rate",
                   "name": "Гейгер"
-                },
-                {
-                  "entity": "sensor.radiacode_dose_rate",
-                  "name": "Radiacode"
                 }
               ],
               "show": {
-                "labels": true,
+                "labels": false,
                 "labels_secondary": true,
                 "average": true,
                 "extrema": true,

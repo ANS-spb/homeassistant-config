@@ -32,10 +32,11 @@
       minutes: 0
       seconds: 2
       milliseconds: 0
+    enabled: false
   - parallel:
     - service: adaptive_lighting.apply
       data:
-        lights: light.torsher_melkaia, light.living_room
+        lights: light.living_room
         transition: 10
         entity_id: switch.adaptive_lighting_room
     - service: script.turn_on
@@ -162,21 +163,17 @@ wakeup_bedroom:
 light_tosleep:
   alias: Sleep lighting, smooth transition
   sequence:
-  - service: hue.activate_scene
-    data:
-      transition: 10
-      dynamic: true
-    target:
-      entity_id: '{{[''scene.spalnia_galaktika'',''scene.spalnia_svet_zvezd'',''scene.spalnia_tumannost'']
-        | random }}'
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 12
-      milliseconds: 0
   - parallel:
+    - service: hue.activate_scene
+      data:
+        transition: 10
+        dynamic: true
+      target:
+        entity_id: '{{[''scene.spalnia_galaktika'',''scene.spalnia_svet_zvezd'',''scene.spalnia_tumannost'']
+          | random }}'
     - service: light.turn_off
-      data: {}
+      data:
+        transition: 10
       target:
         entity_id:
         - light.wled_table
