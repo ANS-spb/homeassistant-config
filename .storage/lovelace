@@ -896,16 +896,16 @@
               "line_width": 2,
               "entities": [
                 {
-                  "entity": "sensor.cgllc_cgdn1_42a2_co2_density",
+                  "entity": "sensor.co2_sensor_air_monitor_lite",
                   "name": "CO2"
                 },
                 {
-                  "entity": "sensor.cgllc_cgdn1_42a2_pm25_density",
+                  "entity": "sensor.pm2_5_sensor_air_monitor_lite",
                   "name": "PM2.5",
                   "y-axis": "secondary"
                 },
                 {
-                  "entity": "sensor.cgllc_cgdn1_42a2_pm10_density",
+                  "entity": "sensor.pm10_sensor_air_monitor_lite",
                   "name": "PM10",
                   "y-axis": "secondary"
                 }
@@ -1271,18 +1271,6 @@
                   "type": "entities",
                   "entities": [
                     {
-                      "entity": "sensor.radiacode_dr_mean_value",
-                      "secondary_info": "last-updated"
-                    },
-                    {
-                      "entity": "sensor.radiacode_count_rate",
-                      "secondary_info": "last-updated"
-                    },
-                    {
-                      "entity": "sensor.radiacode_cr_mean_value",
-                      "secondary_info": "last-updated"
-                    },
-                    {
                       "entity": "sensor.geiger_counter_radiation_dose_per_hour",
                       "secondary_info": "last-updated"
                     },
@@ -1296,52 +1284,15 @@
               ]
             },
             {
-              "type": "custom:frigate-card",
-              "menu": {
-                "buttons": {
-                  "snapshots": true,
-                  "clips": true,
-                  "frigate": false,
-                  "live": true,
-                  "download": false,
-                  "frigate_ui": false,
-                  "fullscreen": true,
-                  "image": false
-                },
-                "mode": "overlay-right"
-              },
-              "view": {
-                "default": "live",
-                "update_force": false
-              },
-              "elements": [
+              "camera_view": "live",
+              "type": "picture-glance",
+              "entities": [
                 {
-                  "type": "custom:frigate-card-menu-icon",
-                  "title": "Открыть дверь",
-                  "icon": "mdi:door-open",
-                  "service": "script.turn_on",
-                  "service_data": {
-                    "entity_id": "script.domru_open_door_657617"
-                  }
+                  "entity": "script.domru_open_door_657617"
                 }
               ],
-              "live": {
-                "preload": true,
-                "controls": {
-                  "thumbnails": {
-                    "mode": "none"
-                  },
-                  "next_previous": {
-                    "style": "chevrons"
-                  }
-                }
-              },
-              "cameras": [
-                {
-                  "camera_entity": "camera.domru_domofon",
-                  "live_provider": "frigate-jsmpeg"
-                }
-              ]
+              "camera_image": "camera.127_0_0_1",
+              "title": "Домофон"
             },
             {
               "type": "entities",

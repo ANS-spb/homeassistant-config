@@ -867,7 +867,8 @@
     data:
       filename: /media/domofon.jpg
     target:
-      entity_id: camera.domru_domofon
+      entity_id:
+      - camera.domofon
   - variables:
       action_open: '{{ ''OPEN_'' ~ context.id }}'
       action_drop: '{{ ''DROP_'' ~ context.id }}'
@@ -898,6 +899,9 @@
           - action: '{{ action_drop }}'
             title: Сгинь
     - service: notify.tv
+      data:
+        message: Кто-то звонит в домофон!
+    - service: notify.lg_webos_tv_tn510sg
       data:
         message: Кто-то звонит в домофон!
   - service: telegram_bot.send_photo
@@ -1020,7 +1024,7 @@
     data:
       filename: /media/domofon.jpg
     target:
-      entity_id: camera.domru_domofon
+      entity_id: camera.domofon
   - wait_for_trigger:
     - platform: event
       event_type: folder_watcher
@@ -1028,6 +1032,7 @@
         event_type: closed
         file: domofon.jpg
     continue_on_timeout: false
+    timeout: 00:02:00
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
@@ -1035,11 +1040,7 @@
       parse_mode: html
       disable_notification: true
       timeout: 1000
-      inline_keyboard:
-      - '{{"\U0001F6AA"}} Открыть дверь:/open_door'
-      - "\U0001F4F8 Показать:/photo_entrance,  \U0001F575️‍♂️ Детект:/person_entrance"
-      message_tag: msg_to_edit
-  mode: single
+  mode: restart
 - id: '1645086906100'
   alias: Открыть или сбросить домофон по команде
   description: ''
@@ -1357,7 +1358,8 @@
     data:
       filename: /media/domofon.jpg
     target:
-      entity_id: camera.domru_domofon
+      entity_id:
+      - camera.domofon
   - wait_for_trigger:
     - platform: event
       event_type: folder_watcher
@@ -1365,6 +1367,7 @@
         event_type: closed
         file: domofon.jpg
     continue_on_timeout: false
+    timeout: 00:02:00
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
@@ -1374,7 +1377,7 @@
       parse_mode: html
       timeout: 1000
       message_tag: msg_to_edit
-  mode: single
+  mode: restart
 - id: '1648212086564'
   alias: Radiacode отвалился, перезапуск
   description: ''
@@ -1611,7 +1614,8 @@
     data:
       filename: /media/domofon.jpg
     target:
-      entity_id: camera.domru_domofon
+      entity_id:
+      - camera.domofon
   - wait_for_trigger:
     - platform: event
       event_type: folder_watcher
@@ -1619,6 +1623,7 @@
         event_type: closed
         file: domofon.jpg
     continue_on_timeout: false
+    timeout: 00:02:00
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
@@ -1628,7 +1633,7 @@
       parse_mode: html
       timeout: 1000
       message_tag: msg_to_edit
-  mode: single
+  mode: restart
 - id: '1656081010980'
   alias: Просмотр ТВ
   description: ''

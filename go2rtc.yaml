@@ -1,0 +1,18 @@
+streams:
+  domru_domofon_test: 
+    - ffmpeg:http://192.168.1.252:10080/api/camera/stream/780900131155/657617#video=copy#audio=aac
+    - ffmpeg:http://192.168.1.252:10080/api/camera/stream/780900131155/657617#video=copy#audio=opus
+
+#ffmpeg:
+#  h264_my: "-c:v h264_vaapi -avoid_negative_ts make_zero -fflags nobuffer -flags low_delay -strict experimental -analyzeduration 1000M -fflags +genpts+discardcorrupt -rw_timeout 5000000 -use_wallclock_as_timestamps 1 -f live_flv"
+
+webrtc:
+  listen: ":8555"
+  candidates:
+#    - stun:8555
+    - 217.12.73.36:8555
+
+log:
+  level: debug
+  exec: trace
+  webrtc: trace

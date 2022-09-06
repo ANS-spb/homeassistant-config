@@ -6,9 +6,9 @@
 - sensor.owm_clouds
 - sensor.openweathermap_cloud_coverage
 - sensor.outside_temperature_min_value
-- sensor.cgllc_cgdn1_42a2_pm10_density
-- sensor.cgllc_cgdn1_42a2_pm25_density
-- sensor.cgllc_cgdn1_42a2_co2_density
+- sensor.pm10_sensor_air_monitor_lite
+- sensor.pm2_5_sensor_air_monitor_lite
+- sensor.co2_sensor_air_monitor_lite
 - sensor.pressure_average
 - sensor.geiger_dose_rate
 - sensor.geiger_counter_radioactive_events_per_minute
