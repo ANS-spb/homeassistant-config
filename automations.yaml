@@ -679,7 +679,8 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: device_tracker.ble_tracker_nut
+    entity_id:
+    - device_tracker.ble_tracker_nut
     from: not_home
     to: home
     for:
@@ -688,17 +689,11 @@
       seconds: 0
   condition:
   - condition: template
-    value_template: '{{ states(''light.prikhozhaia'') != on }}'
-  - condition: template
-    value_template: '{{ states(''light.kukhnia_hue'') != on }}'
-  - condition: template
-    value_template: '{{ states(''light.torsher'') != on }}'
+    value_template: '{{ states(''light.prikhozhaia'') != ''on'' }}'
   - condition: numeric_state
-    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+    entity_id: sensor.osveshchionnost_v_prikhozhei_illuminance_lux
     below: '5'
-  - condition: numeric_state
-    entity_id: sensor.osveshchionnost_na_kukhne_illuminance_lux
-    below: '5'
+    attribute: illuminance_lux
   - condition: state
     entity_id: sensor.daytime
     state: 'on'
@@ -715,10 +710,23 @@
   - condition: state
     entity_id: light.prikhozhaia
     state: 'on'
-  - service: script.turn_on
-    target:
-      entity_id: script.1599944056170
-    data: {}
+  - if:
+    - condition: and
+      conditions:
+      - condition: template
+        value_template: '{{ states(''light.torsher_2'') != ''on'' }}'
+      - condition: template
+        value_template: '{{ states(''light.liustra'') != ''on'' }}'
+      - condition: template
+        value_template: '{{ states(''light.living_room'') != ''on'' }}'
+      - condition: numeric_state
+        entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+        below: 5
+    then:
+    - service: script.turn_on
+      data: {}
+      target:
+        entity_id: script.1599944056170
   - condition: state
     entity_id: sun.sun
     state: below_horizon
@@ -737,7 +745,8 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: sensor.knopka_v_koridore_action
+    entity_id:
+    - sensor.knopka_v_koridore_action
     to: single
   action:
   - service: light.turn_on
@@ -749,13 +758,10 @@
       minutes: 0
       seconds: 10
       milliseconds: 0
-  - condition: state
-    state: 'on'
-    entity_id: light.prikhozhaia
   - condition: template
-    value_template: '{{states.light.torsher.state != ''on'' and state_attr(''light.kukhnia_hue'',
-      ''brightness'') | float(0) > 2 and states.light.living_room.state != ''on''
-      }}'
+    value_template: '{{ states(''light.prikhozhaia'') == ''on'' }}'
+  - condition: template
+    value_template: '{{ states(''light.torsher'') != ''on'' }}'
   - condition: numeric_state
     entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
     below: '5'
@@ -867,8 +873,7 @@
     data:
       filename: /media/domofon.jpg
     target:
-      entity_id:
-      - camera.domofon
+      entity_id: camera.192_168_1_252
   - variables:
       action_open: '{{ ''OPEN_'' ~ context.id }}'
       action_drop: '{{ ''DROP_'' ~ context.id }}'
@@ -878,7 +883,7 @@
         title: Домофон
         message: Кто-то звонит в квартиру!
         data:
-          entity_id: camera.domru_domofon
+          entity_id: camera.domofon
           actions:
           - action: '{{ action_open }}'
             title: Открыть дверь
@@ -1020,26 +1025,51 @@
     id: callback
   condition: []
   action:
-  - service: camera.snapshot
-    data:
-      filename: /media/domofon.jpg
-    target:
-      entity_id: camera.domofon
-  - wait_for_trigger:
-    - platform: event
-      event_type: folder_watcher
-      event_data:
-        event_type: closed
-        file: domofon.jpg
-    continue_on_timeout: false
-    timeout: 00:02:00
-  - service: telegram_bot.send_photo
-    data:
-      file: /media/domofon.jpg
-      target: '{{ trigger.event.data.chat_id }}'
-      parse_mode: html
-      disable_notification: true
-      timeout: 1000
+  - parallel:
+    - sequence:
+      - service: camera.snapshot
+        data:
+          filename: /media/domofon.jpg
+        target:
+          entity_id: camera.domofon
+      - wait_for_trigger:
+        - platform: event
+          event_type: folder_watcher
+          event_data:
+            event_type: closed
+            file: domofon.jpg
+        continue_on_timeout: true
+        timeout: 00:00:10
+      - service: telegram_bot.send_photo
+        data:
+          caption: Фото через go2rtc
+          file: /media/domofon.jpg
+          target: '{{ trigger.event.data.chat_id }}'
+          parse_mode: html
+          disable_notification: true
+          timeout: 1000
+    - sequence:
+      - service: camera.snapshot
+        data:
+          filename: /media/domofon_raw.jpg
+        target:
+          entity_id: camera.192_168_1_252
+      - wait_for_trigger:
+        - platform: event
+          event_type: folder_watcher
+          event_data:
+            event_type: closed
+            file: domofon_raw.jpg
+        continue_on_timeout: true
+        timeout: 00:00:10
+      - service: telegram_bot.send_photo
+        data:
+          caption: Фото через аддон
+          file: /media/domofon_raw.jpg
+          target: '{{ trigger.event.data.chat_id }}'
+          parse_mode: html
+          disable_notification: true
+          timeout: 1000
   mode: restart
 - id: '1645086906100'
   alias: Открыть или сбросить домофон по команде
@@ -1139,18 +1169,18 @@
   - service: camera.record
     data:
       filename: /media/record.mp4
-      duration: 5
-      lookback: 15
+      duration: 10
     target:
-      entity_id: camera.domru_domofon
+      entity_id:
+      - camera.domofon
   - wait_for_trigger:
     - platform: event
       event_type: folder_watcher
       event_data:
-        event_type: closed
-        file: record.mp4
+        event_type: moved
+        dest_file: record.mp4
     continue_on_timeout: false
-    timeout: 00:02:00
+    timeout: 00:00:20
   - service: telegram_bot.send_video
     data:
       file: /media/record.mp4
@@ -1161,7 +1191,7 @@
       message_tag: msg_to_edit
       disable_notification: true
       caption: А вот и видосик подъехал
-  mode: single
+  mode: restart
 - id: '1645168133405'
   alias: Звонок в дверь
   description: ''
@@ -1366,8 +1396,8 @@
       event_data:
         event_type: closed
         file: domofon.jpg
-    continue_on_timeout: false
-    timeout: 00:02:00
+    continue_on_timeout: true
+    timeout: 00:00:10
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
@@ -1497,52 +1527,6 @@
         chat_id: '{{ trigger.event.data.chat_id }}'
         inline_keyboard:
         - Назад:/back
-  mode: single
-- id: '1653466659164'
-  alias: Звонок в домофон (видео в телеграм) (TEST)
-  description: ''
-  trigger:
-  - platform: event
-    event_type: telegram_command
-    event_data:
-      command: /video
-  condition: []
-  action:
-  - service: telegram_bot.send_message
-    data:
-      message: Запущено в {{now().strftime("%H:%M:%S")}}
-  - service: camera.record
-    data:
-      filename: /media/record.mp4
-      duration: 10
-      lookback: 10
-    target:
-      entity_id: camera.domru_domofon
-  - wait_for_trigger:
-    - platform: event
-      event_type: folder_watcher
-      event_data:
-        event_type: closed
-        file: record.mp4
-    continue_on_timeout: false
-    timeout: 00:02:00
-  - service: telegram_bot.send_message
-    data:
-      message: Закончено в {{now().strftime("%H:%M:%S")}}
-  - service: telegram_bot.send_video
-    data:
-      file: /media/record.mp4
-      target:
-      - 116325704
-      parse_mode: html
-      timeout: 1000
-      message_tag: msg_to_edit
-      disable_notification: true
-      caption: Тестовый видосик
-  - service: homeassistant.reload_config_entry
-    data: {}
-    target:
-      entity_id: camera.domru_domofon
   mode: single
 - id: '1654280445528'
   alias: 'Read Nut Mini battery '
@@ -1802,8 +1786,9 @@
       seconds: 0
   condition: []
   action:
-  - service: notify.sms_ans
+  - service: notify.sms
     data:
+      target: '{{states(''sensor.ans_phone_number'')}}'
       message: 'Network Status: {{ states[trigger.entity_id.split(".")[0]][trigger.entity_id.split(".")[1]].name
         }} is {{ trigger.to_state.state }}
 
@@ -1873,26 +1858,6 @@
       message: "{{ trigger.event.data.phone }} прислал мессагу: \n{{ trigger.event.data.text
         }}"
   mode: queued
-- id: '1661237353968'
-  alias: Выключить ленты при выключении торшера
-  description: ''
-  trigger:
-  - device_id: 2fc5430ae34c11e5cd535f36d767ee7e
-    domain: hue
-    platform: device
-    type: initial_press
-    subtype: 4
-    unique_id: 8af312d4-12ba-4e5e-8593-6c33cdec3391
-  condition: []
-  action:
-  - service: light.turn_off
-    data: {}
-    target:
-      entity_id:
-      - light.wled_2
-      - light.wled
-      - light.wled_table
-  mode: single
 - id: '1661706414333'
   alias: Выключить ленты вместе с торшером
   description: ''

@@ -80,10 +80,10 @@ input_boolean:
     name: "Эффекты гирлянды"
     initial: on
 
-input_text:
-  ans_phone_number:
-    name: ANS phone number
-    initial: !secret sms_ans
+#input_text:
+#  ans_phone_number:
+#    name: ANS phone number
+#    initial: !secret sms_ans
 
 folder_watcher:
   - folder: /media

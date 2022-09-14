@@ -63,7 +63,7 @@ wakeup_bedroom:
     - conditions:
       - condition: numeric_state
         entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
-        above: '30'
+        above: 15
       sequence:
       - condition: numeric_state
         entity_id: cover.shtora
@@ -132,8 +132,8 @@ wakeup_bedroom:
     state: 'on'
   - delay:
       hours: 0
-      minutes: 1
-      seconds: 10
+      minutes: 0
+      seconds: 30
       milliseconds: 0
   - condition: numeric_state
     entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
@@ -152,6 +152,11 @@ wakeup_bedroom:
     service: light.turn_on
     target:
       entity_id: light.living_room
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
   - data:
       brightness_pct: 100
       entity_id: light.living_room
