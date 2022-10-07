@@ -1291,7 +1291,7 @@
                   "entity": "script.domru_open_door_657617"
                 }
               ],
-              "camera_image": "camera.domofon",
+              "camera_image": "camera.frigate_test",
               "title": "Домофон"
             },
             {
@@ -1310,14 +1310,20 @@
               "type": "custom:frigate-card",
               "cameras": [
                 {
-                  "camera_entity": "camera.192_168_1_252",
-                  "live_provider": "ha"
+                  "camera_entity": "camera.domru_domofon",
+                  "live_provider": "frigate-jsmpeg"
                 }
               ],
               "menu": {
                 "buttons": {
-                  "frigate": false
+                  "frigate": {
+                    "enabled": true
+                  }
                 }
+              },
+              "view": {
+                "default": "live",
+                "dark_mode": "off"
               }
             }
           ]

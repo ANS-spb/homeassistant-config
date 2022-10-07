@@ -33,7 +33,7 @@
       field: diskBytes
 
 # Uptime
-- platform: uptime
+#- platform: uptime
 
 # CPU Temp
 - platform: command_line

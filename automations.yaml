@@ -873,7 +873,8 @@
     data:
       filename: /media/domofon.jpg
     target:
-      entity_id: camera.192_168_1_252
+      entity_id:
+      - camera.frigate_test
   - variables:
       action_open: '{{ ''OPEN_'' ~ context.id }}'
       action_drop: '{{ ''DROP_'' ~ context.id }}'
@@ -919,7 +920,7 @@
       message_tag: msg_to_edit
       disable_notification: true
       caption: Кто стучится в дверь моя?
-    enabled: false
+    enabled: true
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
@@ -1029,43 +1030,20 @@
     - sequence:
       - service: camera.snapshot
         data:
-          filename: /media/domofon.jpg
+          filename: /media/domofon_frigate.jpg
         target:
-          entity_id: camera.domofon
+          entity_id: camera.frigate_test
       - wait_for_trigger:
         - platform: event
           event_type: folder_watcher
           event_data:
             event_type: closed
-            file: domofon.jpg
+            file: domofon_frigate.jpg
         continue_on_timeout: true
-        timeout: 00:00:10
+        timeout: 00:00:00
       - service: telegram_bot.send_photo
         data:
-          caption: Фото через go2rtc
-          file: /media/domofon.jpg
-          target: '{{ trigger.event.data.chat_id }}'
-          parse_mode: html
-          disable_notification: true
-          timeout: 1000
-    - sequence:
-      - service: camera.snapshot
-        data:
-          filename: /media/domofon_raw.jpg
-        target:
-          entity_id: camera.192_168_1_252
-      - wait_for_trigger:
-        - platform: event
-          event_type: folder_watcher
-          event_data:
-            event_type: closed
-            file: domofon_raw.jpg
-        continue_on_timeout: true
-        timeout: 00:00:10
-      - service: telegram_bot.send_photo
-        data:
-          caption: Фото через аддон
-          file: /media/domofon_raw.jpg
+          file: /media/domofon_frigate.jpg
           target: '{{ trigger.event.data.chat_id }}'
           parse_mode: html
           disable_notification: true
@@ -1149,38 +1127,32 @@
     entity_id: sensor.domofon_state
     from: Idle
     to: Ring
+    enabled: true
   - platform: event
     event_type: telegram_command
     event_data:
       command: /video
   condition: []
   action:
-  - service: telegram_bot.send_video
-    data:
-      caption: Тестовый (по ивенту)
-      url: http://127.0.0.1:5000/api/events/{{states('input_text.frigate_event')}}/clip.mp4
-      target:
-      - 116325704
-      parse_mode: html
-      timeout: 1000
-      message_tag: msg_to_edit
-      disable_notification: true
-    enabled: false
   - service: camera.record
     data:
       filename: /media/record.mp4
-      duration: 10
+      duration: 5
+      lookback: 10
     target:
-      entity_id:
-      - camera.domofon
+      entity_id: camera.domru_domofon
   - wait_for_trigger:
     - platform: event
       event_type: folder_watcher
       event_data:
-        event_type: moved
-        dest_file: record.mp4
-    continue_on_timeout: false
-    timeout: 00:00:20
+        event_type: closed
+        file: record.mp4
+    continue_on_timeout: true
+    timeout:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
   - service: telegram_bot.send_video
     data:
       file: /media/record.mp4
@@ -1191,6 +1163,17 @@
       message_tag: msg_to_edit
       disable_notification: true
       caption: А вот и видосик подъехал
+  - service: telegram_bot.send_video
+    data:
+      caption: Тестовый (по ивенту)
+      url: http://127.0.0.1:5000/api/events/{{states('input_text.frigate_event')}}/clip.mp4
+      target:
+      - 116325704
+      parse_mode: html
+      timeout: 1000
+      message_tag: msg_to_edit
+      disable_notification: true
+    enabled: true
   mode: restart
 - id: '1645168133405'
   alias: Звонок в дверь
@@ -1323,15 +1306,9 @@
       value: '{{trigger.payload_json["after"]["id"]}}'
   mode: parallel
 - id: '1646401197588'
-  alias: Radiacode унюхал проблему
+  alias: Гейгер унюхал проблему
   description: ''
   trigger:
-  - platform: numeric_state
-    entity_id: sensor.radiacode_dose_rate
-    above: '0.5'
-  - platform: numeric_state
-    entity_id: sensor.radiacode_dose_rate
-    above: '1'
   - platform: numeric_state
     entity_id: sensor.geiger_dose_rate
     above: '0.5'
@@ -1457,7 +1434,7 @@
     data: {}
   mode: single
 - id: '1648396428257'
-  alias: Radiacode - информация по запросу в Telegram
+  alias: Гейгер - информация по запросу в Telegram
   description: ''
   trigger:
   - platform: event
@@ -1484,13 +1461,7 @@
           'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')
           }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')
           }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)
-          }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:
-          *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')
-          }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',
-          'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')
-          }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\nОбновление
-          данных ПП было {{relative_time(states.sensor.radiacode.last_updated) }}
-          назад.\n\n{% else %}\nСенсор Radiacode недоступен.\n\n{% endif %}\n"
+          }} назад.\n"
         target: '{{ trigger.event.data.chat_id }}'
         parse_mode: markdown
         disable_notification: true
@@ -1516,13 +1487,7 @@
           'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')
           }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')
           }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)
-          }} назад.\n{% if states('sensor.radiacode') != \"unknown\" %}\n\nRadiacode:
-          *{{ states('sensor.radiacode') }} {{\nstate_attr('sensor.radiacode', 'unit_of_measurement')
-          }}* при среднем {{\nstates('sensor.radiacode_dr_mean_value') }} {{\nstate_attr('sensor.radiacode_dr_mean_value',
-          'unit_of_measurement') }}. \n\nСкорость счёта Radiacode: {{ states('sensor.radiacode_cr')
-          }} CPS при\nсреднем {{ states('sensor.radiacode_cr_mean_value') }} CPS.\n\nОбновление
-          данных ПП было {{relative_time(states.sensor.radiacode.last_updated) }}
-          назад.\n\n{% else %}\nСенсор Radiacode недоступен.\n\n{% endif %}\n"
+          }} назад.\n"
         message_id: last
         chat_id: '{{ trigger.event.data.chat_id }}'
         inline_keyboard:

@@ -1,13 +1,14 @@
 streams:
-  domru_domofon_test: 
-    - ffmpeg:http://192.168.1.252:10080/api/camera/stream/780900131155/657617#video=copy#audio=aac
-    - ffmpeg:http://192.168.1.252:10080/api/camera/stream/780900131155/657617#video=copy#audio=opus
+  domru_domofon_test:
+    - ffmpeg:http://192.168.1.252:20880/api/camera/stream/780900131155/657617#video=copy#audio=aac
+    - ffmpeg:http://192.168.1.252:20880/api/camera/stream/780900131155/657617#audio=opus
 
 webrtc:
   listen: ":8555"
   candidates:
-#    - stun:8555
-    - 217.12.73.36:8555
+    #- stun:8555
+    - d7160cc8a60d.sn.mynetname.net:8555
+    - 176.215.64.220:8555
 
 log:
   level: trace

@@ -1,6 +1,6 @@
 '1599944056170':
   alias: Обычный свет
-  mode: single
+  mode: restart
   sequence:
   - parallel:
     - service: hue.activate_scene
@@ -30,9 +30,9 @@
   - delay:
       hours: 0
       minutes: 0
-      seconds: 2
+      seconds: 15
       milliseconds: 0
-    enabled: false
+    enabled: true
   - parallel:
     - service: adaptive_lighting.apply
       data:
