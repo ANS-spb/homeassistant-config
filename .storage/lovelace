@@ -619,6 +619,37 @@
                           }
                         },
                         {
+                          "type": "custom:slider-button-card",
+                          "entity": "light.wled",
+                          "slider": {
+                            "direction": "left-right",
+                            "background": "solid"
+                          },
+                          "action_button": {
+                            "mode": "toggle",
+                            "show": true
+                          }
+                        },
+                        {
+                          "type": "custom:slider-button-card",
+                          "entity": "light.wled_2",
+                          "slider": {
+                            "direction": "left-right",
+                            "background": "solid"
+                          },
+                          "action_button": {
+                            "mode": "toggle",
+                            "show": true
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "square": false,
+                      "columns": 4,
+                      "type": "grid",
+                      "cards": [
+                        {
                           "show_name": false,
                           "show_icon": true,
                           "type": "button",
@@ -636,6 +667,27 @@
                           },
                           "entity": "script.light_tosleep",
                           "name": "Вечерний свет "
+                        },
+                        {
+                          "show_name": false,
+                          "show_icon": true,
+                          "type": "button",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "entity": "script.1638995744105",
+                          "name": "Эффект ленты"
+                        },
+                        {
+                          "show_name": false,
+                          "show_icon": true,
+                          "icon": "mdi:led-strip-variant-off",
+                          "type": "button",
+                          "tap_action": {
+                            "action": "toggle"
+                          },
+                          "entity": "script.wled_static_effect",
+                          "name": "Гирлянда, не моргай"
                         }
                       ]
                     }
@@ -2247,162 +2299,6 @@
                       "modify": "var dt = new Date(0,0,0,0,0,0,(Date.now()-Date.parse(x))); isFinite(dt) ? dt.toTimeString().split(\" \")[0] : \"\"\n"
                     }
                   ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "title": "Meshtastic",
-          "path": "meshtastic",
-          "icon": "mdi:access-point",
-          "type": "sidebar",
-          "badges": [],
-          "cards": [
-            {
-              "type": "entities",
-              "entities": [
-                {
-                  "entity": "binary_sensor.meshtastic"
-                },
-                {
-                  "entity": "sensor.meshtastic_radio_frequency"
-                },
-                {
-                  "entity": "sensor.meshtastic_tx_utilization",
-                  "secondary_info": "last-updated"
-                },
-                {
-                  "entity": "sensor.meshtastic_uptime"
-                },
-                {
-                  "entity": "sensor.meshtastic_reboot_counter"
-                },
-                {
-                  "entity": "sensor.meshtastic_wifi_rssi"
-                },
-                {
-                  "entity": "sensor.meshtastic_wifi_ip"
-                },
-                {
-                  "entity": "sensor.meshtastic_battery"
-                },
-                {
-                  "entity": "sensor.meshtastic_voltage"
-                }
-              ],
-              "show_header_toggle": false,
-              "view_layout": {
-                "position": "sidebar"
-              }
-            },
-            {
-              "type": "vertical-stack",
-              "cards": [
-                {
-                  "type": "custom:apexcharts-card",
-                  "apex_config": {
-                    "chart": {
-                      "height": "250px"
-                    }
-                  },
-                  "header": {
-                    "show": true,
-                    "show_states": true,
-                    "colorize_states": true
-                  },
-                  "stacked": true,
-                  "hours_12": false,
-                  "graph_span": "24h",
-                  "span": {
-                    "end": "hour",
-                    "offset": ""
-                  },
-                  "series": [
-                    {
-                      "entity": "sensor.meshtastic_airtime",
-                      "name": "tx",
-                      "type": "column",
-                      "data_generator": "let now = start.getTime();\nconst data = JSON.parse(\"[\" + entity.attributes.tx_log + \"]\").reverse();\nreturn data.map((entry) => {\n  const lNow = now;\n  now += 60 * 60 * 1000;\n  return [lNow, entry];\n}).reverse();\n",
-                      "group_by": {
-                        "func": "min",
-                        "duration": "1h"
-                      }
-                    },
-                    {
-                      "entity": "sensor.meshtastic_airtime",
-                      "name": "rx",
-                      "type": "column",
-                      "data_generator": "let now = start.getTime();\nconst data = JSON.parse(\"[\" + entity.attributes.rx_log + \"]\").reverse();\nreturn data.map((entry) => {\n  const lNow = now;\n  now += 60 * 60 * 1000;\n  return [lNow, entry];\n}).reverse();\n",
-                      "group_by": {
-                        "func": "min",
-                        "duration": "1h"
-                      }
-                    },
-                    {
-                      "entity": "sensor.meshtastic_airtime",
-                      "name": "all_rx",
-                      "type": "column",
-                      "data_generator": "let now = start.getTime();\nconst data = JSON.parse(\"[\" + entity.attributes.rx_all_log + \"]\").reverse();\nreturn data.map((entry) => {\n  const lNow = now;\n  now += 60 * 60 * 1000;\n  return [lNow, entry];\n}).reverse();\n",
-                      "group_by": {
-                        "func": "min",
-                        "duration": "1h"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:apexcharts-card",
-                  "apex_config": {
-                    "chart": {
-                      "height": "250px"
-                    }
-                  },
-                  "header": {
-                    "show": true,
-                    "show_states": true,
-                    "colorize_states": true
-                  },
-                  "stacked": true,
-                  "hours_12": false,
-                  "graph_span": "24h",
-                  "span": {
-                    "end": "hour",
-                    "offset": ""
-                  },
-                  "series": [
-                    {
-                      "entity": "sensor.meshtastic_channel_utilization",
-                      "name": "ch util",
-                      "type": "column",
-                      "group_by": {
-                        "func": "max",
-                        "duration": "1h"
-                      }
-                    },
-                    {
-                      "entity": "sensor.meshtastic_tx_utilization",
-                      "name": "tx util",
-                      "type": "column",
-                      "group_by": {
-                        "func": "max",
-                        "duration": "1h"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "history-graph",
-                  "entities": [
-                    {
-                      "entity": "sensor.meshtastic_channel_utilization"
-                    },
-                    {
-                      "entity": "sensor.meshtastic_utilization_tx"
-                    }
-                  ],
-                  "hours_to_show": 24,
-                  "refresh_interval": 10
                 }
               ]
             }

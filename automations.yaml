@@ -1652,9 +1652,10 @@
       - condition: state
         entity_id: sensor.daytime
         state: 'on'
-      - condition: template
-        value_template: '{{ states.cover.shtora.context.id == states.automation.prosmotr_tv.context.id
-          }}'
+      - condition: numeric_state
+        entity_id: cover.shtora
+        attribute: current_position
+        below: 50
       then:
       - device_id: 00113b2b18e9fc886e10987ed5635044
         domain: cover
