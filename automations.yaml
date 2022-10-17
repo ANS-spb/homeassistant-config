@@ -904,6 +904,9 @@
             destructive: true
           - action: '{{ action_drop }}'
             title: Сгинь
+          data:
+            push:
+              interruption-level: time-sensitive
     - service: notify.tv
       data:
         message: Кто-то звонит в домофон!
@@ -1009,7 +1012,7 @@
           entity_id: automation.zvonok_v_domofon
           message: Запрос не выполнен - не проходит по условиям. Полимеры просраны.
             Статус домофона {{ states.sensor.domofon_state.state }}.
-  mode: single
+  mode: restart
 - id: '1645086792531'
   alias: Фото с домофона по команде
   description: ''
@@ -1140,7 +1143,8 @@
       duration: 5
       lookback: 10
     target:
-      entity_id: camera.domru_domofon
+      entity_id:
+      - camera.frigate_test
   - wait_for_trigger:
     - platform: event
       event_type: folder_watcher
@@ -1262,6 +1266,9 @@
         data:
           message: Дверь открыта
           title: Домофон
+          data:
+            push:
+              interruption-level: time-sensitive
       - service: telegram_bot.send_message
         data:
           target:
@@ -1278,6 +1285,9 @@
         data:
           message: Звонок сброшен
           title: Домофон
+          data:
+            push:
+              interruption-level: time-sensitive
       - service: telegram_bot.send_message
         data:
           target:
@@ -1325,6 +1335,9 @@
         устройством {{ states[trigger.entity_id.split(\".\")[0]][\ntrigger.entity_id.split(\".\")[1]].name
         }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value') }} {{\nstate_attr('sensor.geiger_dr_mean_value',
         'unit_of_measurement') }}. \n"
+      data:
+        push:
+          interruption-level: time-sensitive
   - service: notify.telegram
     data:
       title: ☢️ *Радиационный мониторинг*
@@ -1715,22 +1728,6 @@
       target:
         entity_id: input_boolean.manual_light_off
   mode: restart
-- id: '1657219950895'
-  alias: Обновление супервизора
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - update.home_assistant_supervisor_update
-    from: 'on'
-    to: 'off'
-  condition: []
-  action:
-  - service: telegram_bot.send_message
-    data:
-      message: Супер обновился до версии {{ state_attr('update.home_assistant_supervisor_update',
-        'installed_version') }}
-  mode: single
 - id: '1659508235142'
   alias: Что-то отвалилось, послать SMS
   description: ''
