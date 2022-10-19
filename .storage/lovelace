@@ -1336,47 +1336,52 @@
               ]
             },
             {
-              "camera_view": "live",
-              "type": "picture-glance",
-              "entities": [
+              "type": "vertical-stack",
+              "cards": [
                 {
-                  "entity": "script.domru_open_door_657617"
-                }
-              ],
-              "camera_image": "camera.frigate_test",
-              "title": "Домофон"
-            },
-            {
-              "type": "entities",
-              "entities": [
-                {
-                  "entity": "switch.domofon_once"
+                  "type": "custom:frigate-card",
+                  "cameras": [
+                    {
+                      "camera_entity": "camera.domru_domofon",
+                      "live_provider": "frigate-jsmpeg"
+                    },
+                    {
+                      "camera_entity": "camera.frigate_mjpeg"
+                    }
+                  ],
+                  "menu": {
+                    "buttons": {
+                      "frigate": {
+                        "enabled": true
+                      }
+                    }
+                  },
+                  "view": {
+                    "default": "live",
+                    "dark_mode": "off"
+                  }
                 },
                 {
-                  "entity": "sensor.domofon_state"
-                }
-              ],
-              "show_header_toggle": false
-            },
-            {
-              "type": "custom:frigate-card",
-              "cameras": [
+                  "type": "custom:mushroom-entity-card",
+                  "entity": "script.domru_open_door_657617",
+                  "name": "Открыть дверь",
+                  "icon": "mdi:home-lock-open",
+                  "icon_color": "red",
+                  "fill_container": false
+                },
                 {
-                  "camera_entity": "camera.domru_domofon",
-                  "live_provider": "frigate-jsmpeg"
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "switch.domofon_once"
+                    },
+                    {
+                      "entity": "sensor.domofon_state"
+                    }
+                  ],
+                  "show_header_toggle": false
                 }
-              ],
-              "menu": {
-                "buttons": {
-                  "frigate": {
-                    "enabled": true
-                  }
-                }
-              },
-              "view": {
-                "default": "live",
-                "dark_mode": "off"
-              }
+              ]
             }
           ]
         },

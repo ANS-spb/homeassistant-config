@@ -40,6 +40,13 @@
     - conditions: []
       sequence: []
     default: []
+  - service: telegram_bot.send_message
+    data:
+      message: "\U0001F3C1 Cервер запущен в {{ states('sensor.time') }}.\n⏱ Время
+        запуска Home Assistant составило {{ states('sensor.start_time') | format(morph='секунда',
+        as_text=false) }}.\n"
+      title: "\U0001F197 Системное уведомление"
+      target: 116325704
   mode: single
 - id: '1601827285752'
   alias: Hass Shutdown Notification
@@ -867,7 +874,10 @@
     entity_id: sensor.domofon_state
     from: Idle
     to: Ring
-  condition: []
+  condition:
+  - condition: template
+    value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
+      0) > 60 }}'
   action:
   - service: camera.snapshot
     data:
@@ -882,16 +892,18 @@
     - service: notify.mobile_app_iphone_ans
       data:
         title: Домофон
-        message: Кто-то звонит в квартиру!
+        message: Нам звонят!
         data:
-          entity_id: camera.domofon
+          entity_id: camera.frigate_mjpeg
           actions:
           - action: '{{ action_open }}'
-            title: Открыть дверь
+            title: Открыть
+            icon: sfsymbols:lock.open
             destructive: true
           - action: '{{ action_drop }}'
             title: Сгинь
-      enabled: false
+            icon: sfsymbols:xmark.circle
+      enabled: true
     - service: notify.mobile_app_iphone_ans
       data:
         title: Домофон
@@ -907,6 +919,7 @@
           data:
             push:
               interruption-level: time-sensitive
+      enabled: false
     - service: notify.tv
       data:
         message: Кто-то звонит в домофон!
@@ -1035,7 +1048,7 @@
         data:
           filename: /media/domofon_frigate.jpg
         target:
-          entity_id: camera.frigate_test
+          entity_id: camera.frigate_mjpeg
       - wait_for_trigger:
         - platform: event
           event_type: folder_watcher
@@ -1130,7 +1143,7 @@
     entity_id: sensor.domofon_state
     from: Idle
     to: Ring
-    enabled: true
+    enabled: false
   - platform: event
     event_type: telegram_command
     event_data:
