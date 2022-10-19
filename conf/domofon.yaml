@@ -4,7 +4,7 @@
 
 rest_command:
   domru_open_door_657617:
-    url: http://192.168.1.252:10080/api/open/780900131155/657617
+    url: http://192.168.1.252:20880/api/open/780900131155/657617
 
 script:
   domru_open_door_657617:

@@ -884,7 +884,7 @@
       filename: /media/domofon.jpg
     target:
       entity_id:
-      - camera.frigate_test
+      - camera.frigate_mjpeg
   - variables:
       action_open: '{{ ''OPEN_'' ~ context.id }}'
       action_drop: '{{ ''DROP_'' ~ context.id }}'
