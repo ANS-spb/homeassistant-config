@@ -40,6 +40,7 @@
     - conditions: []
       sequence: []
     default: []
+    enabled: false
   - service: telegram_bot.send_message
     data:
       message: "\U0001F3C1 Cервер запущен в {{ states('sensor.time') }}.\n⏱ Время
@@ -1141,9 +1142,12 @@
   trigger:
   - platform: state
     entity_id: sensor.domofon_state
-    from: Idle
-    to: Ring
-    enabled: false
+    from: Open
+    to: Idle
+  - platform: state
+    entity_id: sensor.domofon_state
+    from: Drop
+    to: Idle
   - platform: event
     event_type: telegram_command
     event_data:
@@ -1158,6 +1162,7 @@
     target:
       entity_id:
       - camera.frigate_test
+    enabled: false
   - wait_for_trigger:
     - platform: event
       event_type: folder_watcher
@@ -1170,6 +1175,7 @@
       minutes: 0
       seconds: 0
       milliseconds: 0
+    enabled: false
   - service: telegram_bot.send_video
     data:
       file: /media/record.mp4
@@ -1180,6 +1186,7 @@
       message_tag: msg_to_edit
       disable_notification: true
       caption: А вот и видосик подъехал
+    enabled: false
   - service: telegram_bot.send_video
     data:
       caption: Тестовый (по ивенту)
