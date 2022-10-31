@@ -857,6 +857,11 @@
     value_template: '{{ trigger.from_state.state != "unavailable" and trigger.from_state.state
       != "unknown" }}'
   action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
   - wait_for_trigger:
     - platform: state
       entity_id: sensor.opple_action

@@ -43,7 +43,6 @@
       target:
         entity_id:
         - script.1638995744105
-        - script.wled_random_effect
       data: {}
   icon: mdi:lamp
 '2131':
@@ -176,17 +175,55 @@ light_tosleep:
       target:
         entity_id: '{{[''scene.spalnia_galaktika'',''scene.spalnia_svet_zvezd'',''scene.spalnia_tumannost'']
           | random }}'
+      enabled: true
     - service: light.turn_off
       data:
         transition: 10
       target:
         entity_id:
-        - light.wled_table
         - light.wled_2
     - service: input_boolean.turn_off
       data: {}
       target:
         entity_id: input_boolean.manual_effects_on
+      enabled: false
+    - choose:
+      - conditions:
+        - condition: device
+          type: is_on
+          device_id: d9631ea87a6b46b5e7e5fadb00518bb8
+          entity_id: light.wled
+          domain: light
+        sequence:
+        - service: script.turn_on
+          data: {}
+          target:
+            entity_id: script.wled_static_effect
+      default: []
+      enabled: false
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 15
+      milliseconds: 0
+  - parallel:
+    - service: hue.activate_scene
+      data:
+        transition: 10
+        dynamic: true
+      target:
+        entity_id: '{{[''scene.spalnia_galaktika'',''scene.spalnia_svet_zvezd'',''scene.spalnia_tumannost'']
+          | random }}'
+      enabled: false
+    - service: light.turn_off
+      data: {}
+      target:
+        entity_id: light.wled_table
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id: input_boolean.manual_effects_on
+      enabled: false
     - choose:
       - conditions:
         - condition: device
