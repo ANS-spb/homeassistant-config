@@ -772,10 +772,10 @@
     value_template: '{{ states(''light.torsher'') != ''on'' }}'
   - condition: numeric_state
     entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
-    below: '5'
+    below: 6
   - condition: numeric_state
     entity_id: sensor.osveshchionnost_na_kukhne_illuminance_lux
-    below: '5'
+    below: 10
   - condition: state
     entity_id: sensor.daytime
     state: 'on'
@@ -890,7 +890,7 @@
       filename: /media/domofon.jpg
     target:
       entity_id:
-      - camera.frigate_mjpeg
+      - camera.domru_domofon
   - variables:
       action_open: '{{ ''OPEN_'' ~ context.id }}'
       action_drop: '{{ ''DROP_'' ~ context.id }}'
@@ -909,7 +909,7 @@
           - action: '{{ action_drop }}'
             title: Сгинь
             icon: sfsymbols:xmark.circle
-      enabled: true
+      enabled: false
     - service: notify.mobile_app_iphone_ans
       data:
         title: Домофон
@@ -922,10 +922,8 @@
             destructive: true
           - action: '{{ action_drop }}'
             title: Сгинь
-          data:
-            push:
-              interruption-level: time-sensitive
-      enabled: false
+          push:
+            interruption-level: time-sensitive
     - service: notify.tv
       data:
         message: Кто-то звонит в домофон!
@@ -934,7 +932,7 @@
         message: Кто-то звонит в домофон!
   - service: telegram_bot.send_photo
     data:
-      url: http://127.0.0.1:5000/api/events/{{states('input_text.frigate_event')}}/snapshot.jpg?bbox=1&crop=1&timestamp=1
+      url: http://127.0.0.1:5000/api/domru_domofon/person/snapshot.jpg
       target:
       - 116325704
       parse_mode: html
@@ -959,6 +957,7 @@
       - ⛔️ Сбросить:/drop_domofon
       - "\U0001F4F8 Показать:/photo_entrance,  \U0001F575️‍♂️ Детект:/person_entrance"
       message_tag: msg_to_edit
+    enabled: true
   - wait_for_trigger:
     - platform: event
       event_type: mobile_app_notification_action
@@ -1667,6 +1666,7 @@
       then:
       - service: script.light_tosleep
         data: {}
+      enabled: false
   mode: restart
 - id: '1656081690599'
   alias: Просмотр ТВ закончен

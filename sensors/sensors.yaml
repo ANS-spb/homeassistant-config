@@ -32,6 +32,7 @@
   state_characteristic: mean
   max_age:
     minutes: 10
+  sampling_size: 200
 
 - platform: statistics
   entity_id: sensor.pressure_average
