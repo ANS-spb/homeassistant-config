@@ -9,7 +9,7 @@ mqtt:
       icon: mdi:clock-outline
       state_topic: "zigbee2mqtt/bridge/state"
 
-    - name: "Zigbee2MQTT Verion"
+    - name: "Zigbee2MQTT Verison"
       icon: mdi:numeric-1-box-multiple-outline
       state_topic: "zigbee2mqtt/bridge/info"
       value_template: "{{ value_json.version }}"
