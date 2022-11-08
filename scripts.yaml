@@ -204,7 +204,7 @@ light_tosleep:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 15
+      seconds: 20
       milliseconds: 0
   - parallel:
     - service: hue.activate_scene
@@ -444,6 +444,7 @@ wled_static_effect:
       color_temp: 407
     target:
       entity_id: light.wled
+    enabled: false
   - parallel:
     - service: select.select_option
       target:

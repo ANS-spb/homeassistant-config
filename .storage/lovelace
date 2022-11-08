@@ -1755,6 +1755,38 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "entities",
+              "entities": [
+                {
+                  "entity": "update.zigbee2mqtt_update"
+                },
+                {
+                  "entity": "sensor.zigbee2mqtt_verion"
+                },
+                {
+                  "entity": "sensor.zigbee2mqtt_bridge_status"
+                },
+                {
+                  "entity": "sensor.zigbee2mqtt_coordinator_type"
+                },
+                {
+                  "entity": "sensor.zigbee2mqtt_coordinator_firmware"
+                },
+                {
+                  "entity": "sensor.zigbee2mqtt_coordinator_version"
+                },
+                {
+                  "entity": "sensor.zigbee2mqtt_coordinator_zigbee_channel"
+                },
+                {
+                  "entity": "sensor.zigbee2mqtt_defined_groups"
+                },
+                {
+                  "entity": "sensor.zigbee2mqtt_device_count"
+                }
+              ]
             }
           ]
         },

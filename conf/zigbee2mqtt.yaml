@@ -1,0 +1,45 @@
+###################################
+#  Сенсоры состояния Zigbee2MQTT  #
+###################################
+
+mqtt:
+  sensor:
+
+    - name: "Zigbee2MQTT Bridge Status"
+      icon: mdi:clock-outline
+      state_topic: "zigbee2mqtt/bridge/state"
+
+    - name: "Zigbee2MQTT Verion"
+      icon: mdi:numeric-1-box-multiple-outline
+      state_topic: "zigbee2mqtt/bridge/info"
+      value_template: "{{ value_json.version }}"
+
+    - name: "Zigbee2MQTT Coordinator Zigbee Channel"
+      icon: mdi:numeric
+      state_topic: "zigbee2mqtt/bridge/info"
+      value_template: "{{ value_json.network.channel }}"
+
+    - name: "Zigbee2MQTT Coordinator Type"
+      icon: mdi:card-text-outline
+      state_topic: "zigbee2mqtt/bridge/info"
+      value_template: "{{ value_json.coordinator.type }}"
+
+    - name: "Zigbee2MQTT Coordinator Firmware"
+      icon: mdi:card-text-outline
+      state_topic: "zigbee2mqtt/bridge/info"
+      value_template: "{{ value_json.coordinator.meta.revision }}"
+
+    - name: "Zigbee2MQTT Coordinator Version"
+      icon: mdi:chip
+      state_topic: "zigbee2mqtt/bridge/info"
+      value_template: "{{ value_json.coordinator['meta']['majorrel'] }}.{{ value_json.coordinator['meta']['minorrel'] }}.{{ value_json.coordinator['meta']['maintrel'] }} [{{ value_json.coordinator['type'] }}]"
+
+    - name: "Zigbee2MQTT Device Count"
+      icon: mdi:numeric
+      state_topic: "zigbee2mqtt/bridge/info"
+      value_template: "{{ value_json.config.devices | count }}"
+
+    - name: "Zigbee2MQTT Defined Groups"
+      icon: mdi:numeric
+      state_topic: "zigbee2mqtt/bridge/info"
+      value_template: "{{ value_json.config.groups | count }}"
