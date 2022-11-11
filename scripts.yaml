@@ -54,6 +54,9 @@
       kelvin: 2000
     entity_id: light.living_room
     service: yeelight.set_color_temp_scene
+    enabled: false
+  - service: script.light_tosleep
+    data: {}
   icon: mdi:lamp
 wakeup_bedroom:
   alias: Wakeup lighting, smooth transition

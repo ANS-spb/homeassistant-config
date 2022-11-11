@@ -1,0 +1,35 @@
+yandex_smart_home:
+  entity_config:
+
+    sensor.ble_datchik_v_spalne_temperature:
+      name: Погода в комнате
+      properties:
+        - type: temperature
+          entity: sensor.ble_datchik_v_spalne_temperature
+        - type: humidity
+          entity: sensor.ble_datchik_v_spalne_humidity
+        - type: co2_level
+          entity: sensor.co2_sensor_air_monitor_lite
+        - type: illumination
+          entity: sensor.osveshchionnost_v_spalne_illuminance_lux
+
+    sensor.ble_temperature_datchik_na_kukhne:
+      name: Погода на кухне
+      properties:
+        - type: temperature
+          entity: sensor.ble_temperature_datchik_na_kukhne
+        - type: humidity
+          entity: sensor.ble_humidity_datchik_na_kukhne
+        - type: illumination
+          entity: sensor.osveshchionnost_na_kukhne_illuminance_lux
+
+    sensor.lodzhiia_temperature:
+      name: Погода на лоджии
+      properties:
+        - type: temperature
+          entity: sensor.lodzhiia_temperature
+        - type: humidity
+          entity: sensor.lodzhiia_humidity
+        - type: illumination
+          entity: sensor.osveshchionnost_snaruzhi_illuminance_lux
+

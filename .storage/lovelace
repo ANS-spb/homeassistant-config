@@ -43,126 +43,167 @@
                   "content": "### Свет:\n"
                 },
                 {
-                  "type": "vertical-stack",
+                  "type": "grid",
+                  "square": true,
                   "cards": [
                     {
-                      "type": "grid",
-                      "square": true,
-                      "cards": [
-                        {
-                          "type": "button",
-                          "icon": "mdi:power",
-                          "name": "Выкл свет",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.turn_on",
-                            "service_data": {
-                              "entity_id": "script.power_off_all"
-                            }
-                          }
-                        },
-                        {
-                          "type": "button",
-                          "icon": "mdi:lamp",
-                          "tap_action": {
-                            "action": "call-service",
-                            "service": "script.turn_on",
-                            "service_data": {
-                              "entity_id": "script.1599944056170"
-                            }
-                          },
-                          "name": "Вкл свет"
-                        },
-                        {
-                          "show_name": true,
-                          "show_icon": true,
-                          "type": "button",
-                          "tap_action": {
-                            "action": "toggle"
-                          },
-                          "entity": "script.1638995744105",
-                          "name": "Эффект"
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "icon": "mdi:power",
+                      "name": "Выкл свет",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "service_data": {
+                          "entity_id": "script.power_off_all"
                         }
-                      ]
-                    },
-                    {
-                      "type": "custom:auto-entities",
-                      "show_empty": false,
-                      "card": {
-                        "type": "entities",
-                        "show_header_toggle": false,
-                        "state_color": true
-                      },
-                      "filter": {
-                        "include": [
-                          {
-                            "entity_id": "binary_sensor.dd_na_kukhne_occupancy"
-                          },
-                          {
-                            "entity_id": "binary_sensor.ble_dd_motion"
-                          },
-                          {
-                            "entity_id": "timer.dvizhenie_na_kukhne"
-                          }
-                        ],
-                        "exclude": [
-                          {
-                            "state": "off"
-                          },
-                          {
-                            "state": "idle"
-                          },
-                          {
-                            "state": "unavailable"
-                          }
-                        ]
-                      },
-                      "sort": {
-                        "method": "none"
                       }
                     },
                     {
-                      "type": "custom:auto-entities",
-                      "show_empty": false,
-                      "card": {
-                        "type": "entities",
-                        "show_header_toggle": false,
-                        "state_color": true
+                      "type": "button",
+                      "icon": "mdi:lamp",
+                      "tap_action": {
+                        "action": "call-service",
+                        "service": "script.turn_on",
+                        "service_data": {
+                          "entity_id": "script.1599944056170"
+                        }
                       },
-                      "filter": {
-                        "include": [
-                          {
-                            "domain": "light",
-                            "not": {
-                              "name": "/Light/"
-                            }
-                          }
-                        ],
-                        "exclude": [
-                          {
-                            "state": "off"
-                          },
-                          {
-                            "state": "unavailable"
-                          }
-                        ]
+                      "name": "Вкл свет"
+                    },
+                    {
+                      "show_name": true,
+                      "show_icon": true,
+                      "type": "button",
+                      "tap_action": {
+                        "action": "toggle"
                       },
-                      "sort": {
-                        "method": "none"
-                      }
+                      "entity": "script.1638995744105",
+                      "name": "Эффект"
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "vertical-stack",
-              "cards": [
+                },
                 {
-                  "type": "custom:mushroom-cover-card",
-                  "entity": "cover.shtora",
-                  "show_position_control": true,
-                  "show_buttons_control": true
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "group.dyn_all_lights",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "tile",
+                    "entity": "group.dyn_all_lights",
+                    "show_entity_picture": false,
+                    "tap_action": {
+                      "action": "navigate",
+                      "navigation_path": "/lovelace/all-lights"
+                    }
+                  }
+                },
+                {
+                  "type": "custom:auto-entities",
+                  "show_empty": false,
+                  "card": {
+                    "type": "entities",
+                    "show_header_toggle": false,
+                    "state_color": true
+                  },
+                  "filter": {
+                    "include": [
+                      {
+                        "entity_id": "binary_sensor.dd_na_kukhne_occupancy"
+                      },
+                      {
+                        "entity_id": "binary_sensor.ble_dd_motion"
+                      },
+                      {
+                        "entity_id": "timer.dvizhenie_na_kukhne"
+                      }
+                    ],
+                    "exclude": [
+                      {
+                        "state": "off"
+                      },
+                      {
+                        "state": "idle"
+                      },
+                      {
+                        "state": "unavailable"
+                      }
+                    ]
+                  },
+                  "sort": {
+                    "method": "none"
+                  }
+                },
+                {
+                  "type": "markdown",
+                  "content": "### Статус:\n"
+                },
+                {
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "type": "custom:mushroom-person-card",
+                      "entity": "person.ans",
+                      "icon_type": "entity-picture"
+                    },
+                    {
+                      "type": "custom:mushroom-person-card",
+                      "entity": "person.lisitsa",
+                      "icon_type": "entity-picture"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:auto-entities",
+                  "show_empty": false,
+                  "filter": {
+                    "include": [
+                      {
+                        "entity_id": "sensor.geiger_dose_rate"
+                      }
+                    ],
+                    "exclude": [
+                      {
+                        "state": "unavailable"
+                      },
+                      {
+                        "last_updated": "> 5"
+                      }
+                    ]
+                  },
+                  "card": {
+                    "type": "entity",
+                    "entity": "sensor.geiger_dose_rate",
+                    "name": "Geiger Doserate"
+                  }
+                },
+                {
+                  "type": "custom:auto-entities",
+                  "show_empty": false,
+                  "card": {
+                    "type": "entities",
+                    "show_header_toggle": false,
+                    "state_color": true
+                  },
+                  "filter": {
+                    "include": [
+                      {
+                        "entity_id": "binary_sensor.*_contact"
+                      }
+                    ],
+                    "exclude": [
+                      {
+                        "state": "off"
+                      },
+                      {
+                        "state": "unavailable"
+                      }
+                    ]
+                  }
                 },
                 {
                   "type": "custom:auto-entities",
@@ -200,81 +241,115 @@
               "type": "vertical-stack",
               "cards": [
                 {
-                  "type": "custom:auto-entities",
-                  "show_empty": false,
-                  "filter": {
-                    "include": [
-                      {
-                        "entity_id": "sensor.geiger_dose_rate"
-                      }
-                    ],
-                    "exclude": [
-                      {
-                        "state": "unavailable"
-                      },
-                      {
-                        "last_updated": "> 5"
-                      }
-                    ]
-                  },
-                  "card": {
-                    "type": "entity",
-                    "entity": "sensor.geiger_dose_rate",
-                    "name": "Geiger Doserate"
-                  }
+                  "type": "markdown",
+                  "content": "### Погода:\n"
                 },
                 {
-                  "type": "custom:auto-entities",
-                  "show_empty": false,
-                  "filter": {
-                    "include": [
-                      {
-                        "entity_id": "sensor.radiacode"
-                      }
-                    ],
-                    "exclude": [
-                      {
-                        "state": "unavailable"
-                      },
-                      {
-                        "last_updated": "> 5"
-                      }
-                    ]
+                  "type": "custom:weather-chart-card",
+                  "entity": "weather.openweathermap",
+                  "units": {
+                    "speed": "m/s"
                   },
-                  "card": {
-                    "type": "entity",
-                    "entity": "sensor.radiacode"
-                  }
+                  "icons": "/local/weather-icons/"
                 },
                 {
-                  "type": "custom:auto-entities",
-                  "show_empty": false,
-                  "filter": {
-                    "include": [
-                      {
-                        "entity_id": "sensor.radiacode_work"
-                      }
-                    ],
-                    "exclude": [
-                      {
-                        "state": "unavailable"
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "type": "custom:multiple-entity-row",
+                      "entity": "sensor.spalnia_perception",
+                      "name": "Спальня",
+                      "icon": "tc:thermal-perception",
+                      "styles": {
+                        "width": "100px"
                       },
-                      {
-                        "last_updated": "> 5"
-                      }
-                    ]
-                  },
-                  "card": {
-                    "type": "entity",
-                    "entity": "sensor.radiacode_work",
-                    "name": "Radiacode Doserate (work)"
-                  }
+                      "state_header": "Влажность",
+                      "entities": [
+                        {
+                          "name": "Температура",
+                          "entity": "sensor.spalnia_simmerzone",
+                          "styles": {
+                            "width": "100px"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:multiple-entity-row",
+                      "entity": "sensor.kukhnia_perception",
+                      "name": "Кухня",
+                      "icon": "tc:thermal-perception",
+                      "styles": {
+                        "width": "100px"
+                      },
+                      "state_header": "Влажность",
+                      "entities": [
+                        {
+                          "name": "Температура",
+                          "entity": "sensor.kukhnia_simmerzone",
+                          "styles": {
+                            "width": "100px"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:multiple-entity-row",
+                      "entity": "sensor.lodzhiia_perception",
+                      "name": "Лоджия",
+                      "icon": "tc:thermal-perception",
+                      "styles": {
+                        "width": "100px"
+                      },
+                      "state_header": "Влажность",
+                      "entities": [
+                        {
+                          "name": "Температура",
+                          "entity": "sensor.lodzhiia_simmerzone",
+                          "styles": {
+                            "width": "100px"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "section"
+                    },
+                    {
+                      "type": "custom:multiple-entity-row",
+                      "entity": "sensor.ulitsa_owm_perception",
+                      "name": "Улица",
+                      "icon": "tc:thermal-perception",
+                      "styles": {
+                        "width": "100px"
+                      },
+                      "state_header": "Влажность",
+                      "entities": [
+                        {
+                          "name": "Температура",
+                          "entity": "sensor.ulitsa_owm_simmerzone",
+                          "styles": {
+                            "width": "100px"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "entity": "sensor.pressure_indicator"
+                    }
+                  ]
                 }
               ]
             },
             {
               "type": "vertical-stack",
               "cards": [
+                {
+                  "type": "custom:mushroom-cover-card",
+                  "entity": "cover.shtora",
+                  "show_position_control": true,
+                  "show_buttons_control": true
+                },
                 {
                   "type": "conditional",
                   "conditions": [
@@ -296,9 +371,10 @@
                     "second_step": 5,
                     "name": "",
                     "layout": {
-                      "embedded": true,
+                      "embedded": false,
                       "align_controls": "right",
-                      "name": "header"
+                      "name": "inside",
+                      "thin": true
                     },
                     "hide": {
                       "name": false
@@ -323,9 +399,10 @@
                     "second_step": 5,
                     "name": "",
                     "layout": {
-                      "embedded": true,
+                      "embedded": false,
                       "align_controls": "right",
-                      "name": "header"
+                      "name": "inside",
+                      "thin": true
                     },
                     "hide": {
                       "name": false
@@ -378,166 +455,12 @@
                     "second_step": 5,
                     "name": "",
                     "layout": {
-                      "embedded": true,
-                      "align_controls": "right"
+                      "embedded": false,
+                      "align_controls": "right",
+                      "name": "inside",
+                      "thin": true
                     }
                   }
-                }
-              ]
-            },
-            {
-              "type": "horizontal-stack",
-              "cards": [
-                {
-                  "type": "custom:mushroom-person-card",
-                  "entity": "person.ans",
-                  "icon_type": "entity-picture"
-                },
-                {
-                  "type": "custom:mushroom-person-card",
-                  "entity": "person.lisitsa",
-                  "icon_type": "entity-picture"
-                }
-              ]
-            },
-            {
-              "type": "vertical-stack",
-              "cards": [
-                {
-                  "type": "custom:weather-chart-card",
-                  "entity": "weather.openweathermap",
-                  "units": {
-                    "speed": "m/s"
-                  },
-                  "icons": "/local/weather-icons/"
-                }
-              ]
-            },
-            {
-              "type": "entities",
-              "entities": [
-                {
-                  "type": "custom:multiple-entity-row",
-                  "entity": "sensor.spalnia_perception",
-                  "name": "Спальня",
-                  "icon": "tc:thermal-perception",
-                  "styles": {
-                    "width": "100px"
-                  },
-                  "state_header": "Влажность",
-                  "entities": [
-                    {
-                      "name": "Температура",
-                      "entity": "sensor.spalnia_simmerzone",
-                      "styles": {
-                        "width": "100px"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:multiple-entity-row",
-                  "entity": "sensor.kukhnia_perception",
-                  "name": "Кухня",
-                  "icon": "tc:thermal-perception",
-                  "styles": {
-                    "width": "100px"
-                  },
-                  "state_header": "Влажность",
-                  "entities": [
-                    {
-                      "name": "Температура",
-                      "entity": "sensor.kukhnia_simmerzone",
-                      "styles": {
-                        "width": "100px"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:multiple-entity-row",
-                  "entity": "sensor.lodzhiia_perception",
-                  "name": "Лоджия",
-                  "icon": "tc:thermal-perception",
-                  "styles": {
-                    "width": "100px"
-                  },
-                  "state_header": "Влажность",
-                  "entities": [
-                    {
-                      "name": "Температура",
-                      "entity": "sensor.lodzhiia_simmerzone",
-                      "styles": {
-                        "width": "100px"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "section"
-                },
-                {
-                  "type": "custom:multiple-entity-row",
-                  "entity": "sensor.ulitsa_owm_perception",
-                  "name": "Улица",
-                  "icon": "tc:thermal-perception",
-                  "styles": {
-                    "width": "100px"
-                  },
-                  "state_header": "Влажность",
-                  "entities": [
-                    {
-                      "name": "Температура",
-                      "entity": "sensor.ulitsa_owm_simmerzone",
-                      "styles": {
-                        "width": "100px"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "entity": "sensor.pressure_indicator"
-                },
-                {
-                  "entity": "sensor.pressure_weather_forecast"
-                }
-              ]
-            },
-            {
-              "type": "vertical-stack",
-              "cards": [
-                {
-                  "type": "markdown",
-                  "content": "### Окна и двери:\n"
-                },
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:auto-entities",
-                      "show_empty": false,
-                      "card": {
-                        "type": "entities",
-                        "show_header_toggle": false,
-                        "state_color": true
-                      },
-                      "filter": {
-                        "include": [
-                          {
-                            "entity_id": "binary_sensor.*_contact"
-                          }
-                        ],
-                        "exclude": [
-                          {
-                            "state": "off"
-                          },
-                          {
-                            "state": "unavailable"
-                          }
-                        ]
-                      }
-                    }
-                  ]
                 }
               ]
             }
@@ -596,8 +519,10 @@
                           "type": "custom:slider-button-card",
                           "entity": "light.living_room",
                           "action_button": {
-                            "show": true
-                          }
+                            "show": true,
+                            "mode": "toggle"
+                          },
+                          "compact": false
                         }
                       ]
                     },
@@ -690,8 +615,29 @@
                           "name": "Гирлянда, не моргай"
                         }
                       ]
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "entity": "input_boolean.manual_light_off"
+                        }
+                      ]
                     }
                   ]
+                },
+                {
+                  "type": "markdown",
+                  "content": "### Весь свет в доме:\n"
+                },
+                {
+                  "type": "tile",
+                  "entity": "group.dyn_all_lights",
+                  "show_entity_picture": false,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/lovelace/all-lights"
+                  }
                 }
               ]
             },
@@ -786,50 +732,6 @@
                       }
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "vertical-stack",
-              "cards": [
-                {
-                  "type": "markdown",
-                  "content": "### Весь свет в доме:\n"
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    "input_boolean.manual_light_off"
-                  ],
-                  "show_header_toggle": false
-                },
-                {
-                  "type": "custom:auto-entities",
-                  "card": {
-                    "type": "custom:fold-entity-row",
-                    "head": {
-                      "entity": "group.dyn_all_lights",
-                      "icon": "mdi:lamp"
-                    }
-                  },
-                  "filter": {
-                    "include": [
-                      {
-                        "domain": "light",
-                        "options": {
-                          "secondary_info": "last-changed"
-                        }
-                      }
-                    ],
-                    "exclude": [
-                      {
-                        "state": "unavailable"
-                      }
-                    ]
-                  },
-                  "sort": {
-                    "method": "name"
-                  }
                 }
               ]
             }
@@ -1763,7 +1665,7 @@
                   "entity": "update.zigbee2mqtt_update"
                 },
                 {
-                  "entity": "sensor.zigbee2mqtt_verion"
+                  "entity": "sensor.zigbee2mqtt_version_2"
                 },
                 {
                   "entity": "sensor.zigbee2mqtt_bridge_status"
@@ -1786,7 +1688,8 @@
                 {
                   "entity": "sensor.zigbee2mqtt_device_count"
                 }
-              ]
+              ],
+              "show_header_toggle": false
             }
           ]
         },
@@ -2366,6 +2269,56 @@
                     }
                   ],
                   "hours_to_show": 24
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "theme": "Backend-selected",
+          "title": "All lights",
+          "path": "all-lights",
+          "icon": "mdi:ceiling-light-multiple-outline",
+          "type": "panel",
+          "subview": true,
+          "badges": [],
+          "cards": [
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "markdown",
+                  "content": "### Весь свет в доме:\n"
+                },
+                {
+                  "type": "custom:auto-entities",
+                  "show_empty": false,
+                  "card": {
+                    "type": "entities",
+                    "show_header_toggle": false,
+                    "state_color": true
+                  },
+                  "filter": {
+                    "include": [
+                      {
+                        "domain": "light",
+                        "not": {
+                          "name": "/Light/"
+                        }
+                      }
+                    ],
+                    "exclude": [
+                      {
+                        "state": "off"
+                      },
+                      {
+                        "state": "unavailable"
+                      }
+                    ]
+                  },
+                  "sort": {
+                    "method": "none"
+                  }
                 }
               ]
             }
