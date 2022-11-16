@@ -467,6 +467,7 @@
           ]
         },
         {
+          "theme": "macOS Theme",
           "title": "Light",
           "path": "light",
           "icon": "mdi:lightbulb-on-outline",
@@ -738,7 +739,7 @@
           ]
         },
         {
-          "theme": "Backend-selected",
+          "theme": "macOS Theme",
           "title": "Charts",
           "path": "charts",
           "icon": "mdi:chart-line",
@@ -1285,9 +1286,21 @@
           ]
         },
         {
+          "theme": "macOS Theme",
           "title": "System",
           "path": "system-health",
           "icon": "mdi:server",
+          "visible": [
+            {
+              "user": "54073e3322e74e96a6480f01a91546e3"
+            },
+            {
+              "user": "2eb37a0f536a4e17bed83629e865cbda"
+            },
+            {
+              "user": "80d00bac24804dd089952c07c3fa2816"
+            }
+          ],
           "badges": [],
           "cards": [
             {
@@ -1431,9 +1444,8 @@
                     },
                     {
                       "type": "custom:mini-graph-card",
-                      "name": "SQLite Size",
                       "entities": [
-                        "sensor.home_assistant_v2_db_size"
+                        "sensor.recorder_db_size"
                       ],
                       "hours_to_show": 96,
                       "points_per_hour": 0.25,
@@ -1694,10 +1706,23 @@
           ]
         },
         {
+          "theme": "macOS Theme",
           "title": "Zigbee",
           "path": "zigbee",
           "icon": "mdi:zigbee",
           "panel": true,
+          "type": "panel",
+          "visible": [
+            {
+              "user": "54073e3322e74e96a6480f01a91546e3"
+            },
+            {
+              "user": "2eb37a0f536a4e17bed83629e865cbda"
+            },
+            {
+              "user": "80d00bac24804dd089952c07c3fa2816"
+            }
+          ],
           "badges": [],
           "cards": [
             {
@@ -2188,9 +2213,21 @@
           ]
         },
         {
+          "theme": "macOS Theme",
           "title": "TEST",
           "path": "test",
           "type": "panel",
+          "visible": [
+            {
+              "user": "54073e3322e74e96a6480f01a91546e3"
+            },
+            {
+              "user": "2eb37a0f536a4e17bed83629e865cbda"
+            },
+            {
+              "user": "80d00bac24804dd089952c07c3fa2816"
+            }
+          ],
           "badges": [],
           "cards": [
             {
@@ -2275,7 +2312,7 @@
           ]
         },
         {
-          "theme": "Backend-selected",
+          "theme": "macOS Theme",
           "title": "All lights",
           "path": "all-lights",
           "icon": "mdi:ceiling-light-multiple-outline",
