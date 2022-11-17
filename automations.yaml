@@ -1642,6 +1642,7 @@
         domain: cover
         entity_id: cover.shtora
         type: is_open
+        enabled: false
       - condition: numeric_state
         entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
         above: '50'
@@ -1711,6 +1712,11 @@
       - condition: state
         entity_id: sensor.daytime
         state: 'on'
+      - condition: device
+        type: is_off
+        device_id: fa3818f9a75a0704698062d67b597aba
+        entity_id: light.torsher_2
+        domain: light
       then:
       - service: script.1599944056170
         data: {}
@@ -1725,6 +1731,11 @@
       - condition: state
         entity_id: sensor.daytime
         state: 'off'
+      - condition: device
+        type: is_off
+        device_id: fa3818f9a75a0704698062d67b597aba
+        entity_id: light.torsher_2
+        domain: light
       then:
       - service: script.light_tosleep
         data: {}
@@ -1741,6 +1752,7 @@
       then:
       - service: script.1599944056170
         data: {}
+      enabled: false
     - wait_for_trigger:
       - platform: device
         device_id: 00113b2b18e9fc886e10987ed5635044
@@ -1748,6 +1760,11 @@
         entity_id: cover.shtora
         type: opened
       continue_on_timeout: true
+      timeout:
+        hours: 0
+        minutes: 1
+        seconds: 0
+        milliseconds: 0
     - service: input_boolean.turn_off
       data: {}
       target:
