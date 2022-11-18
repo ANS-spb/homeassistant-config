@@ -9,13 +9,17 @@
       icon_template: mdi:sun-clock-outline
       friendly_name: "Дневное время"
       value_template: >
-        {% set state = states.sensor.time.state %}
-        {% if states.binary_sensor.workday_sensor.state %}
-          {% set morning = states.input_datetime.wakeup_time.state [0:5] %}
+        {% set state = states('sensor.time') %}
+        {% if states('binary_sensor.workday_sensor') %}
+          {% set morning = states('input_datetime.wakeup_time') [0:5] %}
         {% else %}
           {% set morning = '12:00' %}
         {% endif %}
-        {% set evening = states.input_datetime.sleep_time.state [0:5] %}
+        {% if states('input_datetime.sleep_time') [0:5] < '12:00' %}
+          {% set evening = '24:00' %}
+        {% else %}
+          {% set evening = states('input_datetime.sleep_time') [0:5] %}
+        {% endif %}
         {% if morning < state < evening %}
           on
         {% else %}

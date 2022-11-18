@@ -336,7 +336,11 @@
                       ]
                     },
                     {
-                      "entity": "sensor.pressure_indicator"
+                      "type": "custom:multiple-entity-row",
+                      "entity": "sensor.pressure_indicator",
+                      "styles": {
+                        "width": "100px"
+                      }
                     }
                   ]
                 }
@@ -2087,14 +2091,14 @@
                       "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
                     },
                     {
-                      "data": "battery_low",
-                      "name": "Battery low",
+                      "data": "battery_type",
+                      "name": "Battery type",
                       "modify": "x+''"
                     },
                     {
-                      "data": "update_available",
-                      "name": "Update available",
-                      "modify": "x+''"
+                      "data": "battery_change",
+                      "name": "Battery changed",
+                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  isFinite(dt) ? d + \"d ago\" : \"\";\n"
                     }
                   ],
                   "css": {
