@@ -253,6 +253,10 @@ power_off_all:
       data: {}
       target:
         entity_id: button.azur_off
+    - service: switch.turn_off
+      data: {}
+      target:
+        entity_id: switch.power_off_sockets
   mode: single
   icon: mdi:power
 wled_random_effect:

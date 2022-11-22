@@ -365,6 +365,10 @@
           entity_id: switch.adaptive_lighting_sleep_mode_room
         data: {}
     default: []
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.power_off_sockets
   mode: single
 - id: '1607707032964'
   alias: Кнопка в комнате управляет светом
@@ -1882,3 +1886,33 @@
       - light.wled
       - light.wled_2
   mode: restart
+- id: '1669047629286'
+  alias: Notify away sockets
+  description: ''
+  trigger:
+  - platform: state
+    from: home
+    to: not_home
+    entity_id: group.devices
+  condition:
+  - condition: state
+    entity_id: switch.power_off_sockets
+    state: 'on'
+  action:
+  - service: notify.mobile_app_iphone_ans
+    data:
+      title: Выключить свет?
+      message: Похоже, Вы ушли из дома. Есть {{states('switch.power_off_sockets')
+        | selectattr('entity_id') | selectattr('state','eq','on') | map(attribute='entity_id')
+        | list | count | format(morph='розетка', as_text=false)}}.
+      data:
+        actions:
+        - action: SWITCHOFF
+          title: Выкл розетки
+          destructive: true
+    enabled: false
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.power_off_sockets
+  mode: single

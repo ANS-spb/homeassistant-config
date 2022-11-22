@@ -1173,6 +1173,14 @@
                       "animate": true
                     }
                   ]
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "switch.adaptive_lighting_sleep_mode_room"
+                    }
+                  ]
                 }
               ]
             },
@@ -2205,6 +2213,16 @@
                     {
                       "data": "last_packet_id",
                       "name": "Last packet ID"
+                    },
+                    {
+                      "data": "battery_type",
+                      "name": "Battery type",
+                      "modify": "x+''"
+                    },
+                    {
+                      "data": "battery_change",
+                      "name": "Battery changed",
+                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  isFinite(dt) ? d + \"d ago\" : \"\";\n"
                     }
                   ],
                   "css": {

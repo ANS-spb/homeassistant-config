@@ -3,9 +3,4 @@ binary_sensor.okno_na_kukhne_contact:
 binary_sensor.okno_v_komnate_contact:
   device_class: window
 sensor.geiger_counter_radioactive_events_per_minute:
-  unit_of_measurement: 'CPM'
-
-## Батарейки ##
-sensor.lodzhiia_linkquality:
-  battery_type: CR2032
-  battery_change: 2022-11-18
+  unit_of_measurement: "CPM"
