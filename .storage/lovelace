@@ -1745,7 +1745,156 @@
               "cards": [
                 {
                   "type": "markdown",
-                  "content": "### <center> Gateways </center>"
+                  "content": "### <center> ZigBee2MQTT </center>"
+                },
+                {
+                  "type": "custom:flex-table-card",
+                  "clickable": false,
+                  "entities": {
+                    "include": [
+                      "sensor.*_linkquality"
+                    ]
+                  },
+                  "sort_by": "last_seen-",
+                  "columns": [
+                    {
+                      "data": "icon",
+                      "name": " ",
+                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:zigbee\" + \"\\\"></ha-icon>\""
+                    },
+                    {
+                      "data": "friendly_name",
+                      "name": "Friendly Name",
+                      "modify": "x.replace(/ linkquality$/,\"\")"
+                    },
+                    {
+                      "data": "linkquality",
+                      "name": "Link quality",
+                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
+                    },
+                    {
+                      "data": "battery",
+                      "name": "Battery",
+                      "fmt": "number",
+                      "modify": "isNaN(parseInt(x, 10)) ? \"--\" : parseInt(x, 10) + \"%\""
+                    },
+                    {
+                      "data": "voltage",
+                      "name": "Voltage",
+                      "modify": "isNaN(parseInt(x, 10)) ? \"--\" : parseInt(x, 10)/1000"
+                    },
+                    {
+                      "data": "last_seen",
+                      "name": "Last seen",
+                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
+                    },
+                    {
+                      "data": "battery_type",
+                      "name": "Battery type",
+                      "modify": "x+''"
+                    },
+                    {
+                      "data": "battery_change",
+                      "name": "Battery changed",
+                      "modify": "x+''"
+                    },
+                    {
+                      "data": "battery_change",
+                      "name": "Battery lifetime",
+                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  isFinite(dt) ? d + \"d ago\" : \"\";\n"
+                    }
+                  ],
+                  "css": {
+                    "table+": "padding-top: 0px;",
+                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
+                    "td.left": "padding: 0px 10px 0px 10px",
+                    "th.left": "padding: 0px 10px 0px 10px",
+                    "thead th": "text-align: left"
+                  }
+                },
+                {
+                  "type": "markdown",
+                  "content": "### <center> BLE Monitor </center>"
+                },
+                {
+                  "type": "custom:flex-table-card",
+                  "clickable": false,
+                  "entities": {
+                    "include": [
+                      "sensor.ble_rssi_*"
+                    ]
+                  },
+                  "sort_by": "last_seen-",
+                  "columns": [
+                    {
+                      "data": "icon",
+                      "name": " ",
+                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:bluetooth\" + \"\\\"></ha-icon>\""
+                    },
+                    {
+                      "data": "friendly_name",
+                      "name": "Friendly Name",
+                      "modify": "x.replace(\"ble_rssi\",\"\")"
+                    },
+                    {
+                      "data": "sensor_type",
+                      "name": "Sensor type"
+                    },
+                    {
+                      "data": "firmware",
+                      "name": "Firmware"
+                    },
+                    {
+                      "data": "state",
+                      "name": "RSSI",
+                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
+                    },
+                    {
+                      "data": "battery_level",
+                      "name": "Battery",
+                      "fmt": "number",
+                      "modify": "isNaN(parseInt(x, 10)) ? \"--\" : parseInt(x, 10) + \"%\""
+                    },
+                    {
+                      "data": "mac_address",
+                      "name": "MAC address"
+                    },
+                    {
+                      "data": "last_changed",
+                      "name": "Last Seen",
+                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
+                    },
+                    {
+                      "data": "last_packet_id",
+                      "name": "Last packet ID"
+                    },
+                    {
+                      "data": "battery_type",
+                      "name": "Battery type",
+                      "modify": "x+''"
+                    },
+                    {
+                      "data": "battery_change",
+                      "name": "Battery changed",
+                      "modify": "x+''"
+                    },
+                    {
+                      "data": "battery_change",
+                      "name": "Battery lifetime",
+                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  isFinite(dt) ? d + \"d ago\" : \"\";\n"
+                    }
+                  ],
+                  "css": {
+                    "table+": "padding-top: 0px;",
+                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
+                    "td.left": "padding: 0px 10px 0px 10px",
+                    "th.left": "padding: 0px 10px 0px 10px",
+                    "thead th": "text-align: left"
+                  }
+                },
+                {
+                  "type": "markdown",
+                  "content": "### <center> GW3 </center>"
                 },
                 {
                   "type": "custom:flex-table-card",
@@ -2056,69 +2205,6 @@
                 },
                 {
                   "type": "markdown",
-                  "content": "### <center> ZigBee2MQTT </center>"
-                },
-                {
-                  "type": "custom:flex-table-card",
-                  "clickable": false,
-                  "entities": {
-                    "include": [
-                      "sensor.*_linkquality"
-                    ]
-                  },
-                  "sort_by": "last_seen-",
-                  "columns": [
-                    {
-                      "data": "icon",
-                      "name": " ",
-                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:zigbee\" + \"\\\"></ha-icon>\""
-                    },
-                    {
-                      "data": "friendly_name",
-                      "name": "Friendly Name",
-                      "modify": "x.replace(/ linkquality$/,\"\")"
-                    },
-                    {
-                      "data": "linkquality",
-                      "name": "Link quality",
-                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "battery",
-                      "name": "Battery",
-                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "voltage",
-                      "name": "Voltage",
-                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "last_seen",
-                      "name": "Last seen",
-                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
-                    },
-                    {
-                      "data": "battery_type",
-                      "name": "Battery type",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "battery_change",
-                      "name": "Battery changed",
-                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  isFinite(dt) ? d + \"d ago\" : \"\";\n"
-                    }
-                  ],
-                  "css": {
-                    "table+": "padding-top: 0px;",
-                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
-                    "td.left": "padding: 0px 10px 0px 10px",
-                    "th.left": "padding: 0px 10px 0px 10px",
-                    "thead th": "text-align: left"
-                  }
-                },
-                {
-                  "type": "markdown",
                   "content": "### <center> Philips Hue </center>"
                 },
                 {
@@ -2149,80 +2235,6 @@
                       "data": "state",
                       "name": "State",
                       "modify": "x.replace(/connectivity_issue$/,\"⚠️\")"
-                    }
-                  ],
-                  "css": {
-                    "table+": "padding-top: 0px;",
-                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
-                    "td.left": "padding: 0px 10px 0px 10px",
-                    "th.left": "padding: 0px 10px 0px 10px",
-                    "thead th": "text-align: left"
-                  }
-                },
-                {
-                  "type": "markdown",
-                  "content": "### <center> BLE Monitor </center>"
-                },
-                {
-                  "type": "custom:flex-table-card",
-                  "clickable": false,
-                  "entities": {
-                    "include": [
-                      "sensor.ble_rssi_*"
-                    ]
-                  },
-                  "sort_by": "last_seen-",
-                  "columns": [
-                    {
-                      "data": "icon",
-                      "name": " ",
-                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:bluetooth\" + \"\\\"></ha-icon>\""
-                    },
-                    {
-                      "data": "friendly_name",
-                      "name": "Friendly Name",
-                      "modify": "x.replace(\"ble_rssi\",\"\")"
-                    },
-                    {
-                      "data": "sensor_type",
-                      "name": "Sensor type"
-                    },
-                    {
-                      "data": "firmware",
-                      "name": "Firmware"
-                    },
-                    {
-                      "data": "state",
-                      "name": "RSSI",
-                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "battery_level",
-                      "name": "Battery",
-                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "mac_address",
-                      "name": "MAC address"
-                    },
-                    {
-                      "data": "last_changed",
-                      "name": "Last Seen",
-                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
-                    },
-                    {
-                      "data": "last_packet_id",
-                      "name": "Last packet ID"
-                    },
-                    {
-                      "data": "battery_type",
-                      "name": "Battery type",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "battery_change",
-                      "name": "Battery changed",
-                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  isFinite(dt) ? d + \"d ago\" : \"\";\n"
                     }
                   ],
                   "css": {
