@@ -6,3 +6,18 @@ sensor.lodzhiia_*:
 sensor.domofon_*:
   battery_type: 2xAAA
   battery_change: 2022-02-21
+sensor.hue_dimmer_switch_1_battery_level:
+  battery_type: CR2032
+  battery_change: 2021-06-10
+sensor.hue_dimmer_switch_2_battery_level:
+  battery_type: CR2032
+  battery_change: 2021-07-13
+sensor.dd_na_kukhne_*:
+  battery_type: CR2450
+  battery_change: 2020-09-02
+sensor.okno_v_komnate_*:
+  battery_type: CR1632
+  battery_change: 2020-09-02
+binary_sensor.okno_na_kukhne_*:
+  battery_type: CR1632
+  battery_change: 2020-09-02

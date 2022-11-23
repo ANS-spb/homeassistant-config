@@ -43,8 +43,8 @@
     enabled: false
   - service: telegram_bot.send_message
     data:
-      message: "\U0001F3C1 Cервер запущен в {{ states('sensor.time') }}.\n⏱ Время
-        запуска Home Assistant составило {{ states('sensor.start_time') | format(morph='секунда',
+      message: "\U0001F3C1 Cервер запущен в {{ states('sensor.time') }}.\n⏱ Запуск
+        Home Assistant занял {{ states('sensor.start_time') | format(morph='секунда',
         as_text=false) }}.\n"
       title: "\U0001F197 Системное уведомление"
       target: 116325704
