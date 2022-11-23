@@ -1786,7 +1786,7 @@
                     {
                       "data": "last_seen",
                       "name": "Last seen",
-                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
+                      "modify": "var dt = new Date(x); var d = parseInt((Date.now()-Date.parse(x)) / 86400000); var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24); var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60); hrs = (hrs < 10) ? \"0\" + hrs : hrs; min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec; isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
                     },
                     {
                       "data": "battery_type",
@@ -1800,8 +1800,13 @@
                     },
                     {
                       "data": "battery_change",
+                      "name": "Battery lifetime days",
+                      "modify": "var dt = new Date(x); var d = parseInt((Date.now()-Date.parse(x)) / 86400000); isFinite(dt) ? d + \" day(s)\" : \"\";\n"
+                    },
+                    {
+                      "data": "battery_change",
                       "name": "Battery lifetime",
-                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  isFinite(dt) ? d + \"d ago\" : \"\";\n"
+                      "modify": "var dt = new Date(x); var m = parseInt(((Date.now()-Date.parse(x)) / 2635200000)); var d = parseInt(((Date.now()-Date.parse(x)) / 86400000) %30); m = (m < 1) ? \"\" + m : m; isFinite(dt) ? m + \" mon \" + d + \" day(s)\" : \"\";\n"
                     }
                   ],
                   "css": {
@@ -1875,13 +1880,13 @@
                     },
                     {
                       "data": "battery_change",
-                      "name": "Battery changed",
-                      "modify": "x+''"
+                      "name": "Battery lifetime days",
+                      "modify": "var dt = new Date(x); var d = parseInt((Date.now()-Date.parse(x)) / 86400000); isFinite(dt) ? d + \" day(s)\" : \"\";\n"
                     },
                     {
                       "data": "battery_change",
                       "name": "Battery lifetime",
-                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  isFinite(dt) ? d + \"d ago\" : \"\";\n"
+                      "modify": "var dt = new Date(x); var m = parseInt(((Date.now()-Date.parse(x)) / 2635200000)); var d = parseInt(((Date.now()-Date.parse(x)) / 86400000) %30); m = (m < 1) ? \"\" + m : m; isFinite(dt) ? m + \" mon \" + d + \" day(s)\" : \"\";\n"
                     }
                   ],
                   "css": {
@@ -1983,7 +1988,7 @@
                     {
                       "data": "last_changed",
                       "name": "Connected Since",
-                      "modify": "var dt = new Date(x); var hrs = parseInt((Date.now()-Date.parse(x)) / 3600000); var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60); hrs = (hrs < 10) ? \"0\" + hrs : hrs; min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec; isFinite(dt) ? dt.toLocaleString(['ru-RU', 'en-US']) + \" (Up: \" + hrs + \":\" + min + \":\" + sec + \")\" : \"\"\n"
+                      "modify": "var dt = new Date(x); var hrs = parseInt((Date.now()-Date.parse(x)) / 3600000); var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60); hrs = (hrs < 10) ? \"0\" + hrs : hrs; min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec; isFinite(dt) ? dt.toLocaleString(['ru-RU', 'en-US']) + \" (Up: \" + hrs + \":\" + min + \":\" + sec + \")\" : \"\";\n"
                     }
                   ],
                   "css": {
@@ -2235,6 +2240,51 @@
                       "data": "state",
                       "name": "State",
                       "modify": "x.replace(/connectivity_issue$/,\"⚠️\")"
+                    }
+                  ]
+                },
+                {
+                  "type": "custom:flex-table-card",
+                  "clickable": false,
+                  "entities": {
+                    "include": [
+                      "sensor.hue_*_battery_level"
+                    ]
+                  },
+                  "sort_by": "friendly_name-",
+                  "columns": [
+                    {
+                      "data": "icon",
+                      "name": " ",
+                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:zigbee\" + \"\\\"></ha-icon>\""
+                    },
+                    {
+                      "data": "friendly_name",
+                      "name": "Friendly Name",
+                      "modify": "x.replace(/ Battery$/,\"\")"
+                    },
+                    {
+                      "data": "battery_state",
+                      "name": "Battery state"
+                    },
+                    {
+                      "data": "state",
+                      "name": "Battery level"
+                    },
+                    {
+                      "data": "battery_type",
+                      "name": "Battery type",
+                      "modify": "x+''"
+                    },
+                    {
+                      "data": "battery_change",
+                      "name": "Battery lifetime days",
+                      "modify": "var dt = new Date(x); var d = parseInt((Date.now()-Date.parse(x)) / 86400000); isFinite(dt) ? d + \" day(s)\" : \"\";\n"
+                    },
+                    {
+                      "data": "battery_change",
+                      "name": "Battery lifetime",
+                      "modify": "var dt = new Date(x); var m = parseInt(((Date.now()-Date.parse(x)) / 2635200000)); var d = parseInt(((Date.now()-Date.parse(x)) / 86400000) %30); m = (m < 1) ? \"\" + m : m; isFinite(dt) ? m + \" mon \" + d + \" day(s)\" : \"\";\n"
                     }
                   ],
                   "css": {
