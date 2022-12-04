@@ -469,7 +469,6 @@
         service: notify.mobile_app_iphone_ans
     default: []
   mode: single
-  initial_state: true
 - id: '1610373676864'
   alias: Кнопка в коридоре выключает всё
   description: ''
@@ -733,7 +732,7 @@
         value_template: '{{ states(''light.living_room'') != ''on'' }}'
       - condition: numeric_state
         entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
-        below: 5
+        below: 7
     then:
     - service: script.turn_on
       data: {}
@@ -894,7 +893,7 @@
       filename: /media/domofon.jpg
     target:
       entity_id:
-      - camera.domru_domofon
+      - camera.frigate_mjpeg
   - variables:
       action_open: '{{ ''OPEN_'' ~ context.id }}'
       action_drop: '{{ ''DROP_'' ~ context.id }}'
@@ -972,7 +971,11 @@
       event_data:
         action: '{{ action_drop }}'
     continue_on_timeout: false
-    timeout: 00:01:00
+    timeout:
+      hours: 0
+      minutes: 3
+      seconds: 0
+      milliseconds: 0
   - choose:
     - conditions:
       - condition: template
@@ -1916,3 +1919,81 @@
     target:
       entity_id: switch.power_off_sockets
   mode: single
+- id: '1669371418514'
+  alias: Переключение будильника
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_button.naste_na_rabotu
+    id: earlier
+  - platform: state
+    entity_id:
+    - input_button.nastia_rabotaet_doma
+    id: later
+  condition: []
+  action:
+  - if:
+    - condition: trigger
+      id: earlier
+    then:
+    - service: input_datetime.set_datetime
+      data:
+        time: 06:35:00
+      target:
+        entity_id: input_datetime.wakeup_time
+  - if:
+    - condition: trigger
+      id: later
+    then:
+    - service: input_datetime.set_datetime
+      data:
+        time: 07:00:00
+      target:
+        entity_id: input_datetime.wakeup_time
+  mode: single
+- id: '1669994969392'
+  alias: Выключить подсветку с пульта Hue
+  description: ''
+  trigger:
+  - device_id: ea28b7c45cdbd3c8d68374d447b6b3ac
+    domain: hue
+    platform: device
+    type: initial_press
+    subtype: 4
+    unique_id: eab0a07c-82b1-4542-8b4d-0301a5422ed6
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id: light.podsvetka_zony
+  mode: single
+- id: '1670007505784'
+  alias: Выключить подсветку модулем Hue
+  description: ''
+  trigger:
+  - device_id: 6bb4c94dc86ca8eef652fab4187836f7
+    domain: hue
+    platform: device
+    type: short_release
+    subtype: 1
+    unique_id: f3ddc7e5-426f-4ee7-8cbf-d53bc04e05fd
+  condition:
+  - condition: state
+    entity_id: light.kitchen
+    state: 'on'
+  action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - condition: state
+    entity_id: light.kukhnia_hue
+    state: 'off'
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id: light.kitchen
+  mode: restart

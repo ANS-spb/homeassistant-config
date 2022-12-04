@@ -37,15 +37,15 @@
           ],
           "cards": [
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "markdown",
                   "content": "### Свет:\n"
                 },
                 {
-                  "type": "grid",
-                  "square": true,
+                  "type": "horizontal-stack",
                   "cards": [
                     {
                       "show_name": true,
@@ -239,7 +239,8 @@
               ]
             },
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "markdown",
@@ -347,7 +348,8 @@
               ]
             },
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "custom:mushroom-cover-card",
@@ -368,23 +370,53 @@
                     }
                   ],
                   "card": {
-                    "type": "custom:time-picker-card",
-                    "entity": "input_datetime.wakeup_time",
-                    "hour_mode": 24,
-                    "hour_step": 1,
-                    "minute_step": 5,
-                    "second_step": 5,
-                    "name": "",
-                    "layout": {
-                      "embedded": false,
-                      "align_controls": "right",
-                      "name": "inside",
-                      "thin": true
-                    },
-                    "hide": {
-                      "name": false
-                    },
-                    "link_values": false
+                    "type": "vertical-stack",
+                    "cards": [
+                      {
+                        "type": "custom:time-picker-card",
+                        "entity": "input_datetime.wakeup_time",
+                        "hour_mode": 24,
+                        "hour_step": 1,
+                        "minute_step": 5,
+                        "second_step": 5,
+                        "name": "",
+                        "layout": {
+                          "embedded": false,
+                          "align_controls": "right",
+                          "name": "inside",
+                          "thin": true
+                        },
+                        "hide": {
+                          "name": false
+                        },
+                        "link_values": false
+                      },
+                      {
+                        "type": "horizontal-stack",
+                        "cards": [
+                          {
+                            "type": "tile",
+                            "entity": "input_button.naste_na_rabotu",
+                            "tap_action": {
+                              "action": "toggle"
+                            },
+                            "icon_tap_action": {
+                              "action": "toggle"
+                            }
+                          },
+                          {
+                            "type": "tile",
+                            "entity": "input_button.nastia_rabotaet_doma",
+                            "tap_action": {
+                              "action": "toggle"
+                            },
+                            "icon_tap_action": {
+                              "action": "toggle"
+                            }
+                          }
+                        ]
+                      }
+                    ]
                   }
                 },
                 {
@@ -724,7 +756,7 @@
                       "icon": {
                         "icon": ""
                       },
-                      "entity": "light.kitchen_zone"
+                      "entity": "light.podsvetka_zony"
                     },
                     {
                       "type": "custom:slider-button-card",
@@ -777,7 +809,7 @@
                 "fill": "fade"
               },
               "animate": true,
-              "height": 150,
+              "height": 130,
               "style": "ha-card {\n  height: 350px !important;\n}\n"
             },
             {
@@ -806,7 +838,7 @@
               },
               "animate": true,
               "style": "ha-card {\n  height: 350px !important;\n}\n",
-              "height": 150
+              "height": 130
             },
             {
               "type": "custom:mini-graph-card",
@@ -879,7 +911,7 @@
               },
               "animate": true,
               "style": "ha-card {\n  height: 350px !important;\n}\n",
-              "height": 150
+              "height": 130
             },
             {
               "type": "custom:mini-graph-card",
@@ -963,7 +995,7 @@
                 }
               ],
               "style": "ha-card {\n  height: 350px !important;\n}\n",
-              "height": 180
+              "height": 170
             },
             {
               "type": "custom:mini-graph-card",
@@ -1131,7 +1163,8 @@
           "badges": [],
           "cards": [
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "markdown",
@@ -1185,7 +1218,8 @@
               ]
             },
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "markdown",
@@ -1209,7 +1243,8 @@
               ]
             },
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "markdown",
@@ -1231,7 +1266,8 @@
               ]
             },
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "markdown",
@@ -1254,7 +1290,8 @@
               ]
             },
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "custom:frigate-card",
@@ -1319,7 +1356,8 @@
           "badges": [],
           "cards": [
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "markdown",
@@ -1554,7 +1592,8 @@
               ]
             },
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "markdown",
@@ -1591,7 +1630,8 @@
                       "entities": [
                         "sensor.osveshchionnost_v_spalne_battery",
                         "sensor.osveshchionnost_na_kukhne_battery",
-                        "sensor.osveshchionnost_snaruzhi_battery"
+                        "sensor.osveshchionnost_snaruzhi_battery",
+                        "sensor.osveshchionnost_v_prikhozhei_battery"
                       ]
                     },
                     {
@@ -1611,8 +1651,8 @@
                       "entities": [
                         "sensor.knopka_aqara_komnata_battery",
                         "sensor.knopka_v_koridore_battery",
-                        "sensor.knopka_na_kukhne_battery",
                         "sensor.opple_battery",
+                        "sensor.dimmer_kukhni_battery",
                         "sensor.hue_dimmer_switch_1_battery_level",
                         "sensor.hue_dimmer_switch_2_battery_level",
                         "sensor.hue_wall_switch_module_1_battery_level"
@@ -1649,7 +1689,8 @@
               }
             },
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "markdown",
@@ -1741,7 +1782,8 @@
           "badges": [],
           "cards": [
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "markdown",
@@ -1983,7 +2025,8 @@
                     },
                     {
                       "data": "state",
-                      "name": "Connected"
+                      "name": "Connected",
+                      "modify": "(x+'').replace(/off$/,\"⚠️\")"
                     },
                     {
                       "data": "last_changed",
@@ -2076,7 +2119,7 @@
                     {
                       "data": "available",
                       "name": "Available",
-                      "modify": "x+''"
+                      "modify": "(x+'').replace(/false$/,\"⚠️\")"
                     },
                     {
                       "data": "state",
@@ -2318,7 +2361,8 @@
           "badges": [],
           "cards": [
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "history-graph",
@@ -2408,7 +2452,8 @@
           "badges": [],
           "cards": [
             {
-              "type": "vertical-stack",
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
               "cards": [
                 {
                   "type": "markdown",

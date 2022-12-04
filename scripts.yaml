@@ -5,28 +5,33 @@
   - parallel:
     - service: hue.activate_scene
       data:
-        transition: 10
+        transition: 5
         dynamic: true
       target:
-        entity_id: '{{ [''scene.spalnia_tuman_na_ozere'',''scene.spalnia_otdykh_na_zakate'',''scene.spalnia_gornyi_briz'',
-          ''scene.spalnia_zakat_v_savanne'',''scene.spalnia_under_the_tree'',''scene.spalnia_tsvetenie'',
-          ''scene.spalnia_krokus'',''scene.spalnia_dragotsennyi'',''scene.spalnia_voskresnoe_utro'',
-          ''scene.spalnia_vesennee_ozero''] | random }}'
+        entity_id: '{{ [''scene.torsher_tuman_na_ozere'',''scene.torsher_otdykh_na_zakate'',''scene.torsher_gornyi_briz'',
+          ''scene.torsher_zakat_v_savanne'',''scene.torsher_under_the_tree'',''scene.torsher_tsvetenie'',
+          ''scene.torsher_dragotsennyi'',''scene.torsher_voskresnoe_utro'', ''scene.torsher_vesennee_ozero'']
+          | random }}'
     - data:
         effect: Stop
-        transition: 10
+        transition: 5
       service: light.turn_on
       target:
         entity_id:
         - light.living_room
     - service: light.turn_on
       data:
-        transition: 10
+        transition: 5
       target:
         entity_id:
         - light.wled_table
         - light.wled
         - light.wled_2
+  - service: script.turn_on
+    target:
+      entity_id:
+      - script.1638995744105
+    data: {}
   - delay:
       hours: 0
       minutes: 0
@@ -39,11 +44,6 @@
         lights: light.living_room
         transition: 10
         entity_id: switch.adaptive_lighting_room
-    - service: script.turn_on
-      target:
-        entity_id:
-        - script.1638995744105
-      data: {}
   icon: mdi:lamp
 '2131':
   alias: Ночной свет
@@ -176,7 +176,7 @@ light_tosleep:
         transition: 10
         dynamic: true
       target:
-        entity_id: '{{[''scene.spalnia_galaktika'',''scene.spalnia_svet_zvezd'',''scene.spalnia_tumannost'']
+        entity_id: '{{[''scene.torsher_galaktika'',''scene.torsher_svet_zvezd'',''scene.torsher_tumannost'']
           | random }}'
       enabled: true
     - service: light.turn_off
@@ -210,23 +210,10 @@ light_tosleep:
       seconds: 20
       milliseconds: 0
   - parallel:
-    - service: hue.activate_scene
-      data:
-        transition: 10
-        dynamic: true
-      target:
-        entity_id: '{{[''scene.spalnia_galaktika'',''scene.spalnia_svet_zvezd'',''scene.spalnia_tumannost'']
-          | random }}'
-      enabled: false
     - service: light.turn_off
       data: {}
       target:
         entity_id: light.wled_table
-    - service: input_boolean.turn_off
-      data: {}
-      target:
-        entity_id: input_boolean.manual_effects_on
-      enabled: false
     - choose:
       - conditions:
         - condition: device
@@ -411,7 +398,7 @@ push_for_closing_curtain:
   - parallel:
     - service: light.turn_off
       data:
-        transition: 4
+        transition: 3
       target:
         entity_id:
         - light.living_room
@@ -419,7 +406,7 @@ push_for_closing_curtain:
         - light.wled
     - service: light.turn_off
       data:
-        transition: 5
+        transition: 3
       target:
         entity_id:
         - light.spalnia
