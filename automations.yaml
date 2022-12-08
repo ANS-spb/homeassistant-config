@@ -775,7 +775,7 @@
     value_template: '{{ states(''light.torsher'') != ''on'' }}'
   - condition: numeric_state
     entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
-    below: 6
+    below: 8
   - condition: numeric_state
     entity_id: sensor.osveshchionnost_na_kukhne_illuminance_lux
     below: 10
@@ -894,6 +894,7 @@
     target:
       entity_id:
       - camera.frigate_mjpeg
+    enabled: false
   - variables:
       action_open: '{{ ''OPEN_'' ~ context.id }}'
       action_drop: '{{ ''DROP_'' ~ context.id }}'
@@ -936,13 +937,19 @@
   - service: telegram_bot.send_photo
     data:
       url: http://127.0.0.1:5000/api/domru_domofon/person/snapshot.jpg
+      caption: "\U0001F6A8 {{ [ \"Кто-то звонит в дверь\", \"Кто-то ломится в дверь\",
+        \"Опять припёрлись\", \"Дзинь-дзинь\", \"Тук-тук\", \"Гости на пороге\", \"Живые
+        наступают!\", \"Это случайно не доставка пиццы?\", \"Кожаный мешок у ворот\"]
+        | random }}"
       target:
       - 116325704
       parse_mode: html
       timeout: 1000
+      inline_keyboard:
+      - '{{"\U0001F6AA"}} Открыть дверь:/open_door'
+      - ⛔️ Сбросить:/drop_domofon
+      - "\U0001F4F8 Показать:/photo_entrance,  \U0001F575️‍♂️ Детект:/person_entrance"
       message_tag: msg_to_edit
-      disable_notification: true
-      caption: Кто стучится в дверь моя?
     enabled: true
   - service: telegram_bot.send_photo
     data:
@@ -960,7 +967,7 @@
       - ⛔️ Сбросить:/drop_domofon
       - "\U0001F4F8 Показать:/photo_entrance,  \U0001F575️‍♂️ Детект:/person_entrance"
       message_tag: msg_to_edit
-    enabled: true
+    enabled: false
   - wait_for_trigger:
     - platform: event
       event_type: mobile_app_notification_action
@@ -1159,55 +1166,30 @@
     entity_id: sensor.domofon_state
     from: Drop
     to: Idle
-  - platform: event
-    event_type: telegram_command
-    event_data:
-      command: /video
   condition: []
   action:
-  - service: camera.record
-    data:
-      filename: /media/record.mp4
-      duration: 5
-      lookback: 10
-    target:
-      entity_id:
-      - camera.frigate_test
-    enabled: false
   - wait_for_trigger:
-    - platform: event
-      event_type: folder_watcher
-      event_data:
-        event_type: closed
-        file: record.mp4
-    continue_on_timeout: true
+    - platform: state
+      entity_id:
+      - input_text.frigate_event
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 0
     timeout:
       hours: 0
-      minutes: 0
+      minutes: 5
       seconds: 0
       milliseconds: 0
-    enabled: false
-  - service: telegram_bot.send_video
+  - service: telegram_bot.send_message
     data:
-      file: /media/record.mp4
+      message: А вот и видосик
+      parse_mode: html
       target:
       - 116325704
-      parse_mode: html
-      timeout: 1000
-      message_tag: msg_to_edit
-      disable_notification: true
-      caption: А вот и видосик подъехал
-    enabled: false
-  - service: telegram_bot.send_video
-    data:
-      caption: Тестовый (по ивенту)
-      url: http://127.0.0.1:5000/api/events/{{states('input_text.frigate_event')}}/clip.mp4
-      target:
-      - 116325704
-      parse_mode: html
-      timeout: 1000
-      message_tag: msg_to_edit
-      disable_notification: true
+      inline_keyboard:
+      - "\U0001F4F9 Получить видео :/getevent {{ states('input_text.it_hall_event')
+        }}"
     enabled: true
   mode: restart
 - id: '1645168133405'
@@ -1338,7 +1320,7 @@
   condition:
   - condition: template
     value_template: '{{ trigger.payload_json[''after''][''camera''] == ''domru_domofon''
-      }}'
+      and trigger.payload_json[''type''] == ''end'' }}'
   action:
   - service: input_text.set_value
     target:
@@ -1997,3 +1979,28 @@
     target:
       entity_id: light.kitchen
   mode: restart
+- id: '1670503170601'
+  alias: Звонок в домофон (выдача видео по кнопке)
+  description: ''
+  trigger:
+  - platform: event
+    event_type: telegram_command
+    event_data:
+      command: /video
+  - platform: event
+    event_type: telegram_callback
+    event_data:
+      command: /video
+  condition: []
+  action:
+  - service: telegram_bot.send_video
+    data:
+      url: http://127.0.0.1:5000/api/events/{{states('input_text.frigate_event')}}/clip.mp4
+      target:
+      - 116325704
+      parse_mode: html
+      timeout: 10000
+      message_tag: msg_to_edit
+      disable_notification: true
+    enabled: true
+  mode: single
