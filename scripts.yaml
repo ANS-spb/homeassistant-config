@@ -8,10 +8,9 @@
         transition: 5
         dynamic: true
       target:
-        entity_id: '{{ [''scene.torsher_tuman_na_ozere'',''scene.torsher_otdykh_na_zakate'',''scene.torsher_gornyi_briz'',
-          ''scene.torsher_zakat_v_savanne'',''scene.torsher_under_the_tree'',''scene.torsher_tsvetenie'',
-          ''scene.torsher_dragotsennyi'',''scene.torsher_voskresnoe_utro'', ''scene.torsher_vesennee_ozero'']
-          | random }}'
+        entity_id: '{{ [''scene.torsher_tuman_na_ozere'',''scene.torsher_gornyi_briz'',
+          ''scene.torsher_under_the_tree'',''scene.torsher_tsvetenie'', ''scene.torsher_dragotsennyi'',''scene.torsher_voskresnoe_utro'',
+          ''scene.torsher_vesennee_ozero''] | random }}'
     - data:
         effect: Stop
         transition: 5
@@ -176,7 +175,7 @@ light_tosleep:
         transition: 10
         dynamic: true
       target:
-        entity_id: '{{[''scene.torsher_galaktika'',''scene.torsher_svet_zvezd'',''scene.torsher_tumannost'']
+        entity_id: '{{[''scene.torsher_galaktika'',''scene.torsher_svet_zvezd'',''scene.torsher_otdykh_na_zakate'',''scene.torsher_tumannost'']
           | random }}'
       enabled: true
     - service: light.turn_off
@@ -409,8 +408,9 @@ push_for_closing_curtain:
         transition: 3
       target:
         entity_id:
-        - light.spalnia
         - light.kukhnia_hue
+        - light.torsher_2
+        - light.liustra
   - delay:
       hours: 0
       minutes: 0

@@ -1617,7 +1617,8 @@
                       "entities": [
                         "sensor.ble_datchik_v_spalne_battery",
                         "sensor.ble_battery_datchik_na_kukhne",
-                        "sensor.lodzhiia_battery"
+                        "sensor.lodzhiia_battery",
+                        "sensor.ulitsa_battery"
                       ]
                     },
                     {
@@ -1631,7 +1632,8 @@
                         "sensor.dimmer_kukhni_battery",
                         "sensor.hue_dimmer_switch_1_battery_level",
                         "sensor.hue_dimmer_switch_2_battery_level",
-                        "sensor.hue_wall_switch_module_1_battery_level"
+                        "sensor.hue_wall_switch_module_1_battery_level",
+                        "sensor.vykliuchatel_liustry_battery"
                       ]
                     },
                     {
@@ -2373,6 +2375,19 @@
                     },
                     {
                       "entity": "light.kukhnia_potolok"
+                    }
+                  ],
+                  "refresh_interval": 0,
+                  "hours_to_show": 1
+                },
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    {
+                      "entity": "input_text.frigate_event_new"
+                    },
+                    {
+                      "entity": "input_text.frigate_event_end"
                     }
                   ],
                   "refresh_interval": 0,

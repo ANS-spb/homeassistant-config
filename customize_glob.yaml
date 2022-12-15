@@ -21,3 +21,9 @@ sensor.okno_v_komnate_*:
 binary_sensor.okno_na_kukhne_*:
   battery_type: CR1632
   battery_change: 2020-09-02
+sensor.ulitsa_*:
+  battery_type: 2xAAA
+  battery_change: 2022-12-10
+sensor.vykliuchatel_liustry_*:
+  battery_type: CR2032
+  battery_change: 2022-12-11

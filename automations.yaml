@@ -224,7 +224,7 @@
   - condition: and
     conditions:
     - condition: template
-      value_template: '{{states.light.living_room.state != ''on'' and states.light.torsher.state
+      value_template: '{{ states(''light.living_room'') != ''on'' and states(''light.torsher'')
         != ''on'' }}'
     - condition: state
       entity_id: group.devices
@@ -289,6 +289,8 @@
   - condition: state
     entity_id: input_boolean.manual_light_off
     state: 'off'
+  - condition: template
+    value_template: '{{ states(''light.liustra'') != ''on'' }}'
   action:
   - parallel:
     - type: turn_off
@@ -891,10 +893,9 @@
   - service: camera.snapshot
     data:
       filename: /media/domofon.jpg
+    enabled: true
     target:
-      entity_id:
-      - camera.frigate_mjpeg
-    enabled: false
+      entity_id: camera.domru_domofon
   - variables:
       action_open: '{{ ''OPEN_'' ~ context.id }}'
       action_drop: '{{ ''DROP_'' ~ context.id }}'
@@ -946,9 +947,11 @@
       parse_mode: html
       timeout: 1000
       inline_keyboard:
-      - '{{"\U0001F6AA"}} Открыть дверь:/open_door'
+      - "\U0001F6AA Открыть дверь:/open_door"
       - ⛔️ Сбросить:/drop_domofon
       - "\U0001F4F8 Показать:/photo_entrance,  \U0001F575️‍♂️ Детект:/person_entrance"
+      - "\U0001F4F9 Хочу видос:/getevent {{ states('input_text.frigate_event_new')
+        }}"
       message_tag: msg_to_edit
     enabled: true
   - service: telegram_bot.send_photo
@@ -1312,19 +1315,21 @@
     default: []
   mode: single
 - id: '1646123055658'
-  alias: Frigate event
+  alias: Frigate event new
   description: ''
   trigger:
   - platform: mqtt
     topic: frigate/events
+    payload: new
+    value_template: '{{ value_json.type }}'
   condition:
   - condition: template
     value_template: '{{ trigger.payload_json[''after''][''camera''] == ''domru_domofon''
-      and trigger.payload_json[''type''] == ''end'' }}'
+      }}'
   action:
   - service: input_text.set_value
     target:
-      entity_id: input_text.frigate_event
+      entity_id: input_text.frigate_event_new
     data:
       value: '{{trigger.payload_json["after"]["id"]}}'
   mode: parallel
@@ -1963,44 +1968,81 @@
     unique_id: f3ddc7e5-426f-4ee7-8cbf-d53bc04e05fd
   condition:
   - condition: state
-    entity_id: light.kitchen
+    entity_id: light.podsvetka_zony
     state: 'on'
   action:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 2
+      seconds: 1
       milliseconds: 0
+    enabled: true
   - condition: state
     entity_id: light.kukhnia_hue
     state: 'off'
+    enabled: true
   - service: light.turn_off
     data: {}
     target:
-      entity_id: light.kitchen
+      entity_id: light.podsvetka_zony
   mode: restart
 - id: '1670503170601'
   alias: Звонок в домофон (выдача видео по кнопке)
   description: ''
   trigger:
   - platform: event
-    event_type: telegram_command
-    event_data:
-      command: /video
-  - platform: event
     event_type: telegram_callback
     event_data:
-      command: /video
+      command: /getevent
   condition: []
   action:
+  - service: shell_command.check_clip
+    data_template:
+      id: '{{ trigger.event.data.args[0] }}'
+  - if:
+    - condition: state
+      entity_id: binary_sensor.clip
+      state: 'off'
+    then:
+    - service: telegram_bot.send_message
+      data:
+        chat_id: '{{ trigger.event.data.chat_id }}'
+        message: Видео готовится, подождите...
+    - wait_template: '{{ states(''input_text.frigate_event_end'') == trigger.event.data.args[0]
+        }}'
+      continue_on_timeout: true
+      timeout: 00:02:00
+  - service: telegram_bot.answer_callback_query
+    data:
+      callback_query_id: '{{ trigger.event.data.id }}'
+      message: Загружаю видео
+      show_alert: false
   - service: telegram_bot.send_video
     data:
-      url: http://127.0.0.1:5000/api/events/{{states('input_text.frigate_event')}}/clip.mp4
-      target:
-      - 116325704
+      target: '{{ trigger.event.data.chat_id }}'
       parse_mode: html
-      timeout: 10000
-      message_tag: msg_to_edit
       disable_notification: true
+      timeout: 1000
+      url: http://127.0.0.1:5000/api/events/{{ trigger.event.data.args[0] }}/clip.mp4
     enabled: true
-  mode: single
+  mode: parallel
+  max: 10
+- id: '1670684594574'
+  alias: Frigate event end
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: frigate/events
+    payload: end
+    value_template: '{{ value_json.type }}'
+  condition:
+  - condition: template
+    value_template: '{{ trigger.payload_json[''after''][''camera''] == ''domru_domofon''
+      }}'
+  action:
+  - service: input_text.set_value
+    target:
+      entity_id: input_text.frigate_event_end
+    data:
+      value: '{{trigger.payload_json["after"]["id"]}}'
+  mode: parallel

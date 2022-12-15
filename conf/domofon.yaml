@@ -10,3 +10,6 @@ script:
   domru_open_door_657617:
     sequence:
       - service: rest_command.domru_open_door_657617
+
+shell_command:
+  check_clip: bash /config/check_clip.sh {{id}}

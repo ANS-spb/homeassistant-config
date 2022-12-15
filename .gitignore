@@ -17,3 +17,4 @@ home-assistant.log*
 *.db
 *.db-*
 /rtsp2webrtc_v5_amd64
+/check_clip.sh

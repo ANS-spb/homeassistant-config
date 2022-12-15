@@ -1,15 +1,28 @@
-- sensor.cpu_temp
-- sensor.memory_use_percent
+## Системные сенсоры
+#- sensor.cpu_temp
+#- sensor.memory_use_percent
+
+## Климат в доме
+- sensor.ble_datchik_v_spalne_temperature
+- sensor.ble_datchik_v_spalne_humidity
 - sensor.ble_temperature_datchik_na_kukhne
 - sensor.ble_humidity_datchik_na_kukhne
-- sensor.owm_temp
-- sensor.owm_clouds
-- sensor.openweathermap_cloud_coverage
-- sensor.outside_temperature_min_value
 - sensor.pm10_sensor_air_monitor_lite
 - sensor.pm2_5_sensor_air_monitor_lite
 - sensor.co2_sensor_air_monitor_lite
+
+## Климат на улице
+- sensor.owm_temp
+- sensor.owm_clouds
+- sensor.openweathermap_temperature
+- sensor.openweathermap_cloud_coverage
+- sensor.outside_temperature_min_value
 - sensor.pressure_average
+
+## Радиационный фон
 - sensor.geiger_dose_rate
 - sensor.geiger_counter_radioactive_events_per_minute
 - sensor.geiger_dr_mean_value
+
+## Состояние электросети
+- sensor.prikhozhaia_voltage
