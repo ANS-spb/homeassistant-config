@@ -1,2 +1,9 @@
 #!/bin/bash
-curl -s -I http://127.0.0.1:5000/api/events/$1 | head -1 | grep -q "HTTP/1.1 200 OK"; if [ $? -eq 0 ]; then echo true; else echo false; fi | jq -c '{"state": . }' | curl -k -X POST -H "Authorization: Bearer <PASTE_YOUR_HA_TOKEN_HERE>" -H "Content-Type: application/json" -d @- https://127.0.0.1:8123/api/states/binary_sensor.clip
+curl -s -I http://127.0.0.1:5000/api/events/$1 | head -1 | grep -q "HTTP/1.1 200 OK"
+if [ $? -eq 0 ]
+	then echo true
+	else echo false
+fi | \
+jq -c '{"state": . }' | \
+curl -k -X POST -H "Authorization: Bearer <PASTE_YOUR_HA_TOKEN_HERE>" -H "Content-Type: application/json" -d @- \
+https://127.0.0.1:8123/api/states/binary_sensor.clip
