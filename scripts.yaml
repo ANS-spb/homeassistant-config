@@ -450,5 +450,13 @@ wled_static_effect:
         entity_id: number.wled_intensity
       data:
         value: '100'
+    - service: light.turn_on
+      data:
+        rgb_color:
+        - 255
+        - 199
+        - 119
+      target:
+        entity_id: light.wled
   mode: single
   icon: mdi:led-strip-variant

@@ -1334,6 +1334,27 @@
                   "show_header_toggle": false
                 }
               ]
+            },
+            {
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
+              "cards": [
+                {
+                  "type": "markdown",
+                  "content": "### Напряжение сети:\n"
+                },
+                {
+                  "type": "history-graph",
+                  "entities": [
+                    {
+                      "entity": "sensor.prikhozhaia_voltage",
+                      "name": "Реле в прихожей"
+                    }
+                  ],
+                  "refresh_interval": 10,
+                  "hours_to_show": 48
+                }
+              ]
             }
           ]
         },

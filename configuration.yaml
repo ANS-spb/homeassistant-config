@@ -31,8 +31,10 @@ recorder:
   exclude:
     domains:
       - automation
-      - script
       - scene
+  include:
+    entities:
+      - automation.zvonok_v_domofon
 
 morph_numbers:
 start_time:

@@ -221,20 +221,21 @@
     entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
     below: '5'
   condition:
-  - condition: and
-    conditions:
-    - condition: template
-      value_template: '{{ states(''light.living_room'') != ''on'' and states(''light.torsher'')
-        != ''on'' }}'
-    - condition: state
-      entity_id: group.devices
-      state: home
-    - condition: time
-      after: '12:00'
-      before: input_datetime.sleep_time
-    - condition: state
-      entity_id: input_boolean.manual_light_off
-      state: 'off'
+  - condition: template
+    value_template: '{{ states(''light.living_room'') != ''on'' and states(''light.torsher'')
+      != ''on'' }}'
+  - condition: state
+    entity_id: group.devices
+    state: home
+  - condition: time
+    after: '12:00'
+    before: input_datetime.sleep_time
+  - condition: state
+    entity_id: input_boolean.manual_light_off
+    state: 'off'
+  - condition: template
+    value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
+      0) > 60 }}'
   action:
   - if:
     - condition: device
@@ -271,7 +272,10 @@
   trigger:
   - platform: numeric_state
     entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
-    for: 00:00:03
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
     above: '15'
   condition:
   - condition: or
@@ -890,15 +894,15 @@
     value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
       0) > 60 }}'
   action:
+  - variables:
+      action_open: '{{ ''OPEN_'' ~ context.id }}'
+      action_drop: '{{ ''DROP_'' ~ context.id }}'
   - service: camera.snapshot
     data:
       filename: /media/domofon.jpg
     enabled: true
     target:
       entity_id: camera.domru_domofon
-  - variables:
-      action_open: '{{ ''OPEN_'' ~ context.id }}'
-      action_drop: '{{ ''DROP_'' ~ context.id }}'
   - parallel:
     - service: notify.mobile_app_iphone_ans
       data:
@@ -937,7 +941,7 @@
         message: Кто-то звонит в домофон!
   - service: telegram_bot.send_photo
     data:
-      url: http://127.0.0.1:5000/api/domru_domofon/person/snapshot.jpg
+      url: http://127.0.0.1:5000/api/domru_domofon/person/snapshot.jpg?bbox=1&quality=100
       caption: "\U0001F6A8 {{ [ \"Кто-то звонит в дверь\", \"Кто-то ломится в дверь\",
         \"Опять припёрлись\", \"Дзинь-дзинь\", \"Тук-тук\", \"Гости на пороге\", \"Живые
         наступают!\", \"Это случайно не доставка пиццы?\", \"Кожаный мешок у ворот\"]
@@ -991,7 +995,7 @@
       - condition: template
         value_template: '{{ wait.trigger.event.data.action == action_open }}'
       - condition: template
-        value_template: '{{ states.sensor.domofon_state.state != "Idle" }}'
+        value_template: '{{ states(''sensor.domofon_state'') != "Idle" }}'
       sequence:
       - parallel:
         - service: switch.turn_on
@@ -1064,28 +1068,37 @@
     id: callback
   condition: []
   action:
-  - parallel:
-    - sequence:
-      - service: camera.snapshot
-        data:
-          filename: /media/domofon_frigate.jpg
-        target:
-          entity_id: camera.frigate_mjpeg
-      - wait_for_trigger:
-        - platform: event
-          event_type: folder_watcher
-          event_data:
-            event_type: closed
-            file: domofon_frigate.jpg
-        continue_on_timeout: true
-        timeout: 00:00:00
-      - service: telegram_bot.send_photo
-        data:
-          file: /media/domofon_frigate.jpg
-          target: '{{ trigger.event.data.chat_id }}'
-          parse_mode: html
-          disable_notification: true
-          timeout: 1000
+  - service: camera.snapshot
+    data:
+      filename: /media/domofon_frigate.jpg
+    target:
+      entity_id: camera.frigate_mjpeg
+    enabled: false
+  - wait_for_trigger:
+    - platform: event
+      event_type: folder_watcher
+      event_data:
+        event_type: closed
+        file: domofon_frigate.jpg
+    continue_on_timeout: true
+    timeout: 00:00:00
+    enabled: false
+  - service: telegram_bot.send_photo
+    data:
+      file: /media/domofon_frigate.jpg
+      target: '{{ trigger.event.data.chat_id }}'
+      parse_mode: html
+      disable_notification: true
+      timeout: 1000
+    enabled: false
+  - service: telegram_bot.send_photo
+    data:
+      url: http://127.0.0.1:5000/api/domru_domofon/latest.jpg?bbox=1&motion=1&quality=100
+      target: '{{ trigger.event.data.chat_id }}'
+      parse_mode: html
+      disable_notification: true
+      timeout: 1000
+    enabled: true
   mode: restart
 - id: '1645086906100'
   alias: Открыть или сбросить домофон по команде
