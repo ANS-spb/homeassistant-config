@@ -699,7 +699,14 @@
                       ],
                       "card": {
                         "type": "custom:slider-button-card",
-                        "entity": "light.prikhozhaia"
+                        "entity": "light.prikhozhaia",
+                        "slider": {
+                          "direction": "left-right",
+                          "background": "solid"
+                        },
+                        "action_button": {
+                          "mode": "toggle"
+                        }
                       }
                     },
                     {
@@ -709,7 +716,7 @@
                       "cards": [
                         {
                           "type": "custom:slider-button-card",
-                          "entity": "light.50ec50e1b80d_light",
+                          "entity": "light.tualet",
                           "slider": {
                             "direction": "left-right",
                             "background": "solid"
@@ -720,7 +727,15 @@
                         },
                         {
                           "type": "custom:slider-button-card",
-                          "entity": "light.50ec50dfc9c5_light"
+                          "entity": "light.vannaia"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "entities",
+                      "entities": [
+                        {
+                          "entity": "switch.adaptive_lighting_sleep_mode_tualet"
                         }
                       ]
                     }

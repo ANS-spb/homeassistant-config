@@ -32,4 +32,3 @@ yandex_smart_home:
           entity: sensor.lodzhiia_humidity
         - type: illumination
           entity: sensor.osveshchionnost_snaruzhi_illuminance_lux
-
