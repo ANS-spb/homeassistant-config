@@ -1583,7 +1583,8 @@
               "entities": [
                 "automation.zvonok_v_domofon",
                 "sensor.domofon_state",
-                "automation.zvonok_v_dver"
+                "automation.zvonok_v_dver",
+                "select.domofon_mode"
               ]
             },
             {

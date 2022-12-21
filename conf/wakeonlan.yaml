@@ -1,0 +1,11 @@
+wake_on_lan:
+
+automation:
+  - alias: "Turn On Living Room TV with WakeOnLan"
+    trigger:
+      - platform: webostv.turn_on
+        entity_id: media_player.tv
+    action:
+      - service: wake_on_lan.send_magic_packet
+        data:
+          mac: 70:97:41:61:9d:20
