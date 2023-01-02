@@ -72,18 +72,15 @@
     entity_id: group.devices
   condition:
   - condition: template
-    value_template: "{{states.light |\n    rejectattr('entity_id', 'in', ['light.50ec50dfc9c5_light',\n
-      \   'light.50ec50e1b80d_light']) | selectattr('entity_id') |\n    selectattr('state','eq','on')
-      | map(attribute='entity_id') | list | count > 0 }}"
+    value_template: "{{states.light | selectattr('entity_id') | selectattr('state','eq','on')
+      \n  | map(attribute='entity_id') | list | count > 0 }}"
   action:
   - service: notify.mobile_app_iphone_ans
     data:
       title: Выключить свет?
-      message: "{% set filter = ['light.50ec50dfc9c5_light', 'light.50ec50e1b80d_light']
-        %} {{ '\U0001F4A7' }} Похоже, Вы ушли из дома. Есть {{states.light | rejectattr('entity_id',
-        'in', filter) | selectattr('entity_id') | selectattr('state','eq','on') |
-        map(attribute='entity_id') | list | count | format(morph='работающий светильник',
-        as_text=false)}}."
+      message: "{{ '\U0001F4A7' }} Похоже, Вы ушли из дома. Есть {{states.light |
+        selectattr('entity_id') | selectattr('state','eq','on') |  map(attribute='entity_id')
+        | list | count | format(morph='работающий светильник', as_text=false)}}."
       data:
         actions:
         - action: LIGHTSOFF
@@ -219,7 +216,7 @@
   trigger:
   - platform: numeric_state
     entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
-    below: '5'
+    below: 15
   condition:
   - condition: template
     value_template: '{{ states(''light.living_room'') != ''on'' and states(''light.torsher'')
@@ -276,7 +273,7 @@
       hours: 0
       minutes: 0
       seconds: 10
-    above: '15'
+    above: 25
   condition:
   - condition: or
     conditions:
@@ -329,6 +326,8 @@
     device_id: 1b788ea3d24640c4765af9db21a3d897
     entity_id: light.torsher
     domain: light
+  - condition: template
+    value_template: '{{ states(''light.liustra'') != ''on'' }}'
   action:
   - service: script.light_tosleep
     data: {}
@@ -997,20 +996,20 @@
       - condition: template
         value_template: '{{ states(''sensor.domofon_state'') != "Idle" }}'
       sequence:
-      - parallel:
-        - service: switch.turn_on
-          data: {}
-          target:
-            entity_id: switch.domofon_once
-        - service: script.turn_on
-          data: {}
-          target:
-            entity_id: script.domru_open_door_657617
-        - service: logbook.log
-          data:
-            name: Звонок в домофон
-            message: Открытие двери парадной с телефона
-            entity_id: automation.zvonok_v_domofon
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id: switch.domofon_once
+      - service: script.turn_on
+        data: {}
+        target:
+          entity_id: script.domru_open_door_657617
+        enabled: false
+      - service: logbook.log
+        data:
+          name: Звонок в домофон
+          message: Открытие двери парадной с телефона
+          entity_id: automation.zvonok_v_domofon
     - conditions:
       - condition: template
         value_template: '{{ wait.trigger.event.data.action == action_drop }}'
@@ -1213,7 +1212,8 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.zvonok
+    entity_id:
+    - binary_sensor.zvonok
     from: 'on'
     to: 'off'
   condition:
@@ -1259,7 +1259,7 @@
   action:
   - service: telegram_bot.send_photo
     data:
-      url: http://127.0.0.1:5000/api/events/{{states.input_text.frigate_event.state}}/snapshot.jpg?bbox=1&crop=1&timestamp=1
+      url: http://127.0.0.1:5000/api/events/{{states.input_text.frigate_event_end.state}}/snapshot.jpg?bbox=1&crop=1&timestamp=1
       target: '{{ trigger.event.data.chat_id }}'
       parse_mode: html
       disable_notification: true

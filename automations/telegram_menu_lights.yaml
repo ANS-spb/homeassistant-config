@@ -26,11 +26,9 @@
                 message_id: last
                 chat_id: "{{ trigger.event.data.chat_id }}"
                 message: &msg |
-                  {%if states.light | rejectattr('entity_id', 'in', 
-                  ['light.50ec50dfc9c5_light', 'light.50ec50e1b80d_light']) | selectattr('entity_id') |
+                  {%if states.light | selectattr('entity_id') |
                   selectattr('state','eq','on') | map(attribute='entity_id') | list | count == 0 %}*Свет* везде выключен.
-                  {% else %}*Свет* включен: {{ states.light | rejectattr('entity_id', 'in', 
-                  ['light.50ec50dfc9c5_light', 'light.50ec50e1b80d_light'])| selectattr("state", "eq", "on") |
+                  {% else %}*Свет* включен: {{ states.light | selectattr("state", "eq", "on") |
                   map(attribute  = "name") | join(", ") }}.{% endif %}
                 inline_keyboard: &keyb
                   - Включить свет в комнате:/lighton

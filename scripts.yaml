@@ -475,3 +475,11 @@ wled_static_effect:
       entity_id: media_player.tv
   mode: single
   icon: mdi:movie
+'1671604632610':
+  alias: Компьютер
+  sequence:
+  - service: wake_on_lan.send_magic_packet
+    data:
+      mac: e0:3f:49:6e:02:f7
+  mode: single
+  icon: hue:room-computer

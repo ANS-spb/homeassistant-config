@@ -663,19 +663,6 @@
                       ]
                     }
                   ]
-                },
-                {
-                  "type": "markdown",
-                  "content": "### Весь свет в доме:\n"
-                },
-                {
-                  "type": "tile",
-                  "entity": "group.dyn_all_lights",
-                  "show_entity_picture": false,
-                  "tap_action": {
-                    "action": "navigate",
-                    "navigation_path": "/lovelace/all-lights"
-                  }
                 }
               ]
             },
@@ -708,36 +695,6 @@
                           "mode": "toggle"
                         }
                       }
-                    },
-                    {
-                      "square": false,
-                      "columns": 2,
-                      "type": "grid",
-                      "cards": [
-                        {
-                          "type": "custom:slider-button-card",
-                          "entity": "light.tualet",
-                          "slider": {
-                            "direction": "left-right",
-                            "background": "solid"
-                          },
-                          "action_button": {
-                            "mode": "toggle"
-                          }
-                        },
-                        {
-                          "type": "custom:slider-button-card",
-                          "entity": "light.vannaia"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "entity": "switch.adaptive_lighting_sleep_mode_tualet"
-                        }
-                      ]
                     }
                   ]
                 }
@@ -785,6 +742,24 @@
                       }
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "markdown",
+                  "content": "### Весь свет в доме:\n"
+                },
+                {
+                  "type": "tile",
+                  "entity": "group.dyn_all_lights",
+                  "show_entity_picture": false,
+                  "tap_action": {
+                    "action": "navigate",
+                    "navigation_path": "/lovelace/all-lights"
+                  }
                 }
               ]
             }
@@ -2152,64 +2127,6 @@
                 },
                 {
                   "type": "markdown",
-                  "content": "### <center> GW3 Bluetooth Mesh </center>"
-                },
-                {
-                  "type": "custom:flex-table-card",
-                  "clickable": false,
-                  "entities": {
-                    "include": [
-                      "sensor.*_mesh"
-                    ]
-                  },
-                  "sort_by": "mac",
-                  "columns": [
-                    {
-                      "data": "icon",
-                      "name": " ",
-                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:bluetooth\" + \"\\\"></ha-icon>\""
-                    },
-                    {
-                      "data": "friendly_name",
-                      "name": "Friendly Name",
-                      "modify": "x.replace(/ Ble$/,\"\")"
-                    },
-                    {
-                      "data": "mac",
-                      "name": "MAC",
-                      "modify": "(x+'').replace(/(.{2}(?!$))/g,\"$1:\")"
-                    },
-                    {
-                      "data": "msg_received",
-                      "name": "Received",
-                      "modify": "isNaN(parseInt(x, 10)) ? \"\" : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "last_msg",
-                      "name": "Last Msg",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "available",
-                      "name": "Available",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "state",
-                      "name": "Last Seen",
-                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
-                    }
-                  ],
-                  "css": {
-                    "table+": "padding-top: 0px;",
-                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
-                    "td.left": "padding: 0px 10px 0px 10px",
-                    "th.left": "padding: 0px 10px 0px 10px",
-                    "thead th": "text-align: left"
-                  }
-                },
-                {
-                  "type": "markdown",
                   "content": "### <center> GW3 Bluetooth </center>"
                 },
                 {
@@ -2498,10 +2415,7 @@
                   "filter": {
                     "include": [
                       {
-                        "domain": "light",
-                        "not": {
-                          "name": "/Light/"
-                        }
+                        "domain": "light"
                       }
                     ],
                     "exclude": [
