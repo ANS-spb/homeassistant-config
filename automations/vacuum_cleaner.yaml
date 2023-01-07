@@ -1,0 +1,148 @@
+####################################
+# Пылесос: оповещения и управление #
+####################################
+
+- alias: "Vacuum - Оповещение о начале уборки"
+  id: vacuum_telegram_begin_info
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: vacuum.roborock_s6_pure
+    to: "cleaning"
+    not_from: "unavailable"
+  action:
+    - service: telegram_bot.send_message
+      data:
+        target: !secret telegram_bot_allowed_chat_id1
+        message: "_Дружочек_ начал уборку."
+        inline_keyboard:
+          - "🛑 Остановить:/vacuum_stop, ⏎ На базу:/vacuum_go_home"
+
+- alias: "Vacuum - Telegram Control - Stop"
+  id: vacuum_telegram_stop
+  trigger:
+    platform: event
+    event_type: telegram_callback
+    event_data:
+      data: "/vacuum_stop"
+  action:
+    - service: vacuum.pause
+      entity_id: vacuum.roborock_s6_pure
+    - service: telegram_bot.answer_callback_query
+      data_template:
+        callback_query_id: "{{ trigger.event.data.id }}"
+        message: "Команда отправлена"
+    - service: telegram_bot.edit_message
+      data:
+        message_id: "{{ trigger.event.data.message.message_id }}"
+        chat_id: "{{ trigger.event.data.chat_id }}"
+        message: |
+          _Дружочек_ начал уборку.
+          Уборка остановлена.
+        inline_keyboard:
+          - "⏎ На базу:/vacuum_go_home"
+
+- alias: "Vacuum - Telegram Control - Go to Base"
+  id: vacuum_tetegram_to_return
+  trigger:
+    platform: event
+    event_type: telegram_callback
+    event_data:
+      data: "/vacuum_go_home"
+  action:
+    - service: vacuum.pause
+      entity_id: vacuum.roborock_s6_pure
+    - delay: 1
+    - service: vacuum.return_to_base
+      entity_id: vacuum.roborock_s6_pure
+    - service: telegram_bot.answer_callback_query
+      data_template:
+        callback_query_id: "{{ trigger.event.data.id }}"
+        message: "Команда отправлена"
+    - service: telegram_bot.edit_message
+      data:
+        message_id: "{{ trigger.event.data.message.message_id }}"
+        chat_id: "{{ trigger.event.data.chat_id }}"
+        message: |
+          _Дружочек_ начал уборку.
+          Уборка остановлена, робот отправлен на базу.
+
+- alias: "Vacuum - Оповещение о возращении пылесоса на базу [notify]"
+  id: vacuum_telegram_returned_info
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: vacuum.roborock_s6_pure
+    to: "docked"
+    not_from: "unavailable"
+  action:
+    - service: notify.telegram
+      data:
+        message: "_Дружочек_ вернулся на базу (закончил уборку)."
+
+- alias: "Vacuum - Оповещение о забытом пылесосе [notify]"
+  id: vacuum_telegram_lost_info
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: vacuum.roborock_s6_pure
+    to: "idle"
+    for:
+      minutes: 15
+  action:
+    - service: notify.telegram
+      data:
+        message: "_Дружочек_ потерялся и бездельничает, отправляем на базу."
+    - service: vacuum.return_to_base
+      data:
+        entity_id: vacuum.roborock_s6_pure
+
+- alias: "Оповещение об ошибке [notify]"
+  id: vacuum_telegram_error_info
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: vacuum.roborock_s6_pure
+    to: "error"
+    not_from: "unavailable"
+  action:
+    - service: notify.telegram
+      data_template:
+        message: |
+          _Дружочек_: Произошла *ошибка*!
+          {{ state_attr('vacuum.roborock_s6_pure', "error") }}
+
+- alias: "Vacuum - Ежедневная уборка по будням [утро]"
+  id: vacuum_automation_workday_cleaning
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: group.devices
+    to: "not_home"
+    for:
+      minutes: 20
+  condition:
+    condition: and
+    conditions:
+      - condition: time
+        after: "07:30:00"
+        before: "10:30:00"
+#        weekday:
+#          - mon
+#          - tue
+#          - wed
+#          - thu
+#          - fri
+      - condition: state
+        entity_id: binary_sensor.workday
+        state: "on"
+      - condition: template
+        value_template: "{{ now().day != this.attributes.last_triggered.day | default(0) }}"
+  action:
+    - service: vacuum.set_fan_speed
+      data:
+        entity_id: vacuum.roborock_s6_pure
+        fan_speed: Turbo
+    - service: vacuum.start
+      data:
+        entity_id: vacuum.roborock_s6_pure

@@ -20,7 +20,7 @@
   action:
   - data:
       message: "\U0001F3C1 Cервер запущен в {{ states('sensor.time') }}"
-      title: "\U0001F197 Системное уведомление"
+      title: ⚒️ Системное уведомление
     service: notify.mobile_app_iphone_ans
   - service: input_boolean.turn_off
     target:
@@ -46,7 +46,7 @@
       message: "\U0001F3C1 Cервер запущен в {{ states('sensor.time') }}.\n⏱ Запуск
         Home Assistant занял {{ states('sensor.start_time') | format(morph='секунда',
         as_text=false) }}.\n"
-      title: "\U0001F197 Системное уведомление"
+      title: ⚒️ Системное уведомление
       target: 116325704
   mode: single
 - id: '1601827285752'
@@ -59,8 +59,15 @@
   action:
   - data:
       message: ❗️Сервер остановлен в {{ states('sensor.time') }}
-      title: "\U0001F197 Системное уведомление"
+      title: ⚒️ Системное уведомление
     service: notify.mobile_app_iphone_ans
+  - service: telegram_bot.send_message
+    data:
+      message: '⚠️ Cервер остановлен в {{ states(''sensor.time'') }}.
+
+        '
+      title: ⚒️ Системное уведомление
+      target: 116325704
   mode: single
 - id: '1601829228272'
   alias: Notify away
@@ -932,12 +939,32 @@
             title: Сгинь
           push:
             interruption-level: time-sensitive
-    - service: notify.tv
-      data:
-        message: Кто-то звонит в домофон!
-    - service: notify.lg_webos_tv_tn510sg
-      data:
-        message: Кто-то звонит в домофон!
+    - if:
+      - condition: state
+        entity_id: media_player.tv
+        state: 'on'
+      then:
+      - service: notify.tv
+        data:
+          message: Кто-то звонит в домофон!
+    - if:
+      - condition: state
+        entity_id: media_player.lg_webos_tv_tn510sg
+        state: 'on'
+      then:
+      - service: notify.lg_webos_tv_tn510sg
+        data:
+          message: Кто-то звонит в домофон!
+    - if:
+      - condition: state
+        entity_id: light.living_room
+        state: 'on'
+      then:
+      - service: light.turn_on
+        data:
+          effect: WhatsApp
+        target:
+          entity_id: light.living_room
   - service: telegram_bot.send_photo
     data:
       url: http://127.0.0.1:5000/api/domru_domofon/person/snapshot.jpg?bbox=1&quality=100
@@ -1000,11 +1027,12 @@
         data: {}
         target:
           entity_id: switch.domofon_once
+        enabled: false
       - service: script.turn_on
         data: {}
         target:
           entity_id: script.domru_open_door_657617
-        enabled: false
+        enabled: true
       - service: logbook.log
         data:
           name: Звонок в домофон
@@ -1239,9 +1267,45 @@
         - 116325704
         parse_mode: markdown
         message: "\U0001F514 *Звонят в дверь!* \U0001F514"
-    - service: notify.tv
-      data:
-        message: Звонок в дверь!
+    - if:
+      - condition: state
+        entity_id: media_player.tv
+        state: 'on'
+      then:
+      - service: notify.tv
+        data:
+          message: Звонок в дверь!
+    - if:
+      - condition: state
+        entity_id: media_player.lg_webos_tv_tn510sg
+        state: 'on'
+      then:
+      - service: notify.lg_webos_tv_tn510sg
+        data:
+          message: Звонок в дверь!
+    - if:
+      - condition: state
+        entity_id: sensor.daytime
+        state: 'on'
+      then:
+      - service: media_player.play_media
+        data:
+          media_content_type: text
+          media_content_id: Кто-то звонит в дверь!
+          extra:
+            volume_level: 0.8
+        target:
+          entity_id: media_player.yandex_station_m0023t600rr2sb
+    - if:
+      - condition: state
+        entity_id: light.living_room
+        state: 'on'
+      then:
+      - service: light.turn_on
+        data:
+          effect: Twitter
+        target:
+          entity_id: light.living_room
   mode: single
 - id: '1645189263720'
   alias: Фото персоны с домофона по команде
@@ -2059,3 +2123,284 @@
     data:
       value: '{{trigger.payload_json["after"]["id"]}}'
   mode: parallel
+- id: '1673030953289'
+  alias: Уведомления состояния пылесоса
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - vacuum.roborock_s6_pure
+    not_from:
+    - unavailable
+    - unknown
+    id: Состояние
+  - platform: state
+    entity_id:
+    - sensor.roborock_s6_pure_current_error
+    not_from:
+    - unavailable
+    - unknown
+    id: Ошибка
+  - platform: state
+    entity_id:
+    - vacuum.roborock_s6_pure
+    attribute: vacuum_status
+    not_from:
+    - unavailable
+    - unknown
+    id: Статус
+  condition: []
+  action:
+  - service: telegram_bot.send_message
+    data:
+      message: '{{ trigger.id }} пылесоса: {{ trigger.to_state.state }}.
+
+        '
+      target: 116325704
+  mode: single
+- id: '1673035668018'
+  alias: Алиса выключает свет
+  description: ''
+  trigger:
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Спокойной ночи
+  condition: []
+  action:
+  - service: script.1644819849093
+    data: {}
+  mode: single
+- id: '1673035732739'
+  alias: Алиса пылесосит
+  description: ''
+  trigger:
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Пропылесось в комнате
+    id: '16'
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Пропылесось в коридоре
+    id: '17'
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Пропылесось на кухне
+    id: '18'
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Пропылесось в прихожей
+    id: '17'
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Пропылесось под столами в комнате
+    id: room_table
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Пропылесось ковёр в комнате
+    id: room_rug
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Пропылесось под столом на кухне
+    id: kitchen_table
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: '16'
+      sequence:
+      - service: roborock.vacuum_clean_segment
+        data:
+          segments:
+          - 16
+        target:
+          entity_id: vacuum.roborock_s6_pure
+    - conditions:
+      - condition: trigger
+        id: '17'
+      sequence:
+      - service: roborock.vacuum_clean_segment
+        data:
+          segments:
+          - 17
+          - 17
+        target:
+          entity_id: vacuum.roborock_s6_pure
+    - conditions:
+      - condition: trigger
+        id: '18'
+      sequence:
+      - service: roborock.vacuum_clean_segment
+        data:
+          segments:
+          - 18
+        target:
+          entity_id: vacuum.roborock_s6_pure
+    - conditions:
+      - condition: trigger
+        id: room_table
+      sequence:
+      - service: roborock.vacuum_clean_zone
+        data:
+          repeats: 2
+          zone:
+          - - 27598
+            - 20038
+            - 28655
+            - 22275
+        target:
+          entity_id: vacuum.roborock_s6_pure
+    - conditions:
+      - condition: trigger
+        id: room_rug
+      sequence:
+      - service: roborock.vacuum_clean_zone
+        data:
+          zone:
+          - - 25872
+            - 21878
+            - 28184
+            - 23301
+          repeats: 2
+        target:
+          entity_id: vacuum.roborock_s6_pure
+    - conditions:
+      - condition: trigger
+        id: kitchen_table
+      sequence:
+      - service: roborock.vacuum_clean_zone
+        data:
+          zone:
+          - - 23708
+            - 23914
+            - 24946
+            - 25809
+          repeats: 2
+        target:
+          entity_id: vacuum.roborock_s6_pure
+  mode: single
+- id: '1673036058333'
+  alias: Алиса включает свет в комнате
+  description: ''
+  trigger:
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Включи свет
+    id: light
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Включи ночной свет
+    id: night
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: light
+      sequence:
+      - service: script.1599944056170
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: night
+      sequence:
+      - service: script.light_tosleep
+        data: {}
+  mode: single
+- id: '1673042115988'
+  alias: Алиса включает телевизор
+  description: ''
+  trigger:
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Включи кинопоиск
+    id: kinopoisk
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Включи плекс
+    id: plex
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Включи телевизор
+    id: tv
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: kinopoisk
+      sequence:
+      - if:
+        - condition: state
+          entity_id: media_player.tv
+          state: 'off'
+        then:
+        - service: wake_on_lan.send_magic_packet
+          data:
+            mac: 70:97:41:61:9d:20
+        - wait_template: '{{ is_state(''media_player.tv'', ''on'') }}'
+          continue_on_timeout: true
+      - service: media_player.select_source
+        data:
+          source: Кинопоиск
+        target:
+          entity_id: media_player.tv
+    - conditions:
+      - condition: trigger
+        id: plex
+      sequence:
+      - if:
+        - condition: state
+          entity_id: media_player.tv
+          state: 'off'
+        then:
+        - service: wake_on_lan.send_magic_packet
+          data:
+            mac: 70:97:41:61:9d:20
+        - wait_template: '{{ is_state(''media_player.tv'', ''on'') }}'
+          continue_on_timeout: true
+      - service: media_player.select_source
+        data:
+          source: Plex
+        target:
+          entity_id: media_player.tv
+    - conditions:
+      - condition: trigger
+        id: tv
+      - condition: state
+        entity_id: media_player.tv
+        state: 'off'
+      sequence:
+      - service: wake_on_lan.send_magic_packet
+        data:
+          mac: 70:97:41:61:9d:20
+  mode: single
+- id: '1673042285098'
+  alias: Алиса переключает эффекты ленты
+  description: ''
+  trigger:
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Лента моргает
+  condition:
+  - condition: state
+    entity_id: light.wled_2
+    state: 'on'
+  action:
+  - service: script.1638995744105
+    data: {}
+  mode: single

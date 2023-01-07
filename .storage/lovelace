@@ -840,7 +840,11 @@
               "entities": [
                 {
                   "entity": "sensor.openweathermap_temperature",
-                  "name": "Текущая"
+                  "name": "Текущая OWM"
+                },
+                {
+                  "entity": "sensor.ulitsa_temperature",
+                  "name": "Текущая по датчику"
                 },
                 {
                   "entity": "sensor.lodzhiia_temperature",
@@ -1345,6 +1349,555 @@
                   "hours_to_show": 48
                 }
               ]
+            },
+            {
+              "type": "custom:mushroom-vacuum-card",
+              "entity": "vacuum.roborock_s6_pure",
+              "commands": [
+                "on_off",
+                "start_pause",
+                "stop",
+                "locate",
+                "clean_spot",
+                "return_home"
+              ]
+            },
+            {
+              "type": "custom:vacuum-card",
+              "entity": "vacuum.roborock_s6_pure",
+              "image": "default",
+              "compact_view": false
+            },
+            {
+              "type": "custom:xiaomi-vacuum-map-card",
+              "language": "ru",
+              "map_source": {
+                "camera": "camera.roborock_s6_pure_map",
+                "crop": {
+                  "top": 150,
+                  "left": 100,
+                  "right": 280,
+                  "bottom": 230
+                }
+              },
+              "calibration_source": {
+                "camera": true
+              },
+              "entity": "vacuum.roborock_s6_pure",
+              "vacuum_platform": "send_command",
+              "tiles": [
+                {
+                  "tile_id": "battery_level",
+                  "entity": "vacuum.roborock_s6_pure",
+                  "label": "Battery",
+                  "attribute": "battery_level",
+                  "icon": "mdi:battery-charging-100",
+                  "unit": "%"
+                },
+                {
+                  "tile_id": "fan_speed",
+                  "entity": "vacuum.roborock_s6_pure",
+                  "label": "Fan speed",
+                  "attribute": "fan_speed",
+                  "icon": "mdi:fan",
+                  "translations": {
+                    "silent": "Silent",
+                    "standard": "Standard",
+                    "medium": "Medium",
+                    "turbo": "Turbo",
+                    "auto": "Auto",
+                    "gentle": "Gentle"
+                  }
+                }
+              ],
+              "icons": [
+                {
+                  "icon": "mdi:play",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "cleaning"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "error"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "returning"
+                    }
+                  ],
+                  "tooltip": "Start",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.start",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:pause",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "docked"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "idle"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "error"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "paused"
+                    }
+                  ],
+                  "tooltip": "Pause",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.pause",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:stop",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "docked"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "idle"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "error"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "paused"
+                    }
+                  ],
+                  "tooltip": "Stop",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.stop",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:home-map-marker",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "docked"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "returning"
+                    }
+                  ],
+                  "tooltip": "Return to base",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.return_to_base",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:target-variant",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "docked"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "error"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "cleaning"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "value_not": "returning"
+                    }
+                  ],
+                  "tooltip": "Clean spot",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.clean_spot",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:map-marker",
+                  "tooltip": "Locate",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.locate",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:fan-alert",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value": "Off"
+                    }
+                  ],
+                  "tooltip": "Change fan speed",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.set_fan_speed",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure",
+                      "fan_speed": "Silent"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:fan-remove",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value": "Silent"
+                    }
+                  ],
+                  "tooltip": "Change fan speed",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.set_fan_speed",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure",
+                      "fan_speed": "Balanced"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:fan-alert",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value": "Balanced"
+                    }
+                  ],
+                  "tooltip": "Change fan speed",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.set_fan_speed",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure",
+                      "fan_speed": "Turbo"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:fan-speed-3",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value": "Turbo"
+                    }
+                  ],
+                  "tooltip": "Change fan speed",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.set_fan_speed",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure",
+                      "fan_speed": "Max"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:fan-alert",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value": "Max"
+                    }
+                  ],
+                  "tooltip": "Change fan speed",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.set_fan_speed",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure",
+                      "fan_speed": "Max+"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:fan-alert",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value": "Max+"
+                    }
+                  ],
+                  "tooltip": "Change fan speed",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.set_fan_speed",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure",
+                      "fan_speed": "Custom"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:fan-alert",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value": "Custom"
+                    }
+                  ],
+                  "tooltip": "Change fan speed",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.set_fan_speed",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure",
+                      "fan_speed": "Off"
+                    }
+                  }
+                },
+                {
+                  "icon": "mdi:fan-alert",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value_not": "Off"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value_not": "Silent"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value_not": "Balanced"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value_not": "Turbo"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value_not": "Max"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value_not": "Max+"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "attribute": "fan_speed",
+                      "value_not": "Custom"
+                    }
+                  ],
+                  "tooltip": "Change fan speed",
+                  "tap_action": {
+                    "action": "call-service",
+                    "service": "vacuum.set_fan_speed",
+                    "service_data": {
+                      "entity_id": "vacuum.roborock_s6_pure",
+                      "fan_speed": "Off"
+                    }
+                  }
+                }
+              ],
+              "map_modes": [
+                {
+                  "name": "Комнаты",
+                  "icon": "mdi:floor-plan",
+                  "run_immediately": false,
+                  "coordinates_rounding": true,
+                  "selection_type": "ROOM",
+                  "max_selections": 999,
+                  "repeats_type": "REPEAT",
+                  "max_repeats": 3,
+                  "service_call_schema": {
+                    "service": "vacuum.send_command",
+                    "service_data": {
+                      "command": "app_segment_clean",
+                      "params": "[[selection]]",
+                      "entity_id": "[[entity_id]]"
+                    }
+                  },
+                  "predefined_selections": [
+                    {
+                      "id": 16,
+                      "icon": {
+                        "name": "mdi:broom",
+                        "x": 26850,
+                        "y": 22950
+                      },
+                      "label": {
+                        "text": "Комната",
+                        "x": 26850,
+                        "y": 22950,
+                        "offset_y": 35
+                      },
+                      "outline": [
+                        [
+                          25150,
+                          20100
+                        ],
+                        [
+                          28550,
+                          20100
+                        ],
+                        [
+                          28550,
+                          25800
+                        ],
+                        [
+                          25150,
+                          25800
+                        ]
+                      ]
+                    },
+                    {
+                      "id": 17,
+                      "icon": {
+                        "name": "mdi:broom",
+                        "x": 24250,
+                        "y": 21075
+                      },
+                      "label": {
+                        "text": "Коридор",
+                        "x": 24250,
+                        "y": 21075,
+                        "offset_y": 35
+                      },
+                      "outline": [
+                        [
+                          23250,
+                          20050
+                        ],
+                        [
+                          25250,
+                          20050
+                        ],
+                        [
+                          25250,
+                          22100
+                        ],
+                        [
+                          23250,
+                          22100
+                        ]
+                      ]
+                    },
+                    {
+                      "id": 18,
+                      "icon": {
+                        "name": "mdi:broom",
+                        "x": 23325,
+                        "y": 23975
+                      },
+                      "label": {
+                        "text": "Кухня",
+                        "x": 23325,
+                        "y": 23975,
+                        "offset_y": 35
+                      },
+                      "outline": [
+                        [
+                          21750,
+                          22150
+                        ],
+                        [
+                          24900,
+                          22150
+                        ],
+                        [
+                          24900,
+                          25800
+                        ],
+                        [
+                          21750,
+                          25800
+                        ]
+                      ]
+                    }
+                  ],
+                  "variables": {}
+                },
+                {
+                  "name": "Zone cleanup",
+                  "icon": "mdi:select-drag",
+                  "run_immediately": false,
+                  "coordinates_rounding": true,
+                  "selection_type": "MANUAL_RECTANGLE",
+                  "max_selections": 5,
+                  "repeats_type": "EXTERNAL",
+                  "max_repeats": 3,
+                  "service_call_schema": {
+                    "service": "xiaomi_miio.vacuum_clean_zone",
+                    "service_data": {
+                      "zone": "[[selection]]",
+                      "repeats": "[[repeats]]",
+                      "entity_id": "[[entity_id]]"
+                    }
+                  },
+                  "predefined_selections": [],
+                  "variables": {}
+                },
+                {
+                  "name": "Pin & Go",
+                  "icon": "mdi:map-marker-plus",
+                  "run_immediately": false,
+                  "coordinates_rounding": true,
+                  "selection_type": "MANUAL_POINT",
+                  "max_selections": 999,
+                  "repeats_type": "NONE",
+                  "max_repeats": 1,
+                  "service_call_schema": {
+                    "service": "xiaomi_miio.vacuum_goto",
+                    "service_data": {
+                      "x_coord": "[[point_x]]",
+                      "y_coord": "[[point_y]]",
+                      "entity_id": "[[entity_id]]"
+                    }
+                  },
+                  "predefined_selections": [],
+                  "variables": {}
+                }
+              ],
+              "map_locked": true
             }
           ]
         },
