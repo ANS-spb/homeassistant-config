@@ -2212,6 +2212,11 @@
     id: kitchen_table
   condition: []
   action:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
   - choose:
     - conditions:
       - condition: trigger
@@ -2252,10 +2257,10 @@
         data:
           repeats: 2
           zone:
-          - - 27598
-            - 20038
-            - 28655
-            - 22275
+          - - 27631
+            - 20055
+            - 28657
+            - 21820
         target:
           entity_id: vacuum.roborock_s6_pure
     - conditions:

@@ -97,7 +97,7 @@
       data:
         entity_id: vacuum.roborock_s6_pure
 
-- alias: "Оповещение об ошибке [notify]"
+- alias: "Vacuum - Оповещение об ошибке [notify]"
   id: vacuum_telegram_error_info
   initial_state: true
   trigger:
