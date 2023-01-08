@@ -140,16 +140,15 @@
         value_template: "{{ now().day != this.attributes.last_triggered.day | default(0) }}"
   action:
     - if:
-        - condition: numeric_state
-          entity_id: cover.shtora
-          attribute: current_position
-          below: 90
+        - condition: template
+          value_template:  >-
+            {{ state_attr('cover.shtora', 'current_position') < 100}}
       then:
         - service: cover.open_cover
           target:
             entity_id: cover.shtora
         - wait_template: >-
-            {{ states('cover.shtora') == 'open' or state_attr('cover.shtora', 'current_position') == 100}}
+            {{ state_attr('cover.shtora', 'current_position') == 100}}
           continue_on_timeout: false
           timeout: "00:00:30"
     - service: vacuum.set_fan_speed
