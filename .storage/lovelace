@@ -1319,10 +1319,10 @@
                   "type": "entities",
                   "entities": [
                     {
-                      "entity": "switch.domofon_once"
+                      "entity": "switch.zintercom_once"
                     },
                     {
-                      "entity": "sensor.domofon_state"
+                      "entity": "sensor.zintercom_state"
                     }
                   ],
                   "show_header_toggle": false

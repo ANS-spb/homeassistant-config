@@ -892,7 +892,8 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: sensor.domofon_state
+    entity_id:
+    - sensor.zintercom_state
     from: Idle
     to: Ring
   condition:
@@ -1021,12 +1022,12 @@
       - condition: template
         value_template: '{{ wait.trigger.event.data.action == action_open }}'
       - condition: template
-        value_template: '{{ states(''sensor.domofon_state'') != "Idle" }}'
+        value_template: '{{ states(''sensor.zintercom_state'') != "Idle" }}'
       sequence:
       - service: switch.turn_on
         data: {}
         target:
-          entity_id: switch.domofon_once
+          entity_id: switch.zintercom_once
         enabled: false
       - service: script.turn_on
         data: {}
@@ -1042,12 +1043,13 @@
       - condition: template
         value_template: '{{ wait.trigger.event.data.action == action_drop }}'
       - condition: template
-        value_template: '{{ states.sensor.domofon_state.state != "Idle" }}'
+        value_template: '{{ states(''sensor.zintercom_state'') != "Idle" }}'
       sequence:
       - service: switch.turn_on
         data: {}
         target:
-          entity_id: switch.domofon_drop
+          entity_id:
+          - switch.zintercom_drop
       - service: logbook.log
         data:
           name: Звонок в домофон
@@ -1056,7 +1058,8 @@
       - service: switch.turn_off
         data: {}
         target:
-          entity_id: switch.domofon_drop
+          entity_id:
+          - switch.zintercom_drop
     default:
     - parallel:
       - service: notify.mobile_app_iphone_ans
@@ -1070,14 +1073,13 @@
           parse_mode: html
           disable_notification: true
           title: Домофон
-          message: Ваша лошадь тихо ходит. Статус домофона {{ states.sensor.domofon_state.state
-            }}. Запрос на действие не выполнен.
+          message: Ваша лошадь тихо ходит. Статус домофона {{ states('sensor.zintercom_state') }}. Запрос на действие не выполнен.
       - service: logbook.log
         data:
           name: Звонок в домофон
           entity_id: automation.zvonok_v_domofon
           message: Запрос не выполнен - не проходит по условиям. Полимеры просраны.
-            Статус домофона {{ states.sensor.domofon_state.state }}.
+            Статус домофона {{ states('sensor.zintercom_state') }}.
   mode: restart
 - id: '1645086792531'
   alias: Фото с домофона по команде
@@ -1148,12 +1150,12 @@
       - condition: trigger
         id: open
       - condition: template
-        value_template: '{{ states.sensor.domofon_state.state != "Idle" }}'
+        value_template: '{{ states(''sensor.zintercom_state'') != "Idle" }}'
       sequence:
       - service: switch.turn_on
         data: {}
         target:
-          entity_id: switch.domofon_once
+          entity_id: switch.zintercom_once
       - service: script.turn_on
         data: {}
         target:
@@ -1167,12 +1169,12 @@
       - condition: trigger
         id: drop
       - condition: template
-        value_template: '{{ states.sensor.domofon_state.state != "Idle" }}'
+        value_template: '{{ states(''sensor.zintercom_state'') != "Idle" }}'
       sequence:
       - service: switch.turn_on
         data: {}
         target:
-          entity_id: switch.domofon_drop
+          entity_id: switch.zintercom_drop
       - service: logbook.log
         data:
           name: Звонок в домофон
@@ -1181,7 +1183,7 @@
       - service: switch.turn_off
         data: {}
         target:
-          entity_id: switch.domofon_drop
+          entity_id: switch.zintercom_drop
     default:
     - service: telegram_bot.send_message
       data:
@@ -1195,18 +1197,20 @@
         name: Звонок в домофон
         entity_id: automation.zvonok_v_domofon
         message: Запрос не выполнен - не проходит по условиям. Статус домофона {{
-          states.sensor.domofon_state.state }}, вызванный триггер {{ trigger.id }}.
+          states('sensor.zintercom_state') }}, вызванный триггер {{ trigger.id }}.
   mode: single
 - id: '1645117603050'
   alias: Звонок в домофон (видео в телеграм)
   description: ''
   trigger:
   - platform: state
-    entity_id: sensor.domofon_state
+    entity_id:
+    - sensor.zintercom_state
     from: Open
     to: Idle
   - platform: state
-    entity_id: sensor.domofon_state
+    entity_id:
+    - sensor.zintercom_state
     from: Drop
     to: Idle
   condition: []
@@ -1214,7 +1218,7 @@
   - wait_for_trigger:
     - platform: state
       entity_id:
-      - input_text.frigate_event
+      - input_text.frigate_event_new
       for:
         hours: 0
         minutes: 0
@@ -1339,12 +1343,14 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: sensor.domofon_state
+    entity_id:
+    - sensor.zintercom_state
     from: Open
     to: Idle
     id: opened
   - platform: state
-    entity_id: sensor.domofon_state
+    entity_id:
+    - sensor.zintercom_state
     from: Drop
     to: Idle
     id: dropped

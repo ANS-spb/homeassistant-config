@@ -3,7 +3,7 @@
 sensor.lodzhiia_*:
   battery_type: CR2032
   battery_change: 2022-11-18
-sensor.domofon_*:
+sensor.zintercom_*:
   battery_type: 2xAAA
   battery_change: 2022-11-23
 sensor.hue_dimmer_switch_1_battery_level:
