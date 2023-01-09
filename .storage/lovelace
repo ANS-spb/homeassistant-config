@@ -1319,7 +1319,7 @@
                   "type": "entities",
                   "entities": [
                     {
-                      "entity": "switch.zintercom_once"
+                      "entity": "select.zintercom_mode"
                     },
                     {
                       "entity": "sensor.zintercom_state"

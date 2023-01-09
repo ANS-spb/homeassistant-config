@@ -1024,16 +1024,16 @@
       - condition: template
         value_template: '{{ states(''sensor.zintercom_state'') != "Idle" }}'
       sequence:
-      - service: switch.turn_on
-        data: {}
+      - service: select.select_option
+        data:
+          option: once
         target:
-          entity_id: switch.zintercom_once
-        enabled: false
+          entity_id: select.zintercom_mode
       - service: script.turn_on
         data: {}
         target:
           entity_id: script.domru_open_door_657617
-        enabled: true
+        enabled: false
       - service: logbook.log
         data:
           name: Звонок в домофон
@@ -1045,21 +1045,16 @@
       - condition: template
         value_template: '{{ states(''sensor.zintercom_state'') != "Idle" }}'
       sequence:
-      - service: switch.turn_on
-        data: {}
+      - service: select.select_option
+        data:
+          option: drop
         target:
-          entity_id:
-          - switch.zintercom_drop
+          entity_id: select.zintercom_mode
       - service: logbook.log
         data:
           name: Звонок в домофон
           message: Сброс звонка с телефона
           entity_id: automation.zvonok_v_domofon
-      - service: switch.turn_off
-        data: {}
-        target:
-          entity_id:
-          - switch.zintercom_drop
     default:
     - parallel:
       - service: notify.mobile_app_iphone_ans
@@ -1073,7 +1068,8 @@
           parse_mode: html
           disable_notification: true
           title: Домофон
-          message: Ваша лошадь тихо ходит. Статус домофона {{ states('sensor.zintercom_state') }}. Запрос на действие не выполнен.
+          message: Ваша лошадь тихо ходит. Статус домофона {{ states('sensor.zintercom_state')
+            }}. Запрос на действие не выполнен.
       - service: logbook.log
         data:
           name: Звонок в домофон
@@ -1152,10 +1148,11 @@
       - condition: template
         value_template: '{{ states(''sensor.zintercom_state'') != "Idle" }}'
       sequence:
-      - service: switch.turn_on
-        data: {}
+      - service: select.select_option
+        data:
+          option: open
         target:
-          entity_id: switch.zintercom_once
+          entity_id: select.zintercom_mode
       - service: script.turn_on
         data: {}
         target:
@@ -1171,19 +1168,16 @@
       - condition: template
         value_template: '{{ states(''sensor.zintercom_state'') != "Idle" }}'
       sequence:
-      - service: switch.turn_on
-        data: {}
+      - service: select.select_option
+        data:
+          option: drop
         target:
-          entity_id: switch.zintercom_drop
+          entity_id: select.zintercom_mode
       - service: logbook.log
         data:
           name: Звонок в домофон
           message: Сброс звонка из Telegram
           entity_id: automation.zvonok_v_domofon
-      - service: switch.turn_off
-        data: {}
-        target:
-          entity_id: switch.zintercom_drop
     default:
     - service: telegram_bot.send_message
       data:
@@ -2129,41 +2123,6 @@
     data:
       value: '{{trigger.payload_json["after"]["id"]}}'
   mode: parallel
-- id: '1673030953289'
-  alias: Уведомления состояния пылесоса
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - vacuum.roborock_s6_pure
-    not_from:
-    - unavailable
-    - unknown
-    id: Состояние
-  - platform: state
-    entity_id:
-    - sensor.roborock_s6_pure_current_error
-    not_from:
-    - unavailable
-    - unknown
-    id: Ошибка
-  - platform: state
-    entity_id:
-    - vacuum.roborock_s6_pure
-    attribute: vacuum_status
-    not_from:
-    - unavailable
-    - unknown
-    id: Статус
-  condition: []
-  action:
-  - service: telegram_bot.send_message
-    data:
-      message: '{{ trigger.id }} пылесоса: {{ trigger.to_state.state }}.
-
-        '
-      target: 116325704
-  mode: single
 - id: '1673035668018'
   alias: Алиса выключает свет
   description: ''
