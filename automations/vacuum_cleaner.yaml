@@ -67,7 +67,20 @@
           _Дружочек_ начал уборку.
           Уборка остановлена, робот отправлен на базу.
 
-- alias: "Vacuum - Оповещение о возращении пылесоса на базу [notify]"
+- alias: "Vacuum - Оповещение о возвращении пылесоса [notify]"
+  id: vacuum_telegram_returning_info
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: vacuum.roborock_s6_pure
+    to: "returning"
+    not_from: "unavailable"
+  action:
+    - service: notify.telegram
+      data:
+        message: "_Дружочек_ на пути домой."
+
+- alias: "Vacuum - Оповещение о возвращении пылесоса на базу [notify]"
   id: vacuum_telegram_returned_info
   initial_state: true
   trigger:

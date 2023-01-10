@@ -361,6 +361,32 @@
                   "type": "conditional",
                   "conditions": [
                     {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "state_not": "docked"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:mushroom-vacuum-card",
+                    "entity": "vacuum.roborock_s6_pure",
+                    "icon_animation": true,
+                    "commands": [
+                      "on_off",
+                      "start_pause",
+                      "stop",
+                      "locate",
+                      "clean_spot",
+                      "return_home"
+                    ]
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
                       "entity": "input_boolean.wakeup_enabled",
                       "state": "on"
                     },

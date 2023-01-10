@@ -9,3 +9,9 @@ automation:
       - service: wake_on_lan.send_magic_packet
         data:
           mac: 70:97:41:61:9d:20
+
+switch:
+  - platform: wake_on_lan
+    mac: e0:3f:49:6e:02:f7
+    name: Computer
+    host: 192.168.1.105
