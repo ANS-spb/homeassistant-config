@@ -625,9 +625,15 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: light.living_room
-    to: 'off'
+    entity_id:
+    - light.living_room
     from: 'on'
+    to: 'off'
+  - platform: state
+    entity_id:
+    - light.living_room
+    to: 'on'
+    from: 'off'
   condition:
   - condition: or
     conditions:
@@ -680,6 +686,11 @@
     - light.torsher_2
     to: 'off'
     from: 'on'
+  - platform: state
+    entity_id:
+    - light.torsher_2
+    to: 'on'
+    from: 'off'
   condition:
   - condition: or
     conditions:
@@ -1459,8 +1470,9 @@
       actionID: 23448B64-1AF0-498C-98D9-158B8B6F923D
       actionName: Open-door
       sourceDeviceID: iphoneans
-      sourceDeviceName: iPhone_ANS
+      sourceDeviceName: iPhone ANS
       sourceDevicePermanentID: E589AD6D-665A-494A-88A7-B466809EB9DE
+      triggerSource: preview
   condition: []
   action:
   - service: script.domru_open_door_657617

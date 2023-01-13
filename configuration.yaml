@@ -112,7 +112,9 @@ frontend:
   extra_module_url:
     - /hacsfiles/lovelace-card-mod/card-mod.js
 
-#weather:
+config_editor:
+
+  #weather:
 #  - platform: yandex_weather
 #    api_key: !secret yandex_weather_key
 
