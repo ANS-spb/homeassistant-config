@@ -2258,44 +2258,6 @@
               }
             },
             {
-              "type": "custom:stack-in-card",
-              "mode": "vertical",
-              "cards": [
-                {
-                  "type": "markdown",
-                  "content": "### Недоступные устройства:\n"
-                },
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "custom:auto-entities",
-                      "show_empty": false,
-                      "card": {
-                        "type": "entities",
-                        "show_header_toggle": false
-                      },
-                      "filter": {
-                        "include": [
-                          {
-                            "state": "unavailable"
-                          }
-                        ],
-                        "exclude": [
-                          {
-                            "entity_id": "media_player.plex*"
-                          },
-                          {
-                            "entity_id": "device_tracker.*"
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
               "type": "entities",
               "entities": [
                 {

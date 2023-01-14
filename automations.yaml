@@ -645,6 +645,9 @@
     - condition: template
       value_template: '{{ states.light.living_room.context.id == states.automation.knopka_v_koridore_vykliuchaet_vsio.context.id
         }}'
+    - condition: template
+      value_template: '{{ states.light.living_room.context.id == states.automation.alisa_vkliuchaet_svet_v_komnate.context.id
+        }}'
   action:
   - service: input_boolean.turn_on
     target:
@@ -701,6 +704,9 @@
         }}'
     - condition: template
       value_template: '{{ states.light.torsher.context.id == states.automation.knopka_v_koridore_vykliuchaet_vsio.context.id
+        }}'
+    - condition: template
+      value_template: '{{ states.light.torsher.context.id == states.automation.alisa_vkliuchaet_svet_v_komnate.context.id
         }}'
   action:
   - service: input_boolean.turn_on
@@ -905,8 +911,8 @@
   - platform: state
     entity_id:
     - sensor.zintercom_state
-    from: Idle
-    to: Ring
+    from: idle
+    to: ring
   condition:
   - condition: template
     value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
@@ -1211,13 +1217,13 @@
   - platform: state
     entity_id:
     - sensor.zintercom_state
-    from: Open
-    to: Idle
+    from: open
+    to: idle
   - platform: state
     entity_id:
     - sensor.zintercom_state
-    from: Drop
-    to: Idle
+    from: drop
+    to: idle
   condition: []
   action:
   - wait_for_trigger:
@@ -1350,14 +1356,14 @@
   - platform: state
     entity_id:
     - sensor.zintercom_state
-    from: Open
-    to: Idle
+    from: open
+    to: idle
     id: opened
   - platform: state
     entity_id:
     - sensor.zintercom_state
-    from: Drop
-    to: Idle
+    from: drop
+    to: idle
     id: dropped
   condition: []
   action:
