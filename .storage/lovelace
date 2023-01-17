@@ -2136,9 +2136,9 @@
               "type": "logbook",
               "entities": [
                 "automation.zvonok_v_domofon",
-                "sensor.domofon_state",
+                "sensor.zintercom_state",
                 "automation.zvonok_v_dver",
-                "select.domofon_mode"
+                "select.zintercom_mode"
               ]
             },
             {

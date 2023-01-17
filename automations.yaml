@@ -916,7 +916,7 @@
   condition:
   - condition: template
     value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
-      0) > 60 }}'
+      0) > 5 }}'
   action:
   - variables:
       action_open: '{{ ''OPEN_'' ~ context.id }}'
