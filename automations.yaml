@@ -2193,6 +2193,11 @@
     event_data:
       text: Пропылесось под столом на кухне
     id: kitchen_table
+  - platform: event
+    event_type: yandex_intent
+    event_data:
+      text: Пропылесось в квартире
+    id: all_home
   condition: []
   action:
   - delay:
@@ -2272,6 +2277,14 @@
             - 24946
             - 25809
           repeats: 2
+        target:
+          entity_id: vacuum.roborock_s6_pure
+    - conditions:
+      - condition: trigger
+        id: all_home
+      sequence:
+      - service: vacuum.start
+        data: {}
         target:
           entity_id: vacuum.roborock_s6_pure
   mode: single
