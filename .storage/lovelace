@@ -1314,24 +1314,8 @@
               "mode": "vertical",
               "cards": [
                 {
-                  "type": "custom:frigate-card",
-                  "cameras": [
-                    {
-                      "camera_entity": "camera.domru_domofon",
-                      "live_provider": "frigate-jsmpeg"
-                    }
-                  ],
-                  "menu": {
-                    "buttons": {
-                      "frigate": {
-                        "enabled": true
-                      }
-                    }
-                  },
-                  "view": {
-                    "default": "live",
-                    "dark_mode": "off"
-                  }
+                  "type": "custom:webrtc-camera",
+                  "url": "rtsp://127.0.0.1:8554/domru_domofon"
                 },
                 {
                   "type": "custom:mushroom-entity-card",
@@ -2127,10 +2111,6 @@
                   ]
                 }
               ]
-            },
-            {
-              "type": "custom:transmission-card",
-              "default_type": "started"
             },
             {
               "type": "logbook",
