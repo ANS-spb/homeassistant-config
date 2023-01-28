@@ -17,24 +17,7 @@
           "path": "default_view",
           "title": "Дом",
           "icon": "mdi:home",
-          "type": "custom:masonry-layout",
-          "layout": {
-            "max_cols": 3
-          },
-          "badges": [
-            {
-              "entity": "binary_sensor.updater"
-            },
-            {
-              "entity": "person.ans"
-            },
-            {
-              "entity": "device_tracker.ble_tracker_nut"
-            },
-            {
-              "entity": "sun.sun"
-            }
-          ],
+          "badges": [],
           "cards": [
             {
               "type": "custom:stack-in-card",
@@ -1176,10 +1159,10 @@
           "title": "Датчики",
           "path": "sensors",
           "icon": "mdi:gauge",
-          "type": "custom:masonry-layout",
           "layout": {
             "max_cols": 3
           },
+          "type": "custom:masonry-layout",
           "badges": [],
           "cards": [
             {
