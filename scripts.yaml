@@ -4,13 +4,14 @@
   sequence:
   - if:
     - condition: state
-      entity_id: switch.0x04cf8cdf3c76548d_plug
+      entity_id: switch.lumi_lumi_plug_maeu01_switch
       state: 'off'
     then:
     - service: switch.turn_on
       data: {}
       target:
-        entity_id: switch.0x04cf8cdf3c76548d_plug
+        entity_id:
+        - switch.lumi_lumi_plug_maeu01_switch
   - parallel:
     - service: hue.activate_scene
       data:
@@ -258,13 +259,14 @@ dynamic_update_all_light_group:
   sequence:
   - if:
     - condition: state
-      entity_id: switch.0x04cf8cdf3c76548d_plug
       state: 'off'
+      entity_id: switch.lumi_lumi_plug_maeu01_switch
     then:
     - service: switch.turn_on
       data: {}
       target:
-        entity_id: switch.0x04cf8cdf3c76548d_plug
+        entity_id:
+        - switch.lumi_lumi_plug_maeu01_switch
     - wait_template: '{{ states(''light.wled_2'') != ''unavailable''}}'
       continue_on_timeout: true
       timeout: 00:10:00
@@ -409,7 +411,8 @@ push_for_closing_curtain:
     - service: switch.turn_off
       data: {}
       target:
-        entity_id: switch.0x04cf8cdf3c76548d_plug
+        entity_id:
+        - switch.lumi_lumi_plug_maeu01_switch
   mode: single
   icon: mdi:power
 wled_static_effect:

@@ -7,8 +7,9 @@
   - 1*8 Gb Hynix DDR4 SODIMM
   - 120 Gb Intel SSDSCKJW120H6
   - 1 Tb Western Digital Black Mobile (WDC WD10JPLX-00MBPT0)
-  - Sonoff Zigbee 3.0 USB Dongle Plus
-  - Buro BU-BT40C
+  - Sonoff Zigbee 3.0 USB Dongle Plus (Zigbee2MQTT)
+  - Sonoff Zigbee CC2531 USB Dongle (Zigbee Home Automation)
+  - Buro BU-BT40C (Passive BLE Monitor integration)
   - Debian 11
   - Home Assistant Supervised
 
@@ -16,7 +17,7 @@
 
 **Шлюзы:**
   - Philips Hue Bridge v2
-  - Xiaomi Gateway v3
+  - не используется - Xiaomi Gateway v3
 
 **Свет:**
   - Philips Hue White and Color Ambiance LCA001
@@ -25,22 +26,22 @@
   - Лампа Philips Hue GU10 2700K 5.2 Вт (57 Вт) LWG004 - 4 шт
   - Mijia Bedside Lamp 1 WiFi MJCTD01YL
   - TRADFRI driver for wireless control (30 watt) ICPSHC24-30EU-IL-1 - 1 шт
-  - Aqara ZNLDP12LM - 2 шт
   - WLED DIY лента на 196 диодов WS2813
   - WLED DIY гибкая гирлянда на 50 диодов WS2812
   - WLED DIY лента на 30 диодов WS2813
-  - Xiaomi E27 Mesh Bulb MJDP09YL - 2 шт
   - Реле Aqara Single switch module T1 SSM-U01
   - Привод штор Aqara ZNCLDJ11LM
   - не используется - TRADFRI bulb E27 W opal 1000lm - 2 шт
   - не используется - TRÅDFRI светодиод E14 470 лм 704.243.12
+  - не используется - Xiaomi E27 Mesh Bulb MJDP09YL - 2 шт
+  - не используется - Aqara ZNLDP12LM - 2 шт
 
 
 **Управление:**
   - Philips Hue Dimmer Switch RWL022
   - Philips Hue Dimmer Switch RWL021
   - Philips Hue Wall Switch Module
-  - JetHome WS7 - 2 шт
+  - JetHome WS7 - 2 шт (1 в работе, 1 запасная)
   - TRADFRI on/off switch 004.684.32
   - Aqara WXKG12LM
   - Aqara WXKG11LM
@@ -48,7 +49,7 @@
   - не используется - Xiaomi WXKG01LM
 
 **Датчики WiFi:**
-  - Qingping Air Detector Lite CGDN1: углекислый газ, пыль, температура, влажность
+  - в данный момент не используются
 
 **Датчики Zigbee:**
   - Датчик открытия Xiaomi MCCGQ01LM - 3 шт (один из них припаян к кнопке дверного звонка)
@@ -63,6 +64,7 @@
 **Датчики BLE:**
   - Mi Temperature and Humidity Sensor LYWSDCGQ/01ZM
   - Mi Temperature and Humidity Sensor 2 LYWSD03MMC
+  - Qingping Air Detector Lite CGDN1: углекислый газ, пыль, температура, влажность
   - Датчик движения Qingping CGPR1
   - Метка-трекер Nut Mini
  

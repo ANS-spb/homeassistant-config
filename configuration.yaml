@@ -114,6 +114,8 @@ frontend:
 
 config_editor:
 
+zha_toolkit:
+
   #weather:
 #  - platform: yandex_weather
 #    api_key: !secret yandex_weather_key
