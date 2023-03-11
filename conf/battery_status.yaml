@@ -38,6 +38,7 @@ automation:
           {%- endmacro -%}
           {{ battery_level() | trim != "" }}
 
+    action:
       - service: telegram_bot.send_message
         data:
           target:
