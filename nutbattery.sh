@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NUTMAC=$"E5:00:FE:B8:DA:74"
-HCIIF=$"hci0"
+HCIIF=$"hci1"
 
 BATHEX=$(gatttool -t random --char-read --uuid 0x2a19 -b $NUTMAC 2>/dev/null | awk '{print $4}')
 BATDEC=$((0x$BATHEX))

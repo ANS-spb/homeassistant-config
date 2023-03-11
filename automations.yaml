@@ -228,9 +228,14 @@
   - condition: template
     value_template: '{{ states(''light.living_room'') != ''on'' and states(''light.torsher'')
       != ''on'' }}'
-  - condition: state
-    entity_id: group.devices
-    state: home
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: group.devices
+      state: home
+    - condition: state
+      entity_id: input_boolean.gostevoi_rezhim
+      state: 'on'
   - condition: time
     after: '12:00'
     before: input_datetime.sleep_time

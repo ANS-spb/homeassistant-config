@@ -38,30 +38,6 @@ automation:
           {%- endmacro -%}
           {{ battery_level() | trim != "" }}
 
-    action:
-      - service: telegram_bot.send_message
-        data:
-          target:
-            - !secret telegram_bot_allowed_chat_id1
-          message: |
-            {{'\u267B\uFE0F'}} Похоже, садится батарейка (старый вариант):
-            {% macro battery_level() %}
-            {%- set threshold = states('input_number.scale_minimal_battery') | int(0) -%}
-            {%- set domains = ['sensor', 'binary_sensor'] -%}
-            {%- for domain in domains -%}
-            {%- for item in states[domain] if (("battery" in item.name | lower and ((item.state | int(0) < threshold and item.state | int(0) != 0) or item.state | lower == "low" or item.state | lower == "unknown"))) -%}
-            {%- if "battery" in item.name | lower and ((item.state | int(0) < threshold and item.state|int(0) != 0) or item.state | lower == "low") -%}
-            {{ item.name | replace("battery","") | replace("Battery","") }}({{ item.state }}%)
-            {%- if (item.attributes.battery_change is defined) -%}
-            {{ ": менялась" }} {{((now() | as_timestamp - item.attributes['battery_change'] | as_timestamp) / 60 / 60 / 24) | round(0)}} дней назад - {{item.attributes['battery_type']}}
-            {%- endif -%}
-            {% if not loop.last %},{%- endif %}
-            {%- endif -%}
-            {%- endfor %}
-            {%- endfor -%}
-            {%- endmacro -%}
-            {{ battery_level().split(',') | unique | join ('\n') }}
-
       - service: telegram_bot.send_message
         data:
           target:

@@ -142,6 +142,12 @@
                   ]
                 },
                 {
+                  "type": "entities",
+                  "entities": [
+                    "input_boolean.gostevoi_rezhim"
+                  ]
+                },
+                {
                   "type": "custom:auto-entities",
                   "show_empty": false,
                   "filter": {
@@ -153,6 +159,9 @@
                     "exclude": [
                       {
                         "state": "unavailable"
+                      },
+                      {
+                        "state": "unknown"
                       },
                       {
                         "last_updated": "> 5"
@@ -1344,18 +1353,6 @@
               ]
             },
             {
-              "type": "custom:mushroom-vacuum-card",
-              "entity": "vacuum.roborock_s6_pure",
-              "commands": [
-                "on_off",
-                "start_pause",
-                "stop",
-                "locate",
-                "clean_spot",
-                "return_home"
-              ]
-            },
-            {
               "type": "custom:vacuum-card",
               "entity": "vacuum.roborock_s6_pure",
               "image": "default",
@@ -2344,14 +2341,7 @@
                       "name": "Battery lifetime",
                       "modify": "var dt = new Date(x); var m = parseInt(((Date.now()-Date.parse(x)) / 2635200000)); var d = parseInt(((Date.now()-Date.parse(x)) / 86400000) %30); m = (m < 1) ? \"\" + m : m; isFinite(dt) ? m + \" mon \" + d + \" day(s)\" : \"\";\n"
                     }
-                  ],
-                  "css": {
-                    "table+": "padding-top: 0px;",
-                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
-                    "td.left": "padding: 0px 10px 0px 10px",
-                    "th.left": "padding: 0px 10px 0px 10px",
-                    "thead th": "text-align: left"
-                  }
+                  ]
                 },
                 {
                   "type": "markdown",
@@ -2424,268 +2414,7 @@
                       "name": "Battery lifetime",
                       "modify": "var dt = new Date(x); var m = parseInt(((Date.now()-Date.parse(x)) / 2635200000)); var d = parseInt(((Date.now()-Date.parse(x)) / 86400000) %30); m = (m < 1) ? \"\" + m : m; isFinite(dt) ? m + \" mon \" + d + \" day(s)\" : \"\";\n"
                     }
-                  ],
-                  "css": {
-                    "table+": "padding-top: 0px;",
-                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
-                    "td.left": "padding: 0px 10px 0px 10px",
-                    "th.left": "padding: 0px 10px 0px 10px",
-                    "thead th": "text-align: left"
-                  }
-                },
-                {
-                  "type": "markdown",
-                  "content": "### <center> GW3 </center>"
-                },
-                {
-                  "type": "custom:flex-table-card",
-                  "clickable": false,
-                  "entities": {
-                    "include": [
-                      "binary_sensor.*_gateway"
-                    ]
-                  },
-                  "sort_by": "friendly_name",
-                  "columns": [
-                    {
-                      "data": "icon",
-                      "name": " ",
-                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:router-wireless\" + \"\\\"></ha-icon>\""
-                    },
-                    {
-                      "data": "friendly_name",
-                      "name": "Friendly Name",
-                      "modify": "(x+\"\").replace(/ Gateway$/,\"\")"
-                    },
-                    {
-                      "data": "free_mem",
-                      "name": "Memory Free (KB)",
-                      "modify": "isNaN(parseInt(x, 10)) ? \"\" : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "load_avg",
-                      "name": "Load Avg (1m, 5m, 15m)",
-                      "modify": "(x+\"\").split(\"|\").slice(0, 3).join(\", \")"
-                    },
-                    {
-                      "data": "zigbee_tx",
-                      "name": "ZB Tx",
-                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "zigbee_rx",
-                      "name": "ZB Rx",
-                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "zigbee_oe",
-                      "name": "ZB Err OE",
-                      "modify": "isNaN(parseInt(x, 10)) ? \"0\" : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "network_pan_id",
-                      "name": "ZB Net PanID",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "radio_channel",
-                      "name": "ZB Channel",
-                      "modify": "isNaN(parseInt(x, 10)) ? \"0\" : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "bluetooth_tx",
-                      "name": "BT Tx",
-                      "modify": "x"
-                    },
-                    {
-                      "data": "bluetooth_rx",
-                      "name": "BT Rx",
-                      "modify": "x"
-                    },
-                    {
-                      "data": "bluetooth_oe",
-                      "name": "BT Err",
-                      "modify": "isNaN(parseInt(x, 10)) ? \"0\" : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "rssi",
-                      "name": "RSSI",
-                      "modify": "isNaN(parseInt(x, 10)) ? \"\" : (100 + parseInt(x, 10)) * -1"
-                    },
-                    {
-                      "data": "uptime",
-                      "name": "Gateway Uptime",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "state",
-                      "name": "Connected",
-                      "modify": "(x+'').replace(/off$/,\"⚠️\")"
-                    },
-                    {
-                      "data": "last_changed",
-                      "name": "Connected Since",
-                      "modify": "var dt = new Date(x); var hrs = parseInt((Date.now()-Date.parse(x)) / 3600000); var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60); hrs = (hrs < 10) ? \"0\" + hrs : hrs; min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec; isFinite(dt) ? dt.toLocaleString(['ru-RU', 'en-US']) + \" (Up: \" + hrs + \":\" + min + \":\" + sec + \")\" : \"\";\n"
-                    }
-                  ],
-                  "css": {
-                    "table+": "padding-top: 0px;",
-                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
-                    "td.left": "padding: 0px 10px 0px 10px",
-                    "th.left": "padding: 0px 10px 0px 10px",
-                    "thead th": "text-align: left"
-                  }
-                },
-                {
-                  "type": "markdown",
-                  "content": "### <center> GW3 ZigBee </center>"
-                },
-                {
-                  "type": "custom:flex-table-card",
-                  "clickable": false,
-                  "entities": {
-                    "include": [
-                      "sensor.*_zigbee"
-                    ]
-                  },
-                  "sort_by": "ieee",
-                  "columns": [
-                    {
-                      "data": "icon",
-                      "name": " ",
-                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:zigbee\" + \"\\\"></ha-icon>\""
-                    },
-                    {
-                      "data": "friendly_name",
-                      "name": "Friendly Name",
-                      "modify": "x.replace(/ Zigbee$/,\"\")"
-                    },
-                    {
-                      "data": "ieee",
-                      "name": "IEEE",
-                      "modify": "(x+'').toLowerCase()"
-                    },
-                    {
-                      "data": "nwk",
-                      "name": "NWK",
-                      "modify": "(x+'').replace(/^0x/,\"\")"
-                    },
-                    {
-                      "data": "parent",
-                      "name": "Parent",
-                      "modify": "(x+'').replace(/^0x/,\"\").toLowerCase()"
-                    },
-                    {
-                      "data": "type",
-                      "name": "Type",
-                      "modify": "(x+'').replace(/^-$/, \"child device\")"
-                    },
-                    {
-                      "data": "msg_received",
-                      "name": "Received",
-                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "msg_missed",
-                      "name": "Missed",
-                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "unresponsive",
-                      "name": "Unresp",
-                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "linkquality",
-                      "name": "LQI",
-                      "modify": "isNaN(parseInt(x, 10)) ? \"\" : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "rssi",
-                      "name": "RSSI",
-                      "modify": "isNaN(parseInt(x, 10)) ? \"\" : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "last_msg",
-                      "name": "Last Message",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "available",
-                      "name": "Available",
-                      "modify": "(x+'').replace(/false$/,\"⚠️\")"
-                    },
-                    {
-                      "data": "state",
-                      "name": "Last Seen",
-                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
-                    }
-                  ],
-                  "css": {
-                    "table+": "padding-top: 0px;",
-                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
-                    "td.left": "padding: 0px 10px 0px 10px",
-                    "th.left": "padding: 0px 10px 0px 10px",
-                    "thead th": "text-align: left"
-                  }
-                },
-                {
-                  "type": "markdown",
-                  "content": "### <center> GW3 Bluetooth </center>"
-                },
-                {
-                  "type": "custom:flex-table-card",
-                  "clickable": false,
-                  "entities": {
-                    "include": [
-                      "sensor.*_ble"
-                    ]
-                  },
-                  "sort_by": "mac",
-                  "columns": [
-                    {
-                      "data": "icon",
-                      "name": " ",
-                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:bluetooth\" + \"\\\"></ha-icon>\""
-                    },
-                    {
-                      "data": "friendly_name",
-                      "name": "Friendly Name",
-                      "modify": "x.replace(/ Ble$/,\"\")"
-                    },
-                    {
-                      "data": "mac",
-                      "name": "MAC",
-                      "modify": "(x+'').replace(/(.{2}(?!$))/g,\"$1:\")"
-                    },
-                    {
-                      "data": "msg_received",
-                      "name": "Received",
-                      "modify": "isNaN(parseInt(x, 10)) ? \"\" : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "last_msg",
-                      "name": "Last Msg",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "available",
-                      "name": "Available",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "state",
-                      "name": "Last Seen",
-                      "modify": "var dt = new Date(x);  var d = parseInt((Date.now()-Date.parse(x)) / 86400000);  var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24);  var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60);  hrs = (hrs < 10) ? \"0\" + hrs : hrs;  min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec;  isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
-                    }
-                  ],
-                  "css": {
-                    "table+": "padding-top: 0px;",
-                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
-                    "td.left": "padding: 0px 10px 0px 10px",
-                    "th.left": "padding: 0px 10px 0px 10px",
-                    "thead th": "text-align: left"
-                  }
+                  ]
                 },
                 {
                   "type": "markdown",
@@ -2765,14 +2494,7 @@
                       "name": "Battery lifetime",
                       "modify": "var dt = new Date(x); var m = parseInt(((Date.now()-Date.parse(x)) / 2635200000)); var d = parseInt(((Date.now()-Date.parse(x)) / 86400000) %30); m = (m < 1) ? \"\" + m : m; isFinite(dt) ? m + \" mon \" + d + \" day(s)\" : \"\";\n"
                     }
-                  ],
-                  "css": {
-                    "table+": "padding-top: 0px;",
-                    "tbody tr:nth-child(even)": "background-color: #a2542f6;",
-                    "td.left": "padding: 0px 10px 0px 10px",
-                    "th.left": "padding: 0px 10px 0px 10px",
-                    "thead th": "text-align: left"
-                  }
+                  ]
                 }
               ]
             }

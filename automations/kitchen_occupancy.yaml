@@ -16,9 +16,9 @@
       state: "idle"
     - condition: template
       value_template: >-
-        {{ states.light.kukhnia_hue.state != 'on' and
-        states.light.kukhnia_potolok.state != 'on' and
-        states.light.kitchen_zone.state != 'on' }}
+        {{ states('light.kukhnia_hue') != 'on' and
+        states('light.kukhnia_potolok') != 'on' and
+        states('light.kitchen') != 'on' }}
     - condition: numeric_state
       entity_id: sensor.osveshchionnost_na_kukhne_illuminance_lux
       below: "3"
@@ -83,15 +83,15 @@
             value_template: >-
               {{ states.light.kukhnia_potolok.context.id ==
               states.automation.turn_on_light_kitchen_motion_on.context.id and
-              states.light.kukhnia_potolok.state == 'on' and
-              states.light.kitchen_zone.state != 'on' and
+              states('light.kukhnia_potolok') == 'on' and
+              states('light.kitchen') != 'on' and
               state_attr('light.kukhnia_potolok', 'brightness') | float(0) == 1 }}
           - condition: template
             value_template: >-
               {{ states.light.kukhnia_potolok.context.id ==
               states.automation.turn_off_lt_timer_on.context.id and
-              states.light.kukhnia_potolok.state == 'on' and
-              states.light.kitchen_zone.state != 'on' and
+              states('light.kukhnia_potolok') == 'on' and
+              states('light.kitchen') != 'on' and
               state_attr('light.kukhnia_potolok', 'brightness') | float(0) == 1 }}
   action:
     - service: light.turn_off

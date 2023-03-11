@@ -140,15 +140,12 @@
       - condition: time
         after: "07:30:00"
         before: "10:30:00"
-#        weekday:
-#          - mon
-#          - tue
-#          - wed
-#          - thu
-#          - fri
       - condition: state
         entity_id: binary_sensor.workday
         state: "on"
+      - condition: state
+        entity_id: input_boolean.gostevoi_rezhim
+        state: "off"
       - condition: template
         value_template: "{{ now().day != this.attributes.last_triggered.day | default(0) }}"
   action:
