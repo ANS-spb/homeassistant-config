@@ -884,10 +884,12 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: sensor.opple_action
+    entity_id:
+    - sensor.upravlenie_shtoroi_action
     to: button_1_single
   - platform: state
-    entity_id: sensor.opple_action
+    entity_id:
+    - sensor.upravlenie_shtoroi_action
     to: button_2_single
   condition:
   - condition: template
@@ -901,7 +903,8 @@
       milliseconds: 0
   - wait_for_trigger:
     - platform: state
-      entity_id: sensor.opple_action
+      entity_id:
+      - sensor.upravlenie_shtoroi_action
     continue_on_timeout: false
     timeout: 00:00:30
   - service: cover.stop_cover

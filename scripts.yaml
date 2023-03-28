@@ -3,15 +3,16 @@
   mode: restart
   sequence:
   - if:
-    - condition: state
-      entity_id: switch.lumi_lumi_plug_maeu01_switch
-      state: 'off'
+    - condition: device
+      type: is_on
+      device_id: 22bd525be586a27295c49d2e7d4e1fb3
+      entity_id: switch.rozetka
+      domain: switch
     then:
-    - service: switch.turn_on
-      data: {}
-      target:
-        entity_id:
-        - switch.lumi_lumi_plug_maeu01_switch
+    - type: turn_on
+      device_id: 22bd525be586a27295c49d2e7d4e1fb3
+      entity_id: switch.rozetka
+      domain: switch
   - parallel:
     - service: hue.activate_scene
       data:
@@ -412,7 +413,7 @@ push_for_closing_curtain:
       data: {}
       target:
         entity_id:
-        - switch.lumi_lumi_plug_maeu01_switch
+        - switch.rozetka
   mode: single
   icon: mdi:power
 wled_static_effect:

@@ -92,6 +92,14 @@
     - service: notify.telegram
       data:
         message: "_Дружочек_ вернулся на базу (закончил уборку)."
+    - service: camera.snapshot
+      data:
+        filename: /media/vacuum.jpg
+      target:
+        entity_id: camera.roborock_s6_pure_map
+    - service: telegram_bot.send_photo
+      data:
+        file: /media/vacuum.jpg
 
 - alias: "Vacuum - Оповещение о забытом пылесосе [notify]"
   id: vacuum_telegram_lost_info

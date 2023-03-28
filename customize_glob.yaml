@@ -27,3 +27,12 @@ sensor.ulitsa_*:
 sensor.vykliuchatel_liustry_*:
   battery_type: CR2032
   battery_change: 2022-12-11
+device_tracker.ble_tracker_nut:
+  battery_type: CR2016
+  battery_change: 2023-03-12
+sensor.ble_*_datchik_na_kukhne:
+  battery_type: CR2032
+  battery_change: 2023-03-12
+sensor.upravlenie_shtoroi_*:
+  battery_type: CR2032
+  battery_change: 2023-03-27
