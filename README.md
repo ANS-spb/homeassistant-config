@@ -8,7 +8,6 @@
   - 120 Gb Intel SSDSCKJW120H6
   - 1 Tb Western Digital Black Mobile (WDC WD10JPLX-00MBPT0)
   - Sonoff Zigbee 3.0 USB Dongle Plus (Zigbee2MQTT)
-  - Sonoff Zigbee CC2531 USB Dongle (Zigbee Home Automation)
   - Buro BU-BT40C (Passive BLE Monitor integration)
   - Debian 11
   - Home Assistant Supervised
@@ -17,7 +16,6 @@
 
 **Шлюзы:**
   - Philips Hue Bridge v2
-  - не используется - Xiaomi Gateway v3
 
 **Свет:**
   - Philips Hue White and Color Ambiance LCA001
@@ -33,7 +31,6 @@
   - Привод штор Aqara ZNCLDJ11LM
   - не используется - TRADFRI bulb E27 W opal 1000lm - 2 шт
   - не используется - TRÅDFRI светодиод E14 470 лм 704.243.12
-  - не используется - Xiaomi E27 Mesh Bulb MJDP09YL - 2 шт
   - не используется - Aqara ZNLDP12LM - 2 шт
 
 
@@ -45,11 +42,7 @@
   - TRADFRI on/off switch 004.684.32
   - Aqara WXKG12LM
   - Aqara WXKG11LM
-  - Aqara Opple WXCJKG13LM
-  - не используется - Xiaomi WXKG01LM
-
-**Датчики WiFi:**
-  - в данный момент не используются
+  - Aqara Opple WXCJKG11LM
 
 **Датчики Zigbee:**
   - Датчик открытия Xiaomi MCCGQ01LM - 3 шт (один из них припаян к кнопке дверного звонка)
