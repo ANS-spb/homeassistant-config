@@ -2135,7 +2135,7 @@
                       "secondary_info": "Заряд {range}%",
                       "icon": "mdi:door",
                       "entities": [
-                        "sensor.domofon_battery",
+                        "sensor.zintercom_battery",
                         "sensor.zvonok_battery",
                         "sensor.okno_na_kukhne_battery",
                         "sensor.okno_v_komnate_battery"

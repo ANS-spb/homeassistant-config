@@ -4,7 +4,7 @@
   sequence:
   - if:
     - condition: device
-      type: is_on
+      type: is_off
       device_id: 22bd525be586a27295c49d2e7d4e1fb3
       entity_id: switch.rozetka
       domain: switch
@@ -261,13 +261,12 @@ dynamic_update_all_light_group:
   - if:
     - condition: state
       state: 'off'
-      entity_id: switch.lumi_lumi_plug_maeu01_switch
+      entity_id: switch.rozetka
     then:
     - service: switch.turn_on
       data: {}
       target:
-        entity_id:
-        - switch.lumi_lumi_plug_maeu01_switch
+        entity_id: switch.rozetka
     - wait_template: '{{ states(''light.wled_2'') != ''unavailable''}}'
       continue_on_timeout: true
       timeout: 00:10:00
