@@ -1307,7 +1307,7 @@
               "cards": [
                 {
                   "type": "custom:webrtc-camera",
-                  "url": "rtsp://127.0.0.1:8554/domru_domofon"
+                  "url": "domru_domofon"
                 },
                 {
                   "type": "custom:mushroom-entity-card",
