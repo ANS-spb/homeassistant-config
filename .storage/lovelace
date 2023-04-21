@@ -1921,7 +1921,7 @@
                   "type": "entities",
                   "entities": [
                     {
-                      "entity": "binary_sensor.z2m_health"
+                      "entity": "binary_sensor.hdd_smart"
                     },
                     {
                       "entity": "sensor.start_time"

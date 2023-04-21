@@ -44,8 +44,7 @@
       event_data:
         entity_id: timer.dvizhenie_na_kukhne
   condition:
-    condition: or
-    conditions:
+    or:
       - condition: state
         entity_id: binary_sensor.dd_na_kukhne_occupancy
         state: "on"
@@ -69,8 +68,7 @@
       event_data:
         entity_id: timer.dvizhenie_na_kukhne
   condition:
-    condition: and
-    conditions:
+    and:
       - condition: state
         entity_id: binary_sensor.dd_na_kukhne_occupancy
         state: "off"

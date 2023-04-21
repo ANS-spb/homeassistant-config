@@ -2413,3 +2413,21 @@
   - service: script.1638995744105
     data: {}
   mode: single
+- id: '1682059977487'
+  alias: SMART check
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.hdd_smart
+    to: 'on'
+  condition: []
+  action:
+  - service: telegram_bot.send_message
+    data:
+      message: '⚠️ Cервер обнаружил проблему с SMART основного диска!
+
+        '
+      title: ⚒️ Системное уведомление
+      target: 116325704
+  mode: single
