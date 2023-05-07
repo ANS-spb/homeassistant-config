@@ -103,7 +103,7 @@
                         "entity_id": "binary_sensor.ble_dd_motion"
                       },
                       {
-                        "entity_id": "timer.dvizhenie_na_kukhne"
+                        "entity_id": "binary_sensor.autooffkitchen"
                       }
                     ],
                     "exclude": [
@@ -2712,10 +2712,24 @@
                   "type": "history-graph",
                   "entities": [
                     {
-                      "entity": "binary_sensor.dd_na_kukhne_occupancy"
+                      "entity": "binary_sensor.dd_na_kukhne_occupancy",
+                      "name": "ДД ZB"
                     },
                     {
-                      "entity": "binary_sensor.ble_dd_motion"
+                      "entity": "binary_sensor.ble_dd_motion",
+                      "name": "ДД BLE"
+                    },
+                    {
+                      "entity": "binary_sensor.prisutstvie_na_kukhne",
+                      "name": "Группа"
+                    },
+                    {
+                      "entity": "binary_sensor.autooffkitchen",
+                      "name": "Шаблонный 3 мин"
+                    },
+                    {
+                      "entity": "timer.dvizhenie_na_kukhne",
+                      "name": "Таймер"
                     },
                     {
                       "entity": "light.kukhnia_potolok"

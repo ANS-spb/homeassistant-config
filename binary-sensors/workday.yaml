@@ -2,8 +2,8 @@
 # Сенсоры рабочих и выходных дней #
 ###################################
 
-- platform: workday
-  country: RU
+#- platform: workday
+#  country: RU
 
 - platform: command_line
   name: Workday
