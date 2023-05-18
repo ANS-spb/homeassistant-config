@@ -125,8 +125,8 @@
       milliseconds: 0
   condition:
   - condition: template
-    value_template: '{{ iif(this.attributes.last_triggered == none, 9999, as_timestamp(now())
-      - as_timestamp(this.attributes.last_triggered) ) >= 600 }}'
+    value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
+      0) > 600 }}'
   action:
   - service: notify.mobile_app_iphone_ans
     data:
@@ -156,8 +156,8 @@
     id: Температура на кухне
   condition:
   - condition: template
-    value_template: '{{ iif(this.attributes.last_triggered == none, 9999, as_timestamp(now())
-      - as_timestamp(this.attributes.last_triggered) ) >= 3600 }}'
+    value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
+      0) > 3600 }}'
   action:
   - service: notify.mobile_app_iphone_ans
     data:
@@ -199,8 +199,8 @@
     id: Температура на кухне
   condition:
   - condition: template
-    value_template: '{{ iif(this.attributes.last_triggered == none, 9999, as_timestamp(now())
-      - as_timestamp(this.attributes.last_triggered) ) >= 3600 }}'
+    value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
+      0) > 3600 }}'
   action:
   - service: notify.mobile_app_iphone_ans
     data:
@@ -412,8 +412,8 @@
       target:
         entity_id: scene.torsher_nochnoe_osveshchenie
     - type: turn_on
-      device_id: 27f7e75ef92611eaa6e491c70663ffc5
-      entity_id: light.living_room
+      device_id: 1896c3b8be01d976fb97e33f0b051345
+      entity_id: light.torsherchik
       domain: light
       brightness_pct: 1
   mode: single

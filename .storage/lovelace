@@ -2179,8 +2179,9 @@
                       "entities": [
                         "sensor.knopka_aqara_komnata_battery",
                         "sensor.knopka_v_koridore_battery",
-                        "sensor.opple_battery",
+                        "sensor.upravlenie_shtoroi_battery",
                         "sensor.dimmer_kukhni_battery",
+                        "sensor.dimmer_torsherchika_battery",
                         "sensor.hue_dimmer_switch_1_battery_level",
                         "sensor.hue_dimmer_switch_2_battery_level",
                         "sensor.hue_wall_switch_module_1_battery_level",

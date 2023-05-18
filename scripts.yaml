@@ -29,6 +29,7 @@
       target:
         entity_id:
         - light.living_room
+        - light.torsherchik
     - service: light.turn_on
       data:
         transition: 5
@@ -62,12 +63,6 @@
   alias: Ночной свет
   mode: single
   sequence:
-  - data:
-      brightness: 5
-      kelvin: 2000
-    entity_id: light.living_room
-    service: yeelight.set_color_temp_scene
-    enabled: false
   - service: script.light_tosleep
     data: {}
   icon: mdi:lamp
@@ -98,10 +93,6 @@ wakeup_bedroom:
         target:
           entity_id: cover.shtora
     default: []
-  - condition: state
-    entity_id: binary_sensor.workday
-    state: 'on'
-    enabled: false
   - delay:
       hours: 0
       minutes: 0
@@ -113,17 +104,18 @@ wakeup_bedroom:
   - service: adaptive_lighting.set_manual_control
     data:
       entity_id: switch.adaptive_lighting_room
-      lights: light.living_room
+      lights: light.torsherchik
       manual_control: true
   - condition: template
-    value_template: '{{ states(''light.living_room'') != ''on'' and states(''light.torsher_2'')
+    value_template: '{{ states(''light.torsherchik'') != ''on'' and states(''light.torsher_2'')
       != ''on'' }}'
   - data:
       brightness_pct: 1
       kelvin: 2000
     service: light.turn_on
     target:
-      entity_id: light.living_room
+      entity_id:
+      - light.torsherchik
   - delay:
       hours: 0
       minutes: 0
@@ -131,10 +123,12 @@ wakeup_bedroom:
       milliseconds: 0
   - data:
       brightness_pct: 100
-      entity_id: light.living_room
       kelvin: 3500
       transition: 300
     service: light.turn_on
+    target:
+      entity_id:
+      - light.torsherchik
   mode: restart
   icon: mdi:alarm
 light_tosleep:
@@ -405,6 +399,7 @@ push_for_closing_curtain:
         - light.kukhnia_hue
         - light.torsher_2
         - light.liustra
+        - light.torsherchik
   - delay:
       hours: 0
       minutes: 0

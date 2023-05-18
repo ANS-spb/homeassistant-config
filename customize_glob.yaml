@@ -36,3 +36,9 @@ sensor.ble_*_datchik_na_kukhne:
 sensor.upravlenie_shtoroi_*:
   battery_type: CR2032
   battery_change: 2023-03-27
+sensor.dimmer_kukhni_*:
+  battery_type: CR2032
+  battery_change: 2023-05-17
+sensor.dimmer_torsherchika_*:
+  battery_type: CR2032
+  battery_change: 2023-05-18

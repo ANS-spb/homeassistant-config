@@ -9,7 +9,7 @@
   - 1 Tb Western Digital Black Mobile (WDC WD10JPLX-00MBPT0)
   - Sonoff Zigbee 3.0 USB Dongle Plus (Zigbee2MQTT)
   - Buro BU-BT40C (Passive BLE Monitor integration)
-  - Debian 11
+  - Debian 11 Bullseye (non-free)
   - Home Assistant Supervised
 
 # Устройства
@@ -22,6 +22,7 @@
   - Philips Hue White Ambiance E14
   - Philips Hue E27 2700K 9 Вт (60 Вт) 929001821618 - 3 шт
   - Лампа Philips Hue GU10 2700K 5.2 Вт (57 Вт) LWG004 - 4 шт
+  - TRÅDFRI светодиод E14 470 лм 704.243.12
   - Mijia Bedside Lamp 1 WiFi MJCTD01YL
   - TRADFRI driver for wireless control (30 watt) ICPSHC24-30EU-IL-1 - 1 шт
   - WLED DIY лента на 196 диодов WS2813
@@ -30,7 +31,6 @@
   - Реле Aqara Single switch module T1 SSM-U01
   - Привод штор Aqara ZNCLDJ11LM
   - не используется - TRADFRI bulb E27 W opal 1000lm - 2 шт
-  - не используется - TRÅDFRI светодиод E14 470 лм 704.243.12
   - не используется - Aqara ZNLDP12LM - 2 шт
 
 
@@ -39,7 +39,7 @@
   - Philips Hue Dimmer Switch RWL021
   - Philips Hue Wall Switch Module
   - JetHome WS7 - 2 шт (1 в работе, 1 запасная)
-  - TRADFRI on/off switch 004.684.32
+  - TRADFRI on/off switch 004.684.32 - 2 шт
   - Aqara WXKG12LM
   - Aqara WXKG11LM
   - Aqara Opple WXCJKG11LM
