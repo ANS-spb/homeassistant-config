@@ -25,7 +25,7 @@ sensor.ulitsa_*:
   battery_type: 2xAAA
   battery_change: 2022-12-10
 sensor.vykliuchatel_liustry_*:
-  battery_type: CR2032
+  battery_type: CR2477
   battery_change: 2022-12-11
 device_tracker.ble_tracker_nut:
   battery_type: CR2016

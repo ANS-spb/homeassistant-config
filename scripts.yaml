@@ -55,7 +55,6 @@
   - parallel:
     - service: adaptive_lighting.apply
       data:
-        lights: light.living_room
         transition: 10
         entity_id: switch.adaptive_lighting_room
   icon: mdi:lamp
@@ -104,7 +103,6 @@ wakeup_bedroom:
   - service: adaptive_lighting.set_manual_control
     data:
       entity_id: switch.adaptive_lighting_room
-      lights: light.torsherchik
       manual_control: true
   - condition: template
     value_template: '{{ states(''light.torsherchik'') != ''on'' and states(''light.torsher_2'')
@@ -382,6 +380,10 @@ push_for_closing_curtain:
 '1644819849093':
   alias: Выключить всё (плавно)
   sequence:
+  - service: adaptive_lighting.set_manual_control
+    data:
+      manual_control: true
+      entity_id: switch.adaptive_lighting_room
   - parallel:
     - service: light.turn_off
       data:
@@ -391,6 +393,7 @@ push_for_closing_curtain:
         - light.living_room
         - light.wled_2
         - light.wled
+        - light.torsherchik
     - service: light.turn_off
       data:
         transition: 3
@@ -399,7 +402,6 @@ push_for_closing_curtain:
         - light.kukhnia_hue
         - light.torsher_2
         - light.liustra
-        - light.torsherchik
   - delay:
       hours: 0
       minutes: 0

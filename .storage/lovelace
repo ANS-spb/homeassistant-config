@@ -545,7 +545,7 @@
                       "cards": [
                         {
                           "type": "custom:slider-button-card",
-                          "entity": "light.torsher",
+                          "entity": "light.torsher_2",
                           "slider": {
                             "direction": "left-right",
                             "background": "solid",
@@ -560,7 +560,7 @@
                         },
                         {
                           "type": "custom:slider-button-card",
-                          "entity": "light.hue_ambiance_candle_1",
+                          "entity": "light.torsherchik",
                           "slider": {
                             "direction": "left-right",
                             "background": "solid",

@@ -423,16 +423,33 @@
   trigger:
   - platform: event
     event_type: adaptive_lighting.manual_control
+    id: event fired
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.adaptive_lighting_manual_mode
+    id: timer finished
   condition: []
   action:
-  - delay: 01:00:00
-  - condition: template
-    value_template: '{{ light in state_attr(switch, ''manual_control'') }}'
-  - service: adaptive_lighting.set_manual_control
-    data:
-      entity_id: '{{ switch }}'
-      lights: '{{ light }}'
-      manual_control: false
+  - if:
+    - condition: trigger
+      id: event fired
+    then:
+    - service: timer.start
+      data: {}
+      target:
+        entity_id: timer.adaptive_lighting_manual_mode
+  - if:
+    - condition: trigger
+      id: timer finished
+    then:
+    - condition: template
+      value_template: '{{ light in state_attr(switch, ''manual_control'') }}'
+    - service: adaptive_lighting.set_manual_control
+      data:
+        entity_id: '{{ switch }}'
+        lights: '{{ light }}'
+        manual_control: false
   mode: parallel
   variables:
     light: '{{ trigger.event.data.entity_id }}'
