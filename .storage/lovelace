@@ -1921,9 +1921,6 @@
                   "type": "entities",
                   "entities": [
                     {
-                      "entity": "binary_sensor.hdd_smart"
-                    },
-                    {
                       "entity": "sensor.start_time"
                     }
                   ]

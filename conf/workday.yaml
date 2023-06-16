@@ -1,0 +1,23 @@
+###################################
+# Сенсоры рабочих и выходных дней #
+###################################
+
+#- platform: workday
+#  country: RU
+
+command_line:
+  - binary_sensor:
+      name: Workday
+      command: >-
+        curl https://isdayoff.ru/{{ now().date().strftime("%Y%m%d") }}
+      scan_interval: 600
+      payload_on: '0'
+      payload_off: '1'
+
+  - binary_sensor:
+      name: Workday Tomorrow
+      command: >-
+        curl https://isdayoff.ru/{{ (now().date() + timedelta(days=1)).strftime("%Y%m%d") }}
+      scan_interval: 600
+      payload_on: '0'
+      payload_off: '1'

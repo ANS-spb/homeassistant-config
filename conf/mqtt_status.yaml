@@ -1,0 +1,8 @@
+command_line:
+  - binary_sensor:
+      name: MQTT Broker
+      device_class: connectivity 
+      command: timeout 5 /bin/bash -c "(echo > /dev/tcp/192.168.1.252/1883)" &> /dev/null && echo Up || echo Down
+      value_template: '{{ value }}' 
+      payload_on: "Up" 
+      payload_off: "Down" 

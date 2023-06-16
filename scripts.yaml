@@ -140,7 +140,11 @@ light_tosleep:
       target:
         entity_id: '{{[''scene.torsher_galaktika'',''scene.torsher_svet_zvezd'',''scene.torsher_otdykh_na_zakate'',''scene.torsher_tumannost'']
           | random }}'
-      enabled: true
+      enabled: false
+    - service: hue.activate_scene
+      data: {}
+      target:
+        entity_id: scene.torsher_chtenie
     - service: light.turn_off
       data:
         transition: 10
@@ -384,6 +388,7 @@ push_for_closing_curtain:
     data:
       manual_control: true
       entity_id: switch.adaptive_lighting_room
+    enabled: false
   - parallel:
     - service: light.turn_off
       data:
@@ -393,7 +398,6 @@ push_for_closing_curtain:
         - light.living_room
         - light.wled_2
         - light.wled
-        - light.torsherchik
     - service: light.turn_off
       data:
         transition: 3
@@ -402,6 +406,10 @@ push_for_closing_curtain:
         - light.kukhnia_hue
         - light.torsher_2
         - light.liustra
+    - service: light.turn_off
+      data: {}
+      target:
+        entity_id: light.torsherchik
   - delay:
       hours: 0
       minutes: 0
