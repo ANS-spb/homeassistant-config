@@ -16,8 +16,8 @@ automation:
     trigger:
       - platform: state
         entity_id:
-#          - binary_sensor.dd_na_kukhne_occupancy
-#          - binary_sensor.ble_dd_motion
+          - binary_sensor.dd_na_kukhne_occupancy
+          - binary_sensor.ble_dd_motion
           - binary_sensor.autooffkitchen
         to: "on"
     condition:
