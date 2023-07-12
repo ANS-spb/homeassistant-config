@@ -223,7 +223,7 @@
   trigger:
   - platform: numeric_state
     entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
-    below: 15
+    below: 25
   condition:
   - condition: template
     value_template: '{{ states(''light.living_room'') != ''on'' and states(''light.torsher'')
@@ -285,7 +285,7 @@
       hours: 0
       minutes: 0
       seconds: 10
-    above: 25
+    above: 35
   condition:
   - condition: or
     conditions:
@@ -1135,29 +1135,6 @@
     id: callback
   condition: []
   action:
-  - service: camera.snapshot
-    data:
-      filename: /media/domofon_frigate.jpg
-    target:
-      entity_id: camera.frigate_mjpeg
-    enabled: false
-  - wait_for_trigger:
-    - platform: event
-      event_type: folder_watcher
-      event_data:
-        event_type: closed
-        file: domofon_frigate.jpg
-    continue_on_timeout: true
-    timeout: 00:00:00
-    enabled: false
-  - service: telegram_bot.send_photo
-    data:
-      file: /media/domofon_frigate.jpg
-      target: '{{ trigger.event.data.chat_id }}'
-      parse_mode: html
-      disable_notification: true
-      timeout: 1000
-    enabled: false
   - service: telegram_bot.send_photo
     data:
       url: http://127.0.0.1:5000/api/domru_domofon/latest.jpg?bbox=1&motion=1&quality=100
@@ -1703,9 +1680,9 @@
   description: ''
   trigger:
   - platform: event
-    event_type: telegram_command
+    event_type: telegram_callback
     event_data:
-      command: /open_door
+      data: /open_door
   condition: []
   action:
   - service: script.domru_open_door_657617
@@ -1716,6 +1693,7 @@
     target:
       entity_id:
       - camera.domofon
+    enabled: false
   - wait_for_trigger:
     - platform: event
       event_type: folder_watcher
@@ -1724,6 +1702,7 @@
         file: domofon.jpg
     continue_on_timeout: false
     timeout: 00:02:00
+    enabled: false
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
@@ -1733,6 +1712,16 @@
       parse_mode: html
       timeout: 1000
       message_tag: msg_to_edit
+    enabled: false
+  - service: telegram_bot.send_photo
+    data:
+      file: /media/domofon_frigate.jpg
+      caption: Домофон открыт
+      target: '{{ trigger.event.data.chat_id }}'
+      parse_mode: html
+      disable_notification: true
+      timeout: 1000
+    enabled: true
   mode: restart
 - id: '1656081010980'
   alias: Просмотр ТВ
@@ -2206,7 +2195,7 @@
   - platform: event
     event_type: yandex_intent
     event_data:
-      text: Пропылесось под столами в комнате
+      text: Пропылесось под столом
     id: room_table
   - platform: event
     event_type: yandex_intent
