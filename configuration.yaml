@@ -40,12 +40,6 @@ morph_numbers:
 start_time:
 powercalc:
 
-discovery:
-  ignore:
-    - homekit
-    - yeelight
-    - openhome
-
 yeelight: !include yeelight.yaml
 
 #homekit:

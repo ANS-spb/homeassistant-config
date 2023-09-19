@@ -46,6 +46,12 @@
       entity_id:
       - script.1638995744105
     data: {}
+    enabled: false
+  - service: select.select_option
+    data:
+      option: Aurora
+    target:
+      entity_id: select.wled_preset_2
   - delay:
       hours: 0
       minutes: 0
@@ -204,6 +210,11 @@ light_tosleep:
           target:
             entity_id: script.wled_static_effect
       default: []
+    - service: switch.turn_off
+      data: {}
+      target:
+        entity_id: switch.rozetka
+      enabled: false
   mode: single
   icon: mdi:sleep
 power_off_all:
@@ -389,13 +400,15 @@ push_for_closing_curtain:
       manual_control: true
       entity_id: switch.adaptive_lighting_room
     enabled: false
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id: light.torsherchik
   - parallel:
     - service: light.turn_off
-      data:
-        transition: 3
+      data: {}
       target:
         entity_id:
-        - light.living_room
         - light.wled_2
         - light.wled
     - service: light.turn_off
@@ -406,10 +419,7 @@ push_for_closing_curtain:
         - light.kukhnia_hue
         - light.torsher_2
         - light.liustra
-    - service: light.turn_off
-      data: {}
-      target:
-        entity_id: light.torsherchik
+        - light.living_room
   - delay:
       hours: 0
       minutes: 0

@@ -1970,11 +1970,15 @@
   alias: Выключить ленты вместе с торшером
   description: ''
   trigger:
-  - platform: device
-    type: turned_off
-    device_id: 1b788ea3d24640c4765af9db21a3d897
-    entity_id: light.torsher
-    domain: light
+  - platform: state
+    entity_id:
+    - light.torsher_2
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
   condition: []
   action:
   - service: light.turn_off
@@ -2436,4 +2440,30 @@
         '
       title: ⚒️ Системное уведомление
       target: 116325704
+  mode: single
+- id: '1692651777821'
+  alias: Выключить розетку ленты при выключении торшера вечером
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.torsher_2
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  condition:
+  - condition: or
+    conditions:
+    - condition: time
+      after: input_datetime.sleep_time
+    - condition: time
+      before: input_datetime.wakeup_time
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.rozetka
   mode: single

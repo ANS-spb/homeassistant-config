@@ -137,11 +137,13 @@
   id: vacuum_automation_workday_cleaning
   initial_state: true
   trigger:
-    platform: state
-    entity_id: group.devices
-    to: "not_home"
-    for:
-      minutes: 20
+    - platform: state
+      entity_id: group.devices
+      to: "not_home"
+      for:
+        minutes: 20
+    - platform: time
+      at: "10:00:00"
   condition:
     condition: and
     conditions:
@@ -151,6 +153,9 @@
       - condition: state
         entity_id: binary_sensor.workday
         state: "on"
+      - condition: state
+        entity_id: group.devices
+        state: not_home
       - condition: state
         entity_id: input_boolean.gostevoi_rezhim
         state: "off"
