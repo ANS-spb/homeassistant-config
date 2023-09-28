@@ -1206,86 +1206,6 @@
               "cards": [
                 {
                   "type": "markdown",
-                  "content": "### Адаптивное освещение:\n"
-                },
-                {
-                  "type": "horizontal-stack",
-                  "cards": [
-                    {
-                      "type": "custom:mini-graph-card",
-                      "name": "Яркость",
-                      "points_per_hour": 5,
-                      "line_width": 2,
-                      "entities": [
-                        {
-                          "entity": "switch.adaptive_lighting_room",
-                          "attribute": "brightness_pct"
-                        }
-                      ],
-                      "show": {
-                        "fill": "fade"
-                      },
-                      "animate": true
-                    },
-                    {
-                      "type": "custom:mini-graph-card",
-                      "name": "Температура цвета",
-                      "points_per_hour": 5,
-                      "line_width": 2,
-                      "entities": [
-                        {
-                          "entity": "switch.adaptive_lighting_room",
-                          "attribute": "color_temp_kelvin"
-                        }
-                      ],
-                      "show": {
-                        "fill": "fade"
-                      },
-                      "animate": true
-                    }
-                  ]
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "entity": "switch.adaptive_lighting_sleep_mode_room"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "custom:stack-in-card",
-              "mode": "vertical",
-              "cards": [
-                {
-                  "type": "markdown",
-                  "content": "### Освещённость:\n"
-                },
-                {
-                  "type": "custom:auto-entities",
-                  "show_empty": false,
-                  "card": {
-                    "type": "entities",
-                    "show_header_toggle": false
-                  },
-                  "filter": {
-                    "include": [
-                      {
-                        "entity_id": "sensor.*illuminance*"
-                      }
-                    ]
-                  }
-                }
-              ]
-            },
-            {
-              "type": "custom:stack-in-card",
-              "mode": "vertical",
-              "cards": [
-                {
-                  "type": "markdown",
                   "content": "### Присутствие:\n"
                 },
                 {
@@ -1300,30 +1220,6 @@
                   ],
                   "refresh_interval": 0,
                   "hours_to_show": 48
-                }
-              ]
-            },
-            {
-              "type": "custom:stack-in-card",
-              "mode": "vertical",
-              "cards": [
-                {
-                  "type": "markdown",
-                  "content": "### Радиация:\n"
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "entity": "sensor.geiger_counter_radiation_dose_per_hour",
-                      "secondary_info": "last-updated"
-                    },
-                    {
-                      "entity": "sensor.geiger_dr_mean_value",
-                      "secondary_info": "last-updated"
-                    }
-                  ],
-                  "state_color": false
                 }
               ]
             },
@@ -1366,15 +1262,24 @@
                   "content": "### Напряжение сети:\n"
                 },
                 {
-                  "type": "history-graph",
-                  "entities": [
+                  "type": "custom:history-explorer-card",
+                  "cardName": "historycard-29547654",
+                  "header": "hide",
+                  "legendVisible": false,
+                  "defaultTimeRange": "2d",
+                  "graphs": [
                     {
-                      "entity": "sensor.prikhozhaia_voltage",
-                      "name": "Реле в прихожей"
+                      "type": "line",
+                      "entities": [
+                        {
+                          "entity": "sensor.prikhozhaia_voltage"
+                        }
+                      ]
                     }
                   ],
-                  "refresh_interval": 10,
-                  "hours_to_show": 48
+                  "refresh": {
+                    "interval": 30
+                  }
                 }
               ]
             },
@@ -2711,105 +2616,131 @@
               "mode": "vertical",
               "cards": [
                 {
-                  "type": "history-graph",
-                  "entities": [
+                  "type": "custom:history-explorer-card",
+                  "header": "hide",
+                  "graphs": [
                     {
-                      "entity": "device_tracker.iphone_ans"
-                    },
-                    {
-                      "entity": "device_tracker.ble_tracker_nut"
-                    },
-                    {
-                      "entity": "group.devices"
-                    },
-                    {
-                      "entity": "light.prikhozhaia"
-                    },
-                    {
-                      "entity": "device_tracker.ble_tracker_radiacode"
+                      "type": "timeline",
+                      "entities": [
+                        {
+                          "entity": "device_tracker.iphone_ans"
+                        },
+                        {
+                          "entity": "device_tracker.ble_tracker_nut"
+                        },
+                        {
+                          "entity": "group.devices"
+                        },
+                        {
+                          "entity": "light.prikhozhaia"
+                        },
+                        {
+                          "entity": "device_tracker.ble_tracker_radiacode"
+                        }
+                      ]
                     }
-                  ],
-                  "refresh_interval": 0,
-                  "hours_to_show": 24
+                  ]
                 },
                 {
-                  "type": "history-graph",
-                  "entities": [
+                  "type": "custom:history-explorer-card",
+                  "header": "hide",
+                  "graphs": [
                     {
-                      "entity": "binary_sensor.dd_na_kukhne_occupancy",
-                      "name": "ДД ZB"
-                    },
-                    {
-                      "entity": "binary_sensor.ble_dd_motion",
-                      "name": "ДД BLE"
-                    },
-                    {
-                      "entity": "binary_sensor.prisutstvie_na_kukhne",
-                      "name": "Группа"
-                    },
-                    {
-                      "entity": "binary_sensor.autooffkitchen",
-                      "name": "Шаблонный 3 мин"
-                    },
-                    {
-                      "entity": "timer.dvizhenie_na_kukhne",
-                      "name": "Таймер"
-                    },
-                    {
-                      "entity": "light.kukhnia_potolok"
+                      "type": "timeline",
+                      "entities": [
+                        {
+                          "entity": "binary_sensor.dd_na_kukhne_occupancy",
+                          "name": "ДД ZB"
+                        },
+                        {
+                          "entity": "binary_sensor.ble_dd_motion",
+                          "name": "ДД BLE"
+                        },
+                        {
+                          "entity": "binary_sensor.prisutstvie_na_kukhne",
+                          "name": "Группа"
+                        },
+                        {
+                          "entity": "binary_sensor.autooffkitchen",
+                          "name": "Шаблонный 3 мин"
+                        },
+                        {
+                          "entity": "timer.dvizhenie_na_kukhne",
+                          "name": "Таймер"
+                        },
+                        {
+                          "entity": "light.kukhnia_potolok"
+                        }
+                      ]
                     }
                   ],
-                  "refresh_interval": 0,
-                  "hours_to_show": 1
+                  "refresh": {
+                    "automatic": true
+                  }
                 },
                 {
-                  "type": "history-graph",
-                  "entities": [
+                  "type": "custom:history-explorer-card",
+                  "header": "hide",
+                  "graphs": [
                     {
-                      "entity": "input_text.frigate_event_new"
-                    },
-                    {
-                      "entity": "input_text.frigate_event_end"
+                      "type": "timeline",
+                      "entities": [
+                        {
+                          "entity": "input_text.frigate_event_new"
+                        },
+                        {
+                          "entity": "input_text.frigate_event_end"
+                        }
+                      ]
                     }
                   ],
-                  "refresh_interval": 0,
-                  "hours_to_show": 1
+                  "refresh": {
+                    "automatic": true
+                  }
                 },
                 {
-                  "type": "history-graph",
-                  "entities": [
+                  "type": "custom:history-explorer-card",
+                  "header": "hide",
+                  "graphs": [
                     {
-                      "entity": "binary_sensor.gateway"
-                    },
-                    {
-                      "entity": "binary_sensor.google"
-                    },
-                    {
-                      "entity": "binary_sensor.yandex"
-                    },
-                    {
-                      "entity": "binary_sensor.internet"
-                    },
-                    {
-                      "entity": "binary_sensor.yeelight"
-                    },
-                    {
-                      "entity": "binary_sensor.wled_strip"
-                    },
-                    {
-                      "entity": "binary_sensor.wled_garland"
-                    },
-                    {
-                      "entity": "binary_sensor.wled_table"
-                    },
-                    {
-                      "entity": "binary_sensor.xg3"
-                    },
-                    {
-                      "entity": "binary_sensor.espdisplay"
+                      "type": "timeline",
+                      "entities": [
+                        {
+                          "entity": "binary_sensor.gateway"
+                        },
+                        {
+                          "entity": "binary_sensor.google"
+                        },
+                        {
+                          "entity": "binary_sensor.yandex"
+                        },
+                        {
+                          "entity": "binary_sensor.internet"
+                        },
+                        {
+                          "entity": "binary_sensor.yeelight"
+                        },
+                        {
+                          "entity": "binary_sensor.wled_strip"
+                        },
+                        {
+                          "entity": "binary_sensor.wled_garland"
+                        },
+                        {
+                          "entity": "binary_sensor.wled_table"
+                        },
+                        {
+                          "entity": "binary_sensor.xg3"
+                        },
+                        {
+                          "entity": "binary_sensor.espdisplay"
+                        }
+                      ]
                     }
                   ],
-                  "hours_to_show": 24
+                  "refresh": {
+                    "automatic": true
+                  }
                 }
               ]
             }
