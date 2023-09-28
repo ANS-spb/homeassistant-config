@@ -22,10 +22,19 @@ input_boolean:
     name: "У меня отпуск"
     icon: mdi:emoticon-cool-outline
 
+  wakeup_homeoffice:
+    name: "На удалёнке"
+    icon: mdi:home-map-marker
+
 input_datetime:
 
-  wakeup_time:
-    name: "Время пробуждения"
+  wakeup_office_time:
+    name: "Время пробуждения на работу"
+    has_time: true
+    has_date: false
+
+  wakeup_homeoffice_time:
+    name: "Время пробуждения на удалёнку"
     has_time: true
     has_date: false
 
@@ -41,13 +50,11 @@ input_datetime:
 
 automation:
 
-  - id: light_wakeup
-    alias: Световой будильник
+  - id: light_wakeup_office
+    alias: Световой будильник на работу
     trigger:
-      - platform: template
-        value_template:
-          "{{ states('sensor.time') == (states.input_datetime.wakeup_time.attributes.timestamp
-          | int(0) | timestamp_custom('%H:%M', False)) }}"
+      - platform: time
+        at: input_datetime.wakeup_office_time
     condition:
       - condition: state
         entity_id: input_boolean.wakeup_enabled
@@ -57,6 +64,39 @@ automation:
         state: "off"
       - condition: state
         entity_id: binary_sensor.workday
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.wakeup_homeoffice
+        state: "off"
+    action:
+      - choose:
+          - conditions:
+              - condition: numeric_state
+                entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+                below: "10"
+            sequence:
+              - service: script.wakeup_bedroom
+                data: {}
+        default: []
+    mode: single
+
+  - id: light_wakeup_homeoffice
+    alias: Световой будильник на удалёнку
+    trigger:
+      - platform: time
+        at: input_datetime.wakeup_homeoffice_time
+    condition:
+      - condition: state
+        entity_id: input_boolean.wakeup_enabled
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.wakeup_disabled
+        state: "off"
+      - condition: state
+        entity_id: binary_sensor.workday
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.wakeup_homeoffice
         state: "on"
     action:
       - choose:
@@ -73,10 +113,8 @@ automation:
   - id: light_wakeup_weekend
     alias: Световой будильник в выходной
     trigger:
-      - platform: template
-        value_template:
-          "{{ states('sensor.time') == (states.input_datetime.wakeup_weekend_time.attributes.timestamp
-          | int(0) | timestamp_custom('%H:%M', False)) }}"
+      - platform: time
+        at: input_datetime.wakeup_weekend_time
     condition:
       - condition: state
         entity_id: input_boolean.wakeup_weekend

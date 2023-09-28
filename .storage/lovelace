@@ -385,6 +385,10 @@
                     {
                       "entity": "input_boolean.wakeup_disabled",
                       "state": "off"
+                    },
+                    {
+                      "entity": "input_boolean.wakeup_homeoffice",
+                      "state": "off"
                     }
                   ],
                   "card": {
@@ -392,7 +396,7 @@
                     "cards": [
                       {
                         "type": "custom:time-picker-card",
-                        "entity": "input_datetime.wakeup_time",
+                        "entity": "input_datetime.wakeup_office_time",
                         "hour_mode": 24,
                         "hour_step": 1,
                         "minute_step": 5,
@@ -408,31 +412,47 @@
                           "name": false
                         },
                         "link_values": false
-                      },
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "input_boolean.wakeup_enabled",
+                      "state": "on"
+                    },
+                    {
+                      "entity": "input_boolean.wakeup_disabled",
+                      "state": "off"
+                    },
+                    {
+                      "entity": "input_boolean.wakeup_homeoffice",
+                      "state": "on"
+                    }
+                  ],
+                  "card": {
+                    "type": "vertical-stack",
+                    "cards": [
                       {
-                        "type": "horizontal-stack",
-                        "cards": [
-                          {
-                            "type": "tile",
-                            "entity": "input_button.naste_na_rabotu",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "icon_tap_action": {
-                              "action": "toggle"
-                            }
-                          },
-                          {
-                            "type": "tile",
-                            "entity": "input_button.nastia_rabotaet_doma",
-                            "tap_action": {
-                              "action": "toggle"
-                            },
-                            "icon_tap_action": {
-                              "action": "toggle"
-                            }
-                          }
-                        ]
+                        "type": "custom:time-picker-card",
+                        "entity": "input_datetime.wakeup_homeoffice_time",
+                        "hour_mode": 24,
+                        "hour_step": 1,
+                        "minute_step": 5,
+                        "second_step": 5,
+                        "name": "",
+                        "layout": {
+                          "embedded": false,
+                          "align_controls": "right",
+                          "name": "inside",
+                          "thin": true
+                        },
+                        "hide": {
+                          "name": false
+                        },
+                        "link_values": false
                       }
                     ]
                   }
@@ -470,6 +490,9 @@
                   "entities": [
                     {
                       "entity": "input_boolean.wakeup_enabled"
+                    },
+                    {
+                      "entity": "input_boolean.wakeup_homeoffice"
                     },
                     {
                       "entity": "input_boolean.wakeup_weekend"
@@ -677,6 +700,9 @@
                       "entities": [
                         {
                           "entity": "input_boolean.manual_light_off"
+                        },
+                        {
+                          "entity": "switch.rozetka"
                         }
                       ]
                     }
