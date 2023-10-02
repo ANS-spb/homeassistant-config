@@ -127,7 +127,6 @@ wakeup_bedroom:
       milliseconds: 0
   - data:
       brightness_pct: 100
-      kelvin: 3500
       transition: 300
     service: light.turn_on
     target:

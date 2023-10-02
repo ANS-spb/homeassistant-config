@@ -11,7 +11,11 @@
       value_template: >
         {% set state = states('sensor.time') %}
         {% if states('binary_sensor.workday_sensor') %}
-          {% set morning = states('input_datetime.wakeup_time') [0:5] %}
+          {% if states('input_boolean.wakeup_homeoffice') == 'off' %}
+            {% set morning = states('input_datetime.wakeup_office_time') [0:5] %}
+          {% elif states('input_boolean.wakeup_homeoffice') == 'on' %}
+            {% set morning = states('input_datetime.wakeup_homeoffice_time') [0:5] %}
+          {% endif %}
         {% else %}
           {% set morning = '12:00' %}
         {% endif %}
