@@ -45,3 +45,6 @@ sensor.dimmer_kukhni_*:
 sensor.dimmer_torsherchika_*:
   battery_type: CR2032
   battery_change: 2023-05-18
+sensor.nut_mini:
+  battery_type: CR2016
+  battery_change: 2023-10-06

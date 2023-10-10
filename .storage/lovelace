@@ -227,6 +227,33 @@
                   "sort": {
                     "method": "none"
                   }
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    "input_button.vacuum_start"
+                  ]
+                },
+                {
+                  "type": "custom:auto-entities",
+                  "show_empty": false,
+                  "card": {
+                    "type": "entities",
+                    "show_header_toggle": false,
+                    "state_color": true
+                  },
+                  "filter": {
+                    "include": [
+                      {
+                        "domain": "vacuum"
+                      }
+                    ],
+                    "exclude": [
+                      {
+                        "state": "docked"
+                      }
+                    ]
+                  }
                 }
               ]
             },
@@ -2227,7 +2254,7 @@
                     {
                       "data": "friendly_name",
                       "name": "Friendly Name",
-                      "modify": "x.replace(/ linkquality$/,\"\")"
+                      "modify": "x.replace(/ Linkquality$/,\"\")"
                     },
                     {
                       "data": "linkquality",
@@ -2626,6 +2653,12 @@
                           "entity": "device_tracker.iphone_ans"
                         },
                         {
+                          "entity": "device_tracker.iphone_ans_ble"
+                        },
+                        {
+                          "entity": "device_tracker.aw_ans_ble"
+                        },
+                        {
                           "entity": "device_tracker.ble_tracker_nut"
                         },
                         {
@@ -2633,9 +2666,6 @@
                         },
                         {
                           "entity": "light.prikhozhaia"
-                        },
-                        {
-                          "entity": "device_tracker.ble_tracker_radiacode"
                         }
                       ]
                     }
@@ -2663,10 +2693,6 @@
                         {
                           "entity": "binary_sensor.autooffkitchen",
                           "name": "Шаблонный 3 мин"
-                        },
-                        {
-                          "entity": "timer.dvizhenie_na_kukhne",
-                          "name": "Таймер"
                         },
                         {
                           "entity": "light.kukhnia_potolok"
@@ -2728,9 +2754,6 @@
                         },
                         {
                           "entity": "binary_sensor.wled_table"
-                        },
-                        {
-                          "entity": "binary_sensor.xg3"
                         },
                         {
                           "entity": "binary_sensor.espdisplay"

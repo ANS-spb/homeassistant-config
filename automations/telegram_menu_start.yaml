@@ -33,6 +33,7 @@
                 inline_keyboard: &mainkeyb
                   - 💡 Свет:/lights, ℹ Статус:/status
                   - ☀ Погода:/weather, 💻 Система:/system
+                  - 🦾 Запустить уборку:/vacuum_start
                   - ☢️ Радиация:/radiation, 📸 Фото с домофона:/photo_entrance
                 target: "{{ trigger.event.data.chat_id }}"
         - conditions:
