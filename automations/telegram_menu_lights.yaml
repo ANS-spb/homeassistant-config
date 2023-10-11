@@ -34,7 +34,8 @@
                   - Включить свет в комнате:/lighton
                   - '{% if is_state("light.prikhozhaia", "off")%}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Прихожая:/lobby_toggle,
                     {% if is_state("light.kukhnia_hue", "off") %}{{"🔴"}}{% else %}{{"🟢"}}{%endif %} Кухня:/kitchen_toggle'
-                  - '{% if is_state("light.torsher_2", "off") %}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Торшер:/torsher_toggle'
+                  - '{% if is_state("light.torsher_2", "off") %}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Торшер:/torsher_toggle,
+                    {% if is_state("light.torsherchik", "off") %}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Настольная:/torsherchik_toggle'
                   - '{% if is_state("light.living_room", "off") %}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Лампа:/living_toggle,
                     {% if is_state("light.liustra", "off") %}{{"🔴"}}{% else %}{{"🟢"}}{%endif %} Люстра:/liustra_toggle'
                   - Выключить ВСË:/lightoff
@@ -103,10 +104,30 @@
             - service: telegram_bot.answer_callback_query
               data_template:
                 callback_query_id: "{{ trigger.event.data.id }}"
-                message: '{% if is_state("light.torsher_2", "off")%}{{"Включаю торшер в спальне."}}{%else %}{{"Выключаю лампу в спальне."}}{% endif %}'
+                message: '{% if is_state("light.torsher_2", "off")%}{{"Включаю торшер в спальне."}}{%else %}{{"Выключаю торшер в спальне."}}{% endif %}'
             - service: light.toggle
               target:
                 entity_id: light.torsher
+            - delay:
+                milliseconds: 500
+            - service: telegram_bot.edit_message
+              data:
+                message_id: "{{ trigger.event.data.message.message_id }}"
+                chat_id: "{{ trigger.event.data.chat_id }}"
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: *msg
+                inline_keyboard: *keyb
+        - conditions:
+            - condition: template
+              value_template: '{{ trigger.event.data.command == "/torsherchik_toggle" }}'
+          sequence:
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: '{% if is_state("light.torsherchik", "off")%}{{"Включаю настольную лампу."}}{%else %}{{"Выключаю настольную лампу."}}{% endif %}'
+            - service: light.toggle
+              target:
+                entity_id: light.torsherchik
             - delay:
                 milliseconds: 500
             - service: telegram_bot.edit_message

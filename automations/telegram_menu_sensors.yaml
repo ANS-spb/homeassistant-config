@@ -24,10 +24,18 @@
         message_id: last
         chat_id: "{{ trigger.event.data.chat_id }}"
         message: |-
-          *Температура в комнате* {{states('sensor.582d3439b574_temperature')|round(0)|format(morph='градус',as_text=false)}}.
-          *Температура на кухне* {{states('sensor.ble_temperature_datchik_na_kukhne')|round(0)|format(morph='градус',as_text=false)}}.
-          *Влажность в комнате* {{states('sensor.582d3439b574_humidity')|round(0)}}%
+          *Температура в комнате* {{states('sensor.ble_datchik_v_spalne_temperature')|round(0)|format(morph='градус',as_text=false)}}
+          *Температура на кухне* {{states('sensor.ble_temperature_datchik_na_kukhne')|round(0)|format(morph='градус',as_text=false)}}
+          *Температура на лоджии* {{states('sensor.lodzhiia_temperature')|round(0)|format(morph='градус',as_text=false)}}
+          *Температура на улице* {{states('sensor.ulitsa_temperature')|round(0)|format(morph='градус',as_text=false)}}
+
+          *Влажность в комнате* {{states('sensor.ble_datchik_v_spalne_humidity')|round(0)}}%
           *Влажность на кухне* {{states('sensor.ble_humidity_datchik_na_kukhne')|round(0)}}%
+          *Влажность на лоджии* {{states('sensor.lodzhiia_humidity')|round(0)}}%
+          *Влажность на улице* {{states('sensor.ulitsa_humidity')|round(0)}}%
+
+          *Уровень CO2* {{states('sensor.co2_sensor_air_monitor_lite')|round(0)}}% ppm
+          
           {% if is_state("binary_sensor.okno_v_komnate_contact", "off")%}
           Окно в спальне закрыто. {% else %} *Окно в спальне открыто!* {% endif %}
           {% if is_state("binary_sensor.okno_na_kukhne_contact", "off")%}

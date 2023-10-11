@@ -23,14 +23,14 @@
         chat_id: "{{ trigger.event.data.chat_id }}"
         message: |-
 
-          {{ "\U0001F4BB" }} *System*:
+          {{ "\U0001F4BB" }} *Система*:
                   
           *CPU Usage*:   {{ states.sensor.processor_use.state }} %
           *Last Reboot*:   {{ as_timestamp(states.sensor.last_boot.state) | timestamp_custom('%d.%m.%Y %H:%M') }}
-          *Temp CPU*:   {{ states.sensor.cpu_temp.state }} °C
+          *CPU Temp*:   {{ states.sensor.cpu_temp.state }} °C
           *Memory Used*:  {{ states.sensor.memory_use_percent.state }} %
           *Disk Used*:  {{ states.sensor.disk_use_percent.state }} %
-          *Local IP Address:*   {{ states.sensor.local_ip.state }}
+          *LAN IP Address:*   {{ states.sensor.local_ip.state }}
           *WAN IP Address:*   {{ states.sensor.d7160cc8a60d_sn_mynetname_net.state }}
         inline_keyboard:
           - Назад:/back
