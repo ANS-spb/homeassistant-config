@@ -327,8 +327,8 @@
   description: ''
   trigger:
   - platform: template
-    value_template: '{{ states(''sensor.time'') == (states.input_datetime.sleep_time.attributes.timestamp
-      | int(0) | timestamp_custom(''%H:%M'', False)) }}'
+    value_template: '{{ states(''sensor.time'') == states(''input_datetime.sleep_time'',
+      ''timestamp'') | int(0) | timestamp_custom(''%H:%M'', False) }}'
   condition:
   - condition: state
     entity_id: input_boolean.sleep_enabled
@@ -340,6 +340,11 @@
     domain: light
   - condition: template
     value_template: '{{ states(''light.liustra'') != ''on'' }}'
+  - condition: device
+    device_id: 18b05968f19307356eb4c46ae540cbe3
+    domain: media_player
+    entity_id: 75d7daff6f344366b5096972c8d8a217
+    type: is_off
   action:
   - service: script.light_tosleep
     data: {}
@@ -578,29 +583,6 @@
       target:
         entity_id: input_boolean.manual_effects_on
   mode: single
-- id: '1619716984692'
-  alias: Выключение усилителя при простое
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: media_player.volumio
-    to: paused
-    for: 00:05
-  - platform: state
-    entity_id:
-    - media_player.volumio
-    to: idle
-    for:
-      hours: 0
-      minutes: 2
-      seconds: 0
-  condition: []
-  action:
-  - service: button.press
-    data: {}
-    target:
-      entity_id: button.azur_off
-  mode: single
 - id: '1622805950446'
   alias: Тестовая - контексты
   description: ''
@@ -676,32 +658,6 @@
       entity_id: input_boolean.manual_light_off
     data: {}
   mode: restart
-- id: '1629361649319'
-  alias: Отключить колесо от зарядки
-  description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: sensor.lumi_lumi_plug_maeu01_8d54763c_electrical_measurement
-    below: '3.7'
-    for:
-      hours: 1
-      minutes: 5
-      seconds: 0
-  condition:
-  - condition: state
-    entity_id: switch.lumi_lumi_plug_maeu01_8d54763c_on_off
-    state: 'on'
-  action:
-  - parallel:
-    - service: switch.turn_off
-      data: {}
-      target:
-        entity_id:
-        - switch.lumi_lumi_plug_maeu01_8d54763c_on_off
-    - service: notify.mobile_app_iphone_ans
-      data:
-        message: Колесо зарядилось
-  mode: single
 - id: '1634548542278'
   alias: Контексты (выключение торшера)
   description: ''
@@ -1638,43 +1594,6 @@
   - service: shell_command.nut_battery_parse
     data: {}
   mode: single
-- id: '1655208369646'
-  alias: Что-то отвалилось
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.meshtastic
-    - binary_sensor.meshtastic_usb_power
-    - binary_sensor.xg3
-    - binary_sensor.google
-    - binary_sensor.yandex
-    - binary_sensor.yeelight
-    not_from:
-    - unknown
-    - unavailable
-    to:
-    - 'on'
-    - 'off'
-  - platform: numeric_state
-    entity_id: sensor.meshtastic_battery
-    below: '75'
-  - platform: numeric_state
-    entity_id: sensor.meshtastic_battery
-    below: '50'
-  - platform: numeric_state
-    entity_id: sensor.meshtastic_battery
-    below: '25'
-  condition: []
-  action:
-  - service: notify.telegram
-    data:
-      title: ⚠️ *Что-то пошло не так*
-      message: 'Устройство {{ states[trigger.entity_id.split(".")[0]][trigger.entity_id.split(".")[1]].name
-        }} сообщает: {{ trigger.to_state.state }}
-
-        '
-  mode: parallel
 - id: '1655236746321'
   alias: Открыть домофон по команде Telegram
   description: ''
@@ -1740,12 +1659,6 @@
       target:
         entity_id: input_boolean.manual_light_off
     - if:
-      - condition: device
-        device_id: 00113b2b18e9fc886e10987ed5635044
-        domain: cover
-        entity_id: cover.shtora
-        type: is_open
-        enabled: false
       - condition: numeric_state
         entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
         above: '50'
@@ -1768,9 +1681,11 @@
         entity_id: light.torsher_2
         domain: light
       then:
-      - service: script.light_tosleep
+      - service: light.turn_off
         data: {}
-      enabled: false
+        target:
+          entity_id: light.hue_ambiance_candle_1
+      enabled: true
   mode: restart
 - id: '1656081690599'
   alias: Просмотр ТВ закончен
@@ -1843,19 +1758,6 @@
       - service: script.light_tosleep
         data: {}
       else: []
-    - if:
-      - condition: device
-        type: is_on
-        device_id: fa3818f9a75a0704698062d67b597aba
-        entity_id: light.torsher_2
-        domain: light
-      - condition: state
-        entity_id: sensor.daytime
-        state: 'on'
-      then:
-      - service: script.1599944056170
-        data: {}
-      enabled: false
     - wait_for_trigger:
       - platform: device
         device_id: 00113b2b18e9fc886e10987ed5635044
@@ -2018,39 +1920,6 @@
     data: {}
     target:
       entity_id: switch.power_off_sockets
-  mode: single
-- id: '1669371418514'
-  alias: Переключение будильника
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - input_button.naste_na_rabotu
-    id: earlier
-  - platform: state
-    entity_id:
-    - input_button.nastia_rabotaet_doma
-    id: later
-  condition: []
-  action:
-  - if:
-    - condition: trigger
-      id: earlier
-    then:
-    - service: input_datetime.set_datetime
-      data:
-        time: 06:35:00
-      target:
-        entity_id: input_datetime.wakeup_time
-  - if:
-    - condition: trigger
-      id: later
-    then:
-    - service: input_datetime.set_datetime
-      data:
-        time: 07:00:00
-      target:
-        entity_id: input_datetime.wakeup_time
   mode: single
 - id: '1669994969392'
   alias: Выключить подсветку с пульта Hue
@@ -2218,6 +2087,23 @@
     id: all_home
   condition: []
   action:
+  - if:
+    - condition: trigger
+      id:
+      - '17'
+      - '18'
+      - room_table
+      - room_rug
+      - kitchen_table
+    - condition: state
+      entity_id: cover.shtora
+      state: closed
+    then:
+    - service: cover.set_cover_position
+      data:
+        position: 50
+      target:
+        entity_id: cover.shtora
   - delay:
       hours: 0
       minutes: 0
@@ -2228,6 +2114,15 @@
       - condition: trigger
         id: '16'
       sequence:
+      - if:
+        - condition: state
+          entity_id: cover.shtora
+          state: closed
+        then:
+        - service: cover.open_cover
+          data: {}
+          target:
+            entity_id: cover.shtora
       - service: roborock.vacuum_clean_segment
         data:
           segments:
@@ -2305,6 +2200,9 @@
         data: {}
         target:
           entity_id: vacuum.roborock_s6_pure
+        enabled: false
+      - service: script.vacuum_start
+        data: {}
   mode: single
 - id: '1673036058333'
   alias: Алиса включает свет в комнате
@@ -2422,24 +2320,6 @@
   action:
   - service: script.1638995744105
     data: {}
-  mode: single
-- id: '1682059977487'
-  alias: SMART check
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.hdd_smart
-    to: 'on'
-  condition: []
-  action:
-  - service: telegram_bot.send_message
-    data:
-      message: '⚠️ Cервер обнаружил проблему с SMART основного диска!
-
-        '
-      title: ⚒️ Системное уведомление
-      target: 116325704
   mode: single
 - id: '1692651777821'
   alias: Выключить розетку ленты при выключении торшера вечером

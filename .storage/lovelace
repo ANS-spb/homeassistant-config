@@ -1239,10 +1239,10 @@
                   "type": "history-graph",
                   "entities": [
                     {
-                      "entity": "device_tracker.iphone_ans"
+                      "entity": "person.ans"
                     },
                     {
-                      "entity": "device_tracker.ble_tracker_nut"
+                      "entity": "person.lisitsa"
                     }
                   ],
                   "refresh_interval": 0,
@@ -1256,7 +1256,16 @@
               "cards": [
                 {
                   "type": "custom:webrtc-camera",
-                  "url": "domru_domofon"
+                  "streams": [
+                    {
+                      "url": "domru_domofon",
+                      "media": "video"
+                    },
+                    {
+                      "url": "domru_domofon",
+                      "media": "audio"
+                    }
+                  ]
                 },
                 {
                   "type": "custom:mushroom-entity-card",

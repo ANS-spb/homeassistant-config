@@ -1,5 +1,5 @@
 devices:
   name: Мы
   entities:
-    - device_tracker.iphone_ans
-    - device_tracker.ble_tracker_nut
+    - person.ans
+    - person.lisitsa
