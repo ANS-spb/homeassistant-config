@@ -3,9 +3,18 @@
 ####################################
 
 input_button:
+
   vacuum_start:
     name: "Начать уборку"
     icon: mdi:robot-vacuum
+
+  vacuum_stop:
+    name: "Остановить уборку"
+    icon: mdi:robot-vacuum-off
+
+  vacuum_goto_base:
+    name: "Отправить на базу"
+    icon: mdi:robot-vacuum-alert
 
 automation:
 
@@ -28,10 +37,12 @@ automation:
   - alias: "Vacuum - Telegram Control - Stop"
     id: vacuum_telegram_stop
     trigger:
-      platform: event
-      event_type: telegram_callback
-      event_data:
-        data: "/vacuum_stop"
+      - platform: event
+        event_type: telegram_callback
+        event_data:
+          data: "/vacuum_stop"
+      - platform: state
+        entity_id: input_button.vacuum_stop
     action:
       - service: vacuum.pause
         entity_id: vacuum.roborock_s6_pure
@@ -52,10 +63,12 @@ automation:
   - alias: "Vacuum - Telegram Control - Go to Base"
     id: vacuum_tetegram_to_return
     trigger:
-      platform: event
-      event_type: telegram_callback
-      event_data:
-        data: "/vacuum_go_home"
+      - platform: event
+        event_type: telegram_callback
+        event_data:
+          data: "/vacuum_go_home"
+      - platform: state
+        entity_id: input_button.vacuum_goto_base
     action:
       - service: vacuum.pause
         entity_id: vacuum.roborock_s6_pure

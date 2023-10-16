@@ -229,12 +229,6 @@
                   }
                 },
                 {
-                  "type": "entities",
-                  "entities": [
-                    "input_button.vacuum_start"
-                  ]
-                },
-                {
                   "type": "custom:auto-entities",
                   "show_empty": false,
                   "card": {
@@ -252,6 +246,37 @@
                       {
                         "state": "docked"
                       }
+                    ]
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "state": "docked"
+                    }
+                  ],
+                  "card": {
+                    "type": "entities",
+                    "entities": [
+                      "input_button.vacuum_start"
+                    ]
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "state_not": "docked"
+                    }
+                  ],
+                  "card": {
+                    "type": "entities",
+                    "entities": [
+                      "input_button.vacuum_stop",
+                      "input_button.vacuum_goto_base"
                     ]
                   }
                 }
