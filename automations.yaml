@@ -2347,3 +2347,30 @@
     target:
       entity_id: switch.rozetka
   mode: single
+- id: '1697621395541'
+  alias: Alarm SMART status
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.smartctl_sda
+    from: 'on'
+    to: 'off'
+  - platform: state
+    entity_id:
+    - binary_sensor.smartctl_sdb
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: template
+    value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
+      0) > 600 }}'
+  action:
+  - service: notify.mobile_app_iphone_ans
+    data:
+      title: ⚠️ Внимание!
+      message: '❌ {{ trigger.id }} сменил состояние с {{ trigger.from_state.state
+        }} на {{ trigger.to_state.state }}
+
+        '
+  mode: single

@@ -229,27 +229,6 @@
                   }
                 },
                 {
-                  "type": "custom:auto-entities",
-                  "show_empty": false,
-                  "card": {
-                    "type": "entities",
-                    "show_header_toggle": false,
-                    "state_color": true
-                  },
-                  "filter": {
-                    "include": [
-                      {
-                        "domain": "vacuum"
-                      }
-                    ],
-                    "exclude": [
-                      {
-                        "state": "docked"
-                      }
-                    ]
-                  }
-                },
-                {
                   "type": "conditional",
                   "conditions": [
                     {
@@ -270,13 +249,23 @@
                     {
                       "entity": "vacuum.roborock_s6_pure",
                       "state_not": "docked"
+                    },
+                    {
+                      "entity": "vacuum.roborock_s6_pure",
+                      "state_not": "unavailable"
                     }
                   ],
                   "card": {
-                    "type": "entities",
-                    "entities": [
-                      "input_button.vacuum_stop",
-                      "input_button.vacuum_goto_base"
+                    "type": "custom:mushroom-vacuum-card",
+                    "entity": "vacuum.roborock_s6_pure",
+                    "icon_animation": true,
+                    "commands": [
+                      "on_off",
+                      "start_pause",
+                      "stop",
+                      "locate",
+                      "clean_spot",
+                      "return_home"
                     ]
                   }
                 }
@@ -400,32 +389,6 @@
                   "entity": "cover.shtora",
                   "show_position_control": true,
                   "show_buttons_control": true
-                },
-                {
-                  "type": "conditional",
-                  "conditions": [
-                    {
-                      "entity": "vacuum.roborock_s6_pure",
-                      "state_not": "docked"
-                    },
-                    {
-                      "entity": "vacuum.roborock_s6_pure",
-                      "state_not": "unavailable"
-                    }
-                  ],
-                  "card": {
-                    "type": "custom:mushroom-vacuum-card",
-                    "entity": "vacuum.roborock_s6_pure",
-                    "icon_animation": true,
-                    "commands": [
-                      "on_off",
-                      "start_pause",
-                      "stop",
-                      "locate",
-                      "clean_spot",
-                      "return_home"
-                    ]
-                  }
                 },
                 {
                   "type": "conditional",
@@ -2037,31 +2000,6 @@
                         "red": 90
                       },
                       "name": "HDD"
-                    },
-                    {
-                      "type": "custom:mini-graph-card",
-                      "entities": [
-                        "sensor.recorder_db_size"
-                      ],
-                      "hours_to_show": 96,
-                      "points_per_hour": 0.25,
-                      "show": {
-                        "graph": "bar"
-                      },
-                      "animate": true
-                    },
-                    {
-                      "type": "custom:mini-graph-card",
-                      "name": "InfluxDB Size",
-                      "entities": [
-                        "sensor.influxdb_size"
-                      ],
-                      "hours_to_show": 96,
-                      "points_per_hour": 0.25,
-                      "show": {
-                        "graph": "bar"
-                      },
-                      "animate": true
                     }
                   ],
                   "columns": 2
@@ -2070,12 +2008,10 @@
                   "type": "entities",
                   "entities": [
                     {
-                      "entity": "sensor.home_assistant_v2_db_size",
-                      "icon": "mdi:database"
+                      "entity": "binary_sensor.smartctl_sda"
                     },
                     {
-                      "entity": "sensor.influxdb_size",
-                      "icon": "mdi:database"
+                      "entity": "binary_sensor.smartctl_sdb"
                     }
                   ]
                 }
@@ -2239,6 +2175,60 @@
                 }
               ],
               "show_header_toggle": false
+            },
+            {
+              "type": "custom:stack-in-card",
+              "mode": "vertical",
+              "cards": [
+                {
+                  "type": "markdown",
+                  "content": "**БД**"
+                },
+                {
+                  "type": "grid",
+                  "cards": [
+                    {
+                      "type": "custom:mini-graph-card",
+                      "entities": [
+                        "sensor.recorder_db_size"
+                      ],
+                      "hours_to_show": 96,
+                      "points_per_hour": 0.25,
+                      "show": {
+                        "graph": "bar"
+                      },
+                      "animate": true
+                    },
+                    {
+                      "type": "custom:mini-graph-card",
+                      "name": "InfluxDB Size",
+                      "entities": [
+                        "sensor.influxdb_size"
+                      ],
+                      "hours_to_show": 96,
+                      "points_per_hour": 0.25,
+                      "show": {
+                        "graph": "bar"
+                      },
+                      "animate": true
+                    }
+                  ],
+                  "columns": 2
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "sensor.home_assistant_v2_db_size",
+                      "icon": "mdi:database"
+                    },
+                    {
+                      "entity": "sensor.influxdb_size",
+                      "icon": "mdi:database"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },

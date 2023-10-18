@@ -1,0 +1,332 @@
+homeassistant:
+  customize:
+    sensor.smartctl_sda:
+      friendly_name: sda
+      icon: mdi:harddisk
+    sensor.smartctl_sdb:
+      friendly_name: sdb
+      icon: mdi:harddisk
+    binary_sensor.smartctl_sda:
+      friendly_name: Disk sda health
+      icon: mdi:harddisk
+    binary_sensor.smartctl_sdb:
+      friendly_name: Disk sdb health
+      icon: mdi:harddisk
+
+command_line:
+
+  - sensor:
+      name: smartctl_sda_json
+      command: "/bin/cat /share/smartctl/sda.json"
+      value_template: "{{ value_json.smartctl.exit_status }}"
+      json_attributes:
+        - smartctl
+        - device
+        - user_capacity
+        - smart_status
+        - power_on_time
+        - power_cycle_count
+        - temperature
+        - ata_smart_attributes
+      scan_interval: 60
+
+  - sensor:
+      name: smartctl_sdb_json
+      command: "/bin/cat /share/smartctl/sdb.json"
+      value_template: "{{ value_json.smartctl.exit_status }}"
+      json_attributes:
+        - smartctl
+        - device
+        - user_capacity
+        - smart_status
+        - power_on_time
+        - power_cycle_count
+        - temperature
+        - ata_smart_attributes
+      scan_interval: 60
+
+template:
+
+  - sensor:
+
+    - name: smartctl_sda
+      unit_of_measurement: "°C"
+      state: "{{ state_attr('sensor.smartctl_sda_json','temperature').current | int(0) }}"
+      attributes:
+        device: "{{ state_attr('sensor.smartctl_sda_json','device').name | string }}"
+        device_protocol: "{{ state_attr('sensor.smartctl_sda_json','device').protocol | string }}"
+        size: "{{ (state_attr('sensor.smartctl_sda_json','user_capacity').bytes / 1000000000) | round(2)}} GB"
+        smart_status: >
+          {% if states.sensor.smartctl_sda_json.attributes.smart_status.passed  -%}
+            "Healthy",
+          {% else -%}
+            "Sick",
+          {% endif -%}
+        power on time (hrs): "{{ state_attr('sensor.smartctl_sda_json','power_on_time').hours | int(0) }}"
+        power cycle count: "{{ state_attr('sensor.smartctl_sda_json','power_cycle_count') | int(0) }}"
+        raw read error rate: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sda_json','ata_smart_attributes').table %}
+            {%- if i.id == 1 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        reallocated sector count: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sda_json','ata_smart_attributes').table %}
+            {%- if i.id == 5 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        wear leveling count: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sda_json','ata_smart_attributes').table %}
+            {%- if i.id == 177 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        erase fail count total: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sda_json','ata_smart_attributes').table %}
+            {%- if i.id == 182 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        hardware ECC recovered: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sda_json','ata_smart_attributes').table %}
+            {%- if i.id == 195 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        reallocated event count: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sda_json','ata_smart_attributes').table %}
+            {%- if i.id == 196 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        current pending sector: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sda_json','ata_smart_attributes').table %}
+            {%- if i.id == 197 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        offline uncorrectable: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sda_json','ata_smart_attributes').table %}
+            {%- if i.id == 198 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        UDMA CRC error count: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sda_json','ata_smart_attributes').table %}
+            {%- if i.id == 199 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        available reservd space: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sda_json','ata_smart_attributes').table %}
+            {%- if i.id == 232 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+
+    - name: smartctl_sdb
+      unit_of_measurement: "°C"
+      state: "{{ state_attr('sensor.smartctl_sdb_json','temperature').current | int(0) }}"
+      attributes:
+        device: "{{ state_attr('sensor.smartctl_sdb_json','device').name | string }}"
+        device_protocol: "{{ state_attr('sensor.smartctl_sdb_json','device').protocol | string }}"
+        size: "{{ (state_attr('sensor.smartctl_sdb_json','user_capacity').bytes / 1000000000) | round(2)}} GB"
+        smart_status: >
+          {% if states.sensor.smartctl_sdb_json.attributes.smart_status.passed  -%}
+            "Healthy",
+          {% else -%}
+            "Sick",
+          {% endif -%}
+        power on time (hrs): "{{ state_attr('sensor.smartctl_sdb_json','power_on_time').hours | int(0) }}"
+        power cycle count: "{{ state_attr('sensor.smartctl_sdb_json','power_cycle_count') | int(0) }}"
+        raw read error rate: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sdb_json','ata_smart_attributes').table %}
+            {%- if i.id == 1 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        reallocated sector count: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sdb_json','ata_smart_attributes').table %}
+            {%- if i.id == 5 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        wear leveling count: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sdb_json','ata_smart_attributes').table %}
+            {%- if i.id == 177 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        erase fail count total: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sdb_json','ata_smart_attributes').table %}
+            {%- if i.id == 182 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        hardware ECC recovered: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sdb_json','ata_smart_attributes').table %}
+            {%- if i.id == 195 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        reallocated event count: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sdb_json','ata_smart_attributes').table %}
+            {%- if i.id == 196 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        current pending sector: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sdb_json','ata_smart_attributes').table %}
+            {%- if i.id == 197 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        offline uncorrectable: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sdb_json','ata_smart_attributes').table %}
+            {%- if i.id == 198 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        UDMA CRC error count: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sdb_json','ata_smart_attributes').table %}
+            {%- if i.id == 199 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+        available reservd space: >
+          {% set ns = namespace(found=false) %}
+          {% for i in state_attr('sensor.smartctl_sdb_json','ata_smart_attributes').table %}
+            {%- if i.id == 232 %}
+              {% set ns.found = true %}
+              {{ i.raw.value | int(0) }}
+            {% else %}
+            {% endif -%}
+          {% endfor %}
+          {% if not ns.found %}
+            not available
+          {% endif %}
+
+  - binary_sensor:
+
+    - name: smartctl_sda
+      state: > 
+        {{ state_attr('sensor.smartctl_sda_json', 'smart_status')['passed'] }}
+
+    - name: smartctl_sdb
+      state: > 
+        {{ state_attr('sensor.smartctl_sdb_json', 'smart_status')['passed'] }}
