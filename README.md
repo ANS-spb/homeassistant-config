@@ -5,11 +5,11 @@
 **Intel NUC6i3SYH** 
   - Intel Core i3-6100U (4 ядра)
   - 1*8 Gb Hynix DDR4 SODIMM
-  - 120 Gb Intel SSDSCKJW120H6
+  - 128 Gb Transcend TS128GMTS830S
   - 1 Tb Western Digital Black Mobile (WDC WD10JPLX-00MBPT0)
   - Sonoff Zigbee 3.0 USB Dongle Plus (Zigbee2MQTT)
   - Buro BU-BT40C (Passive BLE Monitor integration)
-  - Debian 11 Bullseye (non-free)
+  - Debian 12 Bookworm (non-free)
   - Home Assistant Supervised
 
 # Устройства
@@ -21,7 +21,7 @@
   - Philips Hue White and Color Ambiance LCA001
   - Philips Hue White Ambiance E14
   - Philips Hue E27 2700K 9 Вт (60 Вт) 929001821618 - 3 шт
-  - Лампа Philips Hue GU10 2700K 5.2 Вт (57 Вт) LWG004 - 4 шт
+  - Philips Hue GU10 2700K 5.2 Вт (57 Вт) LWG004 - 4 шт
   - TRÅDFRI светодиод E14 470 лм 704.243.12
   - Mijia Bedside Lamp 1 WiFi MJCTD01YL
   - TRADFRI driver for wireless control (30 watt) ICPSHC24-30EU-IL-1 - 1 шт
