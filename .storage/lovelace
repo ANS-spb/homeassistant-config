@@ -1843,6 +1843,32 @@
                 }
               ],
               "map_locked": true
+            },
+            {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "custom:history-explorer-card",
+                  "cardName": "historycard-13807521",
+                  "showCurrentValues": true,
+                  "header": "hide",
+                  "uiLayout": {
+                    "toolbar": "top",
+                    "selector": "hide"
+                  }
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "timer.adaptive_lighting_manual_mode"
+                    },
+                    {
+                      "entity": "switch.adaptive_lighting_sleep_mode_room"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -2668,7 +2694,12 @@
               "cards": [
                 {
                   "type": "custom:history-explorer-card",
+                  "cardName": "historycard-presence",
                   "header": "hide",
+                  "uiLayout": {
+                    "toolbar": "top",
+                    "selector": "hide"
+                  },
                   "graphs": [
                     {
                       "type": "timeline",
@@ -2697,7 +2728,12 @@
                 },
                 {
                   "type": "custom:history-explorer-card",
+                  "cardName": "historycard-motion",
                   "header": "hide",
+                  "uiLayout": {
+                    "toolbar": "top",
+                    "selector": "hide"
+                  },
                   "graphs": [
                     {
                       "type": "timeline",
@@ -2730,7 +2766,12 @@
                 },
                 {
                   "type": "custom:history-explorer-card",
+                  "cardName": "historycard-frigate",
                   "header": "hide",
+                  "uiLayout": {
+                    "toolbar": "top",
+                    "selector": "hide"
+                  },
                   "graphs": [
                     {
                       "type": "timeline",
@@ -2750,7 +2791,12 @@
                 },
                 {
                   "type": "custom:history-explorer-card",
+                  "cardName": "historycard-connectivity",
                   "header": "hide",
+                  "uiLayout": {
+                    "toolbar": "top",
+                    "selector": "hide"
+                  },
                   "graphs": [
                     {
                       "type": "timeline",

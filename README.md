@@ -19,10 +19,9 @@
 
 **Свет:**
   - Philips Hue White and Color Ambiance LCA001
-  - Philips Hue White Ambiance E14
+  - Philips Hue White Ambiance E14 LTE002 - 2 шт
   - Philips Hue E27 2700K 9 Вт (60 Вт) 929001821618 - 3 шт
   - Philips Hue GU10 2700K 5.2 Вт (57 Вт) LWG004 - 4 шт
-  - TRÅDFRI светодиод E14 470 лм 704.243.12
   - Mijia Bedside Lamp 1 WiFi MJCTD01YL
   - TRADFRI driver for wireless control (30 watt) ICPSHC24-30EU-IL-1 - 1 шт
   - WLED DIY лента на 196 диодов WS2813
@@ -32,6 +31,7 @@
   - Привод штор Aqara ZNCLDJ11LM
   - не используется - TRADFRI bulb E27 W opal 1000lm - 2 шт
   - не используется - Aqara ZNLDP12LM - 2 шт
+  - не используется - TRÅDFRI светодиод E14 470 лм 704.243.12
 
 
 **Управление:**

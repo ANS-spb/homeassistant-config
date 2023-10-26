@@ -128,6 +128,7 @@ wakeup_bedroom:
   - data:
       brightness_pct: 100
       transition: 300
+      kelvin: 4000
     service: light.turn_on
     target:
       entity_id:
@@ -403,6 +404,7 @@ push_for_closing_curtain:
     data: {}
     target:
       entity_id: light.torsherchik
+    enabled: false
   - parallel:
     - service: light.turn_off
       data: {}
@@ -419,6 +421,7 @@ push_for_closing_curtain:
         - light.torsher_2
         - light.liustra
         - light.living_room
+        - light.torsherchik
   - delay:
       hours: 0
       minutes: 0
