@@ -2356,11 +2356,13 @@
     - binary_sensor.smartctl_sda
     from: 'on'
     to: 'off'
+    id: HDD
   - platform: state
     entity_id:
     - binary_sensor.smartctl_sdb
     from: 'on'
     to: 'off'
+    id: SSD
   condition:
   - condition: template
     value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,

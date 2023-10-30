@@ -3,7 +3,6 @@
 ####################################
 
 input_button:
-
   vacuum_start:
     name: "Начать уборку"
     icon: mdi:robot-vacuum
@@ -17,7 +16,6 @@ input_button:
     icon: mdi:robot-vacuum-alert
 
 automation:
-
   - alias: "Vacuum - Оповещение о начале уборки"
     id: vacuum_telegram_begin_info
     initial_state: true
@@ -30,7 +28,7 @@ automation:
       - service: telegram_bot.send_message
         data:
           target: !secret telegram_bot_allowed_chat_id1
-          message: "_Таракан_ начал уборку."
+          message: "_Опарыш_ начал уборку."
           inline_keyboard:
             - "🛑 Остановить:/vacuum_stop, ⏎ На базу:/vacuum_go_home"
 
@@ -55,7 +53,7 @@ automation:
           message_id: "{{ trigger.event.data.message.message_id }}"
           chat_id: "{{ trigger.event.data.chat_id }}"
           message: |
-            _Таракан_ начал уборку.
+            _Опарыш_ начал уборку.
             Уборка остановлена.
           inline_keyboard:
             - "⏎ На базу:/vacuum_go_home"
@@ -84,7 +82,7 @@ automation:
           message_id: "{{ trigger.event.data.message.message_id }}"
           chat_id: "{{ trigger.event.data.chat_id }}"
           message: |
-            _Таракан_ начал уборку.
+            _Опарыш_ начал уборку.
             Уборка остановлена, робот отправлен на базу.
 
   - alias: "Vacuum - Оповещение о возвращении пылесоса [notify]"
@@ -98,7 +96,7 @@ automation:
     action:
       - service: notify.telegram
         data:
-          message: "_Таракан_ на пути домой."
+          message: "_Опарыш_ на пути домой."
 
   - alias: "Vacuum - Оповещение о возвращении пылесоса на базу [notify]"
     id: vacuum_telegram_returned_info
@@ -111,7 +109,7 @@ automation:
     action:
       - service: notify.telegram
         data:
-          message: "_Таракан_ вернулся на базу (закончил уборку)."
+          message: "_Опарыш_ вернулся на базу (закончил уборку)."
       - service: camera.snapshot
         data:
           filename: /media/vacuum.jpg
@@ -133,7 +131,7 @@ automation:
     action:
       - service: notify.telegram
         data:
-          message: "_Таракан_ потерялся и бездельничает, отправляем на базу."
+          message: "_Опарыш_ потерялся и бездельничает, отправляем на базу."
       - service: vacuum.return_to_base
         data:
           entity_id: vacuum.roborock_s6_pure
@@ -150,7 +148,7 @@ automation:
       - service: notify.telegram
         data_template:
           message: |
-            Что-то пошло не так. Тараканья ошибка 
+            Что-то пошло не так. Опарышья ошибка 
             {{ state_attr('vacuum.roborock_s6_pure', 'error') }}
 
   - alias: "Vacuum - Ежедневная уборка по будням [утро]"
@@ -182,7 +180,7 @@ automation:
         - condition: template
           value_template: "{{ now().day != this.attributes.last_triggered.day | default(0) }}"
     action:
-        - service: script.vacuum_start
+      - service: script.vacuum_start
 
   - alias: "Vacuum - Запуск вручную"
     id: vacuum_run
@@ -199,12 +197,11 @@ automation:
       - service: script.vacuum_start
 
 script:
-
   vacuum_start:
     sequence:
       - if:
           - condition: template
-            value_template:  >-
+            value_template: >-
               {{ state_attr('cover.shtora', 'current_position') < 100}}
         then:
           - service: cover.open_cover

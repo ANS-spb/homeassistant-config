@@ -28,7 +28,7 @@ command_line:
         - power_cycle_count
         - temperature
         - ata_smart_attributes
-      scan_interval: 60
+      scan_interval: 600
 
   - sensor:
       name: smartctl_sdb_json
@@ -43,7 +43,7 @@ command_line:
         - power_cycle_count
         - temperature
         - ata_smart_attributes
-      scan_interval: 60
+      scan_interval: 600
 
 template:
 
