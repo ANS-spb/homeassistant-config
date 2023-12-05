@@ -148,7 +148,8 @@ light_tosleep:
           | random }}'
       enabled: false
     - service: hue.activate_scene
-      data: {}
+      data:
+        transition: 10
       target:
         entity_id: scene.torsher_chtenie
     - service: light.turn_off

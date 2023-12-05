@@ -115,7 +115,7 @@ frontend:
 
 config_editor:
 
-zha_toolkit:
+#zha_toolkit:
 
   #weather:
 #  - platform: yandex_weather

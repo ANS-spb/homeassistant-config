@@ -329,6 +329,9 @@
   - platform: template
     value_template: '{{ states(''sensor.time'') == states(''input_datetime.sleep_time'',
       ''timestamp'') | int(0) | timestamp_custom(''%H:%M'', False) }}'
+    enabled: false
+  - platform: time
+    at: input_datetime.sleep_time
   condition:
   - condition: state
     entity_id: input_boolean.sleep_enabled
@@ -397,7 +400,8 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: sensor.knopka_aqara_komnata_action
+    entity_id:
+    - sensor.knopka_aqara_komnata_action
     to: double
   condition: []
   action:
@@ -417,10 +421,9 @@
       target:
         entity_id: scene.torsher_nochnoe_osveshchenie
     - type: turn_on
-      device_id: 1896c3b8be01d976fb97e33f0b051345
-      entity_id: light.torsherchik
+      device_id: 81e3186cf6bc17de37fcf3101a762953
+      entity_id: 29320d6ff54bbcf96a40675299e9b3c2
       domain: light
-      brightness_pct: 1
   mode: single
 - id: '1608399857199'
   alias: 'Adaptive lighting: reset manual_control after 1 hour'
@@ -1265,8 +1268,6 @@
         data:
           media_content_type: text
           media_content_id: Кто-то звонит в дверь!
-          extra:
-            volume_level: 0.8
         target:
           entity_id: media_player.yandex_station_m0023t600rr2sb
     - if:
