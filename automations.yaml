@@ -378,7 +378,8 @@
   - service: script.turn_on
     data: {}
     target:
-      entity_id: script.1644819849093
+      entity_id:
+      - script.1644819849093
   - choose:
     - conditions:
       - condition: state
@@ -2376,4 +2377,36 @@
         }} на {{ trigger.to_state.state }}
 
         '
+  mode: single
+- id: '1701895167970'
+  alias: Notify if Frigate is not working
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.domru_domofon_camera_fps
+    - sensor.frigate_status
+    from:
+    to: unavailable
+  - platform: state
+    entity_id:
+    - sensor.domru_domofon_camera_fps
+    - sensor.frigate_status
+    from:
+    to: unknown
+  - platform: numeric_state
+    entity_id:
+    - sensor.domru_domofon_camera_fps
+    below: 1
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition: []
+  action:
+  - service: telegram_bot.send_message
+    data:
+      message: ⚠️ Проверь Frigate!
+      title: ⚒️ Системное уведомление
+      target: 116325704
   mode: single

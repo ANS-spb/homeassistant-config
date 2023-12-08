@@ -570,10 +570,6 @@
               "type": "vertical-stack",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "### Спальня:\n"
-                },
-                {
                   "type": "vertical-stack",
                   "cards": [
                     {
@@ -729,10 +725,6 @@
               "type": "vertical-stack",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "### Прихожая:\n"
-                },
-                {
                   "type": "vertical-stack",
                   "cards": [
                     {
@@ -762,10 +754,6 @@
             {
               "type": "vertical-stack",
               "cards": [
-                {
-                  "type": "markdown",
-                  "content": "### Кухня:\n"
-                },
                 {
                   "type": "horizontal-stack",
                   "cards": [
@@ -807,10 +795,6 @@
             {
               "type": "vertical-stack",
               "cards": [
-                {
-                  "type": "markdown",
-                  "content": "### Весь свет в доме:\n"
-                },
                 {
                   "type": "tile",
                   "entity": "group.dyn_all_lights",
@@ -928,7 +912,7 @@
               },
               "animate": true,
               "style": "ha-card {\n  height: 350px !important;\n}\n",
-              "height": 220
+              "height": 150
             },
             {
               "type": "custom:mini-graph-card",
@@ -964,7 +948,7 @@
               },
               "animate": true,
               "style": "ha-card {\n  height: 350px !important;\n}\n",
-              "height": 130
+              "height": 120
             },
             {
               "type": "custom:mini-graph-card",
@@ -1048,7 +1032,7 @@
                 }
               ],
               "style": "ha-card {\n  height: 350px !important;\n}\n",
-              "height": 170
+              "height": 150
             },
             {
               "type": "custom:mini-graph-card",

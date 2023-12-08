@@ -426,7 +426,7 @@ push_for_closing_curtain:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 5
+      seconds: 3
       milliseconds: 0
   - parallel:
     - service: light.turn_off

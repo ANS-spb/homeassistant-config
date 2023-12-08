@@ -2,23 +2,23 @@
 #  Сенсоры доступности Интернета  #
 ###################################
 
-- platform: ping
-  name: Gateway
-  host: 192.168.1.1
-  count: 2
-  scan_interval: 15
+# - platform: ping
+#   name: Gateway
+#   host: 192.168.1.1
+#   count: 2
+#   scan_interval: 15
 
-- platform: ping
-  name: Google
-  host: google.com
-  count: 2
-  scan_interval: 15
+# - platform: ping
+#   name: Google
+#   host: google.com
+#   count: 2
+#   scan_interval: 15
 
-- platform: ping
-  name: Yandex
-  host: ya.ru
-  count: 2
-  scan_interval: 15
+# - platform: ping
+#   name: Yandex
+#   host: ya.ru
+#   count: 2
+#   scan_interval: 15
 
 - platform: template
   sensors:
