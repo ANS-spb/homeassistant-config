@@ -37,11 +37,9 @@
                       "icon": "mdi:power",
                       "name": "Выкл свет",
                       "tap_action": {
+                        "confirmation": true,
                         "action": "call-service",
-                        "service": "script.turn_on",
-                        "service_data": {
-                          "entity_id": "script.power_off_all"
-                        }
+                        "service": "script.power_off_all"
                       }
                     },
                     {
@@ -240,7 +238,10 @@
                     "type": "entities",
                     "entities": [
                       "input_button.vacuum_start"
-                    ]
+                    ],
+                    "tap_action": {
+                      "confirmation": true
+                    }
                   }
                 },
                 {

@@ -48,3 +48,6 @@ sensor.dimmer_torsherchika_*:
 sensor.nut_mini:
   battery_type: CR2016
   battery_change: 2023-10-06
+sensor.osveshchionnost_v_spalne_*:
+  battery_type: CR2450
+  battery_change: 2023-12-09

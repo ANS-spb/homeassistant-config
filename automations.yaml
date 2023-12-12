@@ -2384,16 +2384,24 @@
   trigger:
   - platform: state
     entity_id:
-    - sensor.domru_domofon_camera_fps
     - sensor.frigate_status
+    - camera.domru_domofon
     from:
     to: unavailable
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
   - platform: state
     entity_id:
-    - sensor.domru_domofon_camera_fps
     - sensor.frigate_status
+    - camera.domru_domofon
     from:
     to: unknown
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
   - platform: numeric_state
     entity_id:
     - sensor.domru_domofon_camera_fps
@@ -2402,11 +2410,16 @@
       hours: 0
       minutes: 1
       seconds: 0
+  - platform: state
+    entity_id:
+    - binary_sensor.domru_addon
+    from:
+    to: 'off'
   condition: []
   action:
   - service: telegram_bot.send_message
     data:
-      message: ⚠️ Проверь Frigate!
+      message: ⚠️ Проверь Frigate! {{ trigger.entity_id }}
       title: ⚒️ Системное уведомление
       target: 116325704
   mode: single

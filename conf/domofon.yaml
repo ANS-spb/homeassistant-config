@@ -13,3 +13,10 @@ script:
 
 shell_command:
   check_clip: bash /config/check_clip.sh {{id}}
+
+command_line:
+  - binary_sensor:
+      command: 'curl --silent -XGET --max-time 1 -I http://192.168.1.252:20880/ | head -1 | grep -q "HTTP/1.1 200 OK" && (echo "ON") || (echo "OFF")'
+      name: "Domru Addon"
+      scan_interval: 60
+      command_timeout: 30
