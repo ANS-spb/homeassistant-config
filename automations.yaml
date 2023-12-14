@@ -2390,7 +2390,7 @@
     to: unavailable
     for:
       hours: 0
-      minutes: 1
+      minutes: 2
       seconds: 0
   - platform: state
     entity_id:
@@ -2400,7 +2400,7 @@
     to: unknown
     for:
       hours: 0
-      minutes: 1
+      minutes: 2
       seconds: 0
   - platform: numeric_state
     entity_id:
@@ -2408,13 +2408,17 @@
     below: 1
     for:
       hours: 0
-      minutes: 1
+      minutes: 2
       seconds: 0
   - platform: state
     entity_id:
     - binary_sensor.domru_addon
     from:
     to: 'off'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
   condition: []
   action:
   - service: telegram_bot.send_message
@@ -2422,4 +2426,5 @@
       message: ⚠️ Проверь Frigate! {{ trigger.entity_id }}
       title: ⚒️ Системное уведомление
       target: 116325704
+      parse_mode: html
   mode: single
