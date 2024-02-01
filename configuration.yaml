@@ -39,6 +39,15 @@ recorder:
     domains:
       - automation
       - scene
+      - alarm_control_panel
+      - camera
+      - persistent_notification
+      - zone
+      - sun
+    entities:
+      - sensor.date_time
+      - sensor.time
+      - sensor.date_time_iso
   include:
     entities:
       - automation.zvonok_v_domofon
@@ -46,6 +55,7 @@ recorder:
 morph_numbers:
 start_time:
 powercalc:
+python_script:
 
 yeelight: !include yeelight.yaml
 

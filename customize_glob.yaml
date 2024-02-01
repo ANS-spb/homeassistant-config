@@ -51,3 +51,6 @@ sensor.nut_mini:
 sensor.osveshchionnost_v_spalne_*:
   battery_type: CR2450
   battery_change: 2023-12-09
+sensor.ble_*_dd:
+  battery_type: 2xCR2450
+  battery_change: 2024-01-30

@@ -11,9 +11,9 @@ remote_transmitter:
   - id: azur
     pin: 14
     carrier_duty_percent: 50%
-  - id: onkyo
-    pin: 1
-    carrier_duty_percent: 50%
+#  - id: onkyo
+#    pin: 1
+#    carrier_duty_percent: 50%
 
 remote_receiver:
   pin: 1
@@ -146,21 +146,21 @@ switch:
           command: 0x0F
           
 
-  - platform: template
-    name: "Onkyo Play"
-    turn_on_action:
-      - remote_transmitter.transmit_pronto:
-          transmitter_id: onkyo
-          data: "0000 006D 000E 0000 0075 0025 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 06C3"
-      - remote_transmitter.transmit_pronto:
-          transmitter_id: onkyo
-          data: "0000 006D 000E 0000 0074 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 0026 0027 004C 0027 004C 0027 06C3"
-  - platform: template
-    name: "Onkyo Pause"
-    turn_on_action:
-      - remote_transmitter.transmit_pronto:
-          transmitter_id: onkyo
-          data: "0000 006D 000E 0000 0074 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 06C3"
+#  - platform: template
+#    name: "Onkyo Play"
+#    turn_on_action:
+#      - remote_transmitter.transmit_pronto:
+#          transmitter_id: onkyo
+#          data: "0000 006D 000E 0000 0075 0025 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 06C3"
+#      - remote_transmitter.transmit_pronto:
+#          transmitter_id: onkyo
+#          data: "0000 006D 000E 0000 0074 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 0026 0027 004C 0027 004C 0027 06C3"
+#  - platform: template
+#    name: "Onkyo Pause"
+#    turn_on_action:
+#      - remote_transmitter.transmit_pronto:
+#          transmitter_id: onkyo
+#          data: "0000 006D 000E 0000 0074 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 004C 0027 0026 0027 0026 0027 06C3"
 
 binary_sensor:
   - platform: remote_receiver

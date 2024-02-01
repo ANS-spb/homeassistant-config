@@ -158,6 +158,7 @@ light_tosleep:
       target:
         entity_id:
         - light.wled_2
+      enabled: false
     - service: input_boolean.turn_off
       data: {}
       target:
@@ -190,7 +191,7 @@ light_tosleep:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 20
+      seconds: 30
       milliseconds: 0
   - parallel:
     - service: light.turn_off
@@ -316,6 +317,9 @@ dynamic_update_all_light_group:
 push_for_opening_curtain:
   alias: Push for opening curtain
   sequence:
+  - condition: state
+    entity_id: person.ans
+    state: home
   - variables:
       action_open: '{{ ''OPEN_'' ~ context.id }}'
       action_none: '{{ ''NONE_'' ~ context.id }}'
@@ -356,6 +360,9 @@ push_for_opening_curtain:
 push_for_closing_curtain:
   alias: Push for closing curtain
   sequence:
+  - condition: state
+    entity_id: person.ans
+    state: home
   - variables:
       action_close: '{{ ''CLOSE_'' ~ context.id }}'
       action_none: '{{ ''NONE_'' ~ context.id }}'
@@ -500,3 +507,49 @@ wled_static_effect:
       mac: e0:3f:49:6e:02:f7
   mode: single
   icon: hue:room-computer
+welcome_home:
+  alias: Welcome home
+  sequence:
+  - service: light.turn_on
+    data: {}
+    target:
+      entity_id: light.prikhozhaia
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - condition: state
+    entity_id: light.prikhozhaia
+    state: 'on'
+  - if:
+    - condition: and
+      conditions:
+      - condition: template
+        value_template: '{{ states(''light.torsher_2'') != ''on'' }}'
+      - condition: template
+        value_template: '{{ states(''light.liustra'') != ''on'' }}'
+      - condition: template
+        value_template: '{{ states(''light.living_room'') != ''on'' }}'
+      - condition: numeric_state
+        entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+        below: 7
+    then:
+    - service: script.turn_on
+      data: {}
+      target:
+        entity_id: script.1599944056170
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  - type: is_not_open
+    condition: device
+    device_id: 1bd084cf04eca1b2119dbe6a51092f19
+    entity_id: binary_sensor.okno_v_komnate_contact
+    domain: binary_sensor
+  - service: cover.close_cover
+    data: {}
+    target:
+      entity_id: cover.shtora
+  mode: single
+  icon: mdi:home-import-outline

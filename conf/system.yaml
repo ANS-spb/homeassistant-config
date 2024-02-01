@@ -7,15 +7,15 @@ sensor:
   # Time and date
   - platform: time_date
 
-  # System monitor
-  - platform: systemmonitor
-    resources:
-      - type: memory_use_percent
-      - type: processor_use
-      - type: last_boot
-      - type: disk_use_percent
-        arg: /
-      - type: swap_use_percent
+#  # System monitor
+#  - platform: systemmonitor
+#    resources:
+#      - type: memory_use_percent
+#      - type: processor_use
+#      - type: last_boot
+#      - type: disk_use_percent
+#        arg: /
+#      - type: swap_use_percent
 
   # InfluxDB size
   - platform: influxdb

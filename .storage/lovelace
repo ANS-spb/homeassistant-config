@@ -715,6 +715,9 @@
                         },
                         {
                           "entity": "switch.rozetka"
+                        },
+                        {
+                          "entity": "input_button.rassvet"
                         }
                       ]
                     }

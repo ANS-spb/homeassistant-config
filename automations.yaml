@@ -719,48 +719,13 @@
   - condition: state
     entity_id: sensor.daytime
     state: 'on'
+  - condition: template
+    value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
+      0) > 600 }}'
   action:
-  - service: light.turn_on
+  - service: script.welcome_home
+    metadata: {}
     data: {}
-    target:
-      entity_id: light.prikhozhaia
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 10
-      milliseconds: 0
-  - condition: state
-    entity_id: light.prikhozhaia
-    state: 'on'
-  - if:
-    - condition: and
-      conditions:
-      - condition: template
-        value_template: '{{ states(''light.torsher_2'') != ''on'' }}'
-      - condition: template
-        value_template: '{{ states(''light.liustra'') != ''on'' }}'
-      - condition: template
-        value_template: '{{ states(''light.living_room'') != ''on'' }}'
-      - condition: numeric_state
-        entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
-        below: 7
-    then:
-    - service: script.turn_on
-      data: {}
-      target:
-        entity_id: script.1599944056170
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
-  - type: is_not_open
-    condition: device
-    device_id: 1bd084cf04eca1b2119dbe6a51092f19
-    entity_id: binary_sensor.okno_v_komnate_contact
-    domain: binary_sensor
-  - service: cover.close_cover
-    data: {}
-    target:
-      entity_id: cover.shtora
   mode: single
 - id: '1641831168397'
   alias: Включить свет в прихожей кнопкой на двери
@@ -2369,6 +2334,10 @@
   - condition: template
     value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
       0) > 600 }}'
+    enabled: false
+  - condition: template
+    value_template: '{{ this.attributes.last_triggered | default(as_datetime(0), true)
+      < today_at() }}'
   action:
   - service: notify.mobile_app_iphone_ans
     data:
@@ -2427,4 +2396,102 @@
       title: ⚒️ Системное уведомление
       target: 116325704
       parse_mode: html
+  mode: single
+- id: '1702614000258'
+  alias: Запуск рассвета вручную
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_button.rassvet
+    from:
+    to:
+  condition: []
+  action:
+  - service: script.wakeup_bedroom
+    data: {}
+  mode: single
+- id: '1705859570879'
+  alias: Тестовая - приход домой
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - device_tracker.iphone_ans_ble
+    from: not_home
+    to: home
+  condition:
+  - condition: template
+    value_template: '{{ this.attributes.last_triggered | default(as_datetime(0), true)
+      < today_at() }}'
+    enabled: false
+  - condition: state
+    entity_id: sensor.daytime
+    state: 'on'
+  action:
+  - service: telegram_bot.send_message
+    data:
+      target:
+      - 116325704
+      parse_mode: markdown
+      message: "\U0001F3E0 ANS дома"
+  - service: notify.mobile_app_iphone_ans
+    data:
+      title: Тестовая
+      message: ANS дома
+      data:
+        push:
+          interruption-level: time-sensitive
+  mode: single
+- id: '1706767679578'
+  alias: Notify - включение света по приходу домой
+  description: ANS iPhone BLE
+  trigger:
+  - platform: state
+    entity_id:
+    - device_tracker.iphone_ans_ble
+    from: not_home
+    to: home
+  condition:
+  - condition: template
+    value_template: '{{ this.attributes.last_triggered | default(as_datetime(0), true)
+      < today_at() }}'
+    enabled: false
+  - condition: state
+    entity_id: sensor.daytime
+    state: 'on'
+  action:
+  - service: telegram_bot.send_message
+    data:
+      target:
+      - 116325704
+      parse_mode: markdown
+      message: "\U0001F3E0 ANS дома"
+  - service: notify.mobile_app_iphone_ans
+    data:
+      title: Выключить свет?
+      message: "\U0001F3DA️ Добро пожаловать домой! Не желаете ли включить свет?"
+      data:
+        push:
+          interruption-level: time-sensitive
+        actions:
+        - action: LIGHTSON
+          title: Включить свет
+          destructive: false
+  mode: single
+- id: '1706769848719'
+  alias: Push Notify Lights On
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: LIGHTSON
+  condition: []
+  action:
+  - service: script.turn_on
+    data: {}
+    target:
+      entity_id:
+      - script.welcome_home
   mode: single
