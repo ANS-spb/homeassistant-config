@@ -1,0 +1,40 @@
+recorder:
+  commit_interval: 120
+
+  exclude:
+    domains:
+      - automation
+      - scene
+      - alarm_control_panel
+      - camera
+      - persistent_notification
+      - zone
+      - sun
+    entities:
+      - sensor.date_time
+      - sensor.time
+      - sensor.date_time_iso
+    event_types:
+      - call_service
+      - system_log_event
+      - service_registered
+      - service_removed
+      - entity_registry_updated
+      - shopping_list_updated
+      - lovelace_updated
+      - themes_updated
+      - panels_updated
+      - component_loaded
+      - event_template_reloaded
+      - automatio_reloaded
+      - scene_reloaded
+      - telegram_sent
+      - folder_watcher
+      - recorder_5min_statistics_generated
+      - recorder_hourly_statistics_generated
+      - esphome.new_screen
+      - esphome.add_screen
+
+  include:
+    entities:
+      - automation.zvonok_v_domofon

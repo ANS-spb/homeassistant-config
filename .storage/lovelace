@@ -269,6 +269,33 @@
                       "return_home"
                     ]
                   }
+                },
+                {
+                  "type": "custom:battery-state-card",
+                  "secondary_info": "{attributes.battery_type_and_quantity}",
+                  "round": 0,
+                  "filter": {
+                    "include": [
+                      {
+                        "name": "entity_id",
+                        "value": "*_battery_plus"
+                      }
+                    ],
+                    "exclude": [
+                      {
+                        "name": "attributes.battery_low",
+                        "value": false
+                      }
+                    ]
+                  },
+                  "bulk_rename": [
+                    {
+                      "from": "Battery+"
+                    }
+                  ],
+                  "sort": [
+                    "state"
+                  ]
                 }
               ]
             },
@@ -2074,10 +2101,6 @@
               "entities": [
                 {
                   "type": "custom:numberbox-card",
-                  "entity": "input_number.scale_minimal_battery"
-                },
-                {
-                  "type": "custom:numberbox-card",
                   "entity": "input_number.scale_max_temp"
                 },
                 {
@@ -2115,7 +2138,7 @@
                       "icon": "mdi:motion-sensor",
                       "entities": [
                         "sensor.dd_na_kukhne_battery",
-                        "sensor.ble_dd_battery"
+                        "sensor.ble_battery_dd"
                       ]
                     },
                     {
@@ -2343,26 +2366,6 @@
                       "data": "last_seen",
                       "name": "Last seen",
                       "modify": "var dt = new Date(x); var d = parseInt((Date.now()-Date.parse(x)) / 86400000); var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24); var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60); hrs = (hrs < 10) ? \"0\" + hrs : hrs; min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec; isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
-                    },
-                    {
-                      "data": "battery_type",
-                      "name": "Battery type",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "battery_change",
-                      "name": "Battery changed",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "battery_change",
-                      "name": "Battery lifetime days",
-                      "modify": "var dt = new Date(x); var d = parseInt((Date.now()-Date.parse(x)) / 86400000); isFinite(dt) ? d + \" day(s)\" : \"\";\n"
-                    },
-                    {
-                      "data": "battery_change",
-                      "name": "Battery lifetime",
-                      "modify": "var dt = new Date(x); var m = parseInt(((Date.now()-Date.parse(x)) / 2635200000)); var d = parseInt(((Date.now()-Date.parse(x)) / 86400000) %30); m = (m < 1) ? \"\" + m : m; isFinite(dt) ? m + \" mon \" + d + \" day(s)\" : \"\";\n"
                     }
                   ]
                 },
@@ -2421,21 +2424,6 @@
                     {
                       "data": "last_packet_id",
                       "name": "Last packet ID"
-                    },
-                    {
-                      "data": "battery_type",
-                      "name": "Battery type",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "battery_change",
-                      "name": "Battery lifetime days",
-                      "modify": "var dt = new Date(x); var d = parseInt((Date.now()-Date.parse(x)) / 86400000); isFinite(dt) ? d + \" day(s)\" : \"\";\n"
-                    },
-                    {
-                      "data": "battery_change",
-                      "name": "Battery lifetime",
-                      "modify": "var dt = new Date(x); var m = parseInt(((Date.now()-Date.parse(x)) / 2635200000)); var d = parseInt(((Date.now()-Date.parse(x)) / 86400000) %30); m = (m < 1) ? \"\" + m : m; isFinite(dt) ? m + \" mon \" + d + \" day(s)\" : \"\";\n"
                     }
                   ]
                 },
@@ -2501,21 +2489,6 @@
                     {
                       "data": "state",
                       "name": "Battery level"
-                    },
-                    {
-                      "data": "battery_type",
-                      "name": "Battery type",
-                      "modify": "x+''"
-                    },
-                    {
-                      "data": "battery_change",
-                      "name": "Battery lifetime days",
-                      "modify": "var dt = new Date(x); var d = parseInt((Date.now()-Date.parse(x)) / 86400000); isFinite(dt) ? d + \" day(s)\" : \"\";\n"
-                    },
-                    {
-                      "data": "battery_change",
-                      "name": "Battery lifetime",
-                      "modify": "var dt = new Date(x); var m = parseInt(((Date.now()-Date.parse(x)) / 2635200000)); var d = parseInt(((Date.now()-Date.parse(x)) / 86400000) %30); m = (m < 1) ? \"\" + m : m; isFinite(dt) ? m + \" mon \" + d + \" day(s)\" : \"\";\n"
                     }
                   ]
                 }

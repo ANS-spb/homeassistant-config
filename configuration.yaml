@@ -28,34 +28,16 @@ template: !include_dir_merge_list template
 homeassistant:
   packages: !include_dir_named conf
   customize: !include customize.yaml
-  customize_glob: !include customize_glob.yaml
+#  customize_glob: !include customize_glob.yaml
   allowlist_external_dirs:
     - /config
     - /share/smartctl
-
-recorder:
-  commit_interval: 120
-  exclude:
-    domains:
-      - automation
-      - scene
-      - alarm_control_panel
-      - camera
-      - persistent_notification
-      - zone
-      - sun
-    entities:
-      - sensor.date_time
-      - sensor.time
-      - sensor.date_time_iso
-  include:
-    entities:
-      - automation.zvonok_v_domofon
 
 morph_numbers:
 start_time:
 powercalc:
 python_script:
+battery_notes:
 
 yeelight: !include yeelight.yaml
 

@@ -1,15 +1,3 @@
-- id: '1599946493930'
-  alias: Let's Encrypt Renewal
-  description: ''
-  trigger:
-  - at: 00:00:00
-    platform: time
-  condition: []
-  action:
-  - data:
-      addon: core_letsencrypt
-    service: hassio.addon_restart
-  mode: single
 - id: '1599947443054'
   alias: Hass Startup Notification
   description: ''
@@ -478,39 +466,6 @@
     data: {}
     target:
       entity_id: button.azur_cd_source
-  mode: single
-- id: '1610362570344'
-  alias: Notification Alert That Batteries Are Low (dynamic)
-  description: ''
-  trigger:
-  - at: '19:00:00'
-    platform: time
-  condition: []
-  action:
-  - service: group.set
-    data_template:
-      object_id: dyn_all_batteries
-      entities: '{{ states.sensor | selectattr("attributes.device_class", "eq", "battery")
-        | map(attribute="entity_id") | join(",") }}'
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: "{% set min_battery_level = states('input_number.scale_minimal_battery')
-          | int(0) -%} \n{% set ns = namespace(found=false) -%} \n{% for entity_id
-          in states.group.dyn_all_batteries.attributes.entity_id -%}\n  {% set parts
-          = entity_id.split('.') -%}\n  {% if (states(entity_id) | replace(\"%\",\"\")
-          | int(0)) < min_battery_level -%}\n    {% set ns.found = true -%}\n  {%
-          endif -%}\n{% endfor -%} {{ ns.found }}"
-      sequence:
-      - data_template:
-          message: "{%- set min_battery_level = states('input_number.scale_minimal_battery')
-            | int(0) -%}  {%- for entity_id in states.group.dyn_all_batteries.attributes.entity_id
-            -%}\n  {%- set parts = entity_id.split('.') -%}\n  {%- if (states(entity_id)
-            | replace(\"%\",\"\") | int(0)) < min_battery_level -%}\n    {{ states[parts[0]][parts[1]].name
-            }} is {{ states(entity_id) }}%{{ '\\n' }}\n  {%- endif -%}\n{%- endfor
-            -%}\n"
-        service: notify.mobile_app_iphone_ans
-    default: []
   mode: single
 - id: '1610373676864'
   alias: Кнопка в коридоре выключает всё
@@ -2469,7 +2424,7 @@
       message: "\U0001F3E0 ANS дома"
   - service: notify.mobile_app_iphone_ans
     data:
-      title: Выключить свет?
+      title: Включить свет?
       message: "\U0001F3DA️ Добро пожаловать домой! Не желаете ли включить свет?"
       data:
         push:
@@ -2495,3 +2450,130 @@
       entity_id:
       - script.welcome_home
   mode: single
+- id: '1707224574081'
+  alias: Battery Replaced
+  description: Battery Replaced
+  trigger:
+  - platform: event
+    event_type: battery_notes_battery_increased
+    event_data: {}
+    id: battery_increased
+  - platform: event
+    event_type: telegram_callback
+    event_data:
+      command: /battery_replaced
+    id: battery_replaced
+  - platform: event
+    event_type: telegram_callback
+    event_data:
+      command: /do_nothing
+    id: do_nothing
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - battery_increased
+      sequence:
+      - service: telegram_bot.send_message
+        data:
+          message: "\U0001F50B Процент батареи устройства {{ trigger.event.data.device_name
+            }} увеличился. Была ли замена батареи в этом устройстве?\n"
+          parse_mode: html
+          disable_notification: true
+          disable_web_page_preview: true
+          timeout: 500
+          inline_keyboard:
+          - ✅ Батарея заменена:/battery_replaced {{ trigger.event.data.device_id }},
+            ❌ Я ничего не трогал:/do_nothing
+          target:
+          - 116325704
+    - conditions:
+      - condition: trigger
+        id:
+        - battery_replaced
+      sequence:
+      - service: telegram_bot.answer_callback_query
+        data:
+          callback_query_id: '{{ trigger.event.data.id }}'
+          message: OK
+          show_alert: false
+      - service: telegram_bot.edit_message
+        data:
+          message_id: '{{ trigger.event.data.message.message_id }}'
+          chat_id: '{{ trigger.event.data.chat_id }}'
+          message: "\U0001F44C Записываем замену батарейки\n"
+          inline_keyboard:
+          - ✅ OK:/do_nothing
+      - service: battery_notes.set_battery_replaced
+        data:
+          device_id: '{{ trigger.event.data.args[0] }}'
+    - conditions:
+      - condition: trigger
+        id:
+        - do_nothing
+      sequence:
+      - service: telegram_bot.answer_callback_query
+        data:
+          callback_query_id: '{{ trigger.event.data.id }}'
+          message: OK
+          show_alert: false
+      - service: telegram_bot.delete_message
+        data:
+          message_id: '{{ trigger.event.data.message.message_id }}'
+          chat_id: '{{ trigger.event.data.chat_id }}'
+  mode: queued
+- id: '1707224788505'
+  alias: Battery Low Notification
+  description: Battery Low Notification with auto dismiss
+  trigger:
+  - platform: event
+    event_type: battery_notes_battery_threshold
+    event_data:
+      battery_low: true
+    id: low
+    alias: Battery went low
+  - platform: event
+    event_type: battery_notes_battery_threshold
+    event_data:
+      battery_low: false
+    id: high
+    alias: Battery went high
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - low
+      sequence:
+      - service: persistent_notification.create
+        data:
+          title: '{{ trigger.event.data.device_name }} Battery Low
+
+            '
+          notification_id: '{{ trigger.event.data.device_id }}'
+          message: 'The device has a battery level of {{ trigger.event.data.battery_level
+            }}% {{ ''\n'' -}} You need {{ trigger.event.data.battery_quantity }}x
+            {{ trigger.event.data.battery_type }}
+
+            '
+      - service: telegram_bot.send_message
+        metadata: {}
+        data:
+          target:
+          - 116325704
+          message: "\U0001FAAB Батарейка устройства {{ trigger.event.data.device_name
+            }} разрядилась до {{ trigger.event.data.battery_level }}% {{ '\\n' -}}
+            Нужно заменить {{ trigger.event.data.battery_quantity }}x {{ trigger.event.data.battery_type
+            }}\n"
+    - conditions:
+      - condition: trigger
+        id:
+        - high
+      sequence:
+      - service: persistent_notification.dismiss
+        data:
+          notification_id: '{{ trigger.event.data.device_id }}'
+  mode: queued
