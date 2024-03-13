@@ -1607,7 +1607,7 @@
         data: {}
         target:
           entity_id: light.hue_ambiance_candle_1
-      enabled: true
+      enabled: false
   mode: restart
 - id: '1656081690599'
   alias: Просмотр ТВ закончен
@@ -2479,7 +2479,8 @@
       - service: telegram_bot.send_message
         data:
           message: "\U0001F50B Процент батареи устройства {{ trigger.event.data.device_name
-            }} увеличился. Была ли замена батареи в этом устройстве?\n"
+            }} увеличился до {{ trigger.event.data.battery_level | int(0) }}% {{ '\\n'
+            -}} Была ли замена батареи в этом устройстве?\n"
           parse_mode: html
           disable_notification: true
           disable_web_page_preview: true
@@ -2555,8 +2556,8 @@
             '
           notification_id: '{{ trigger.event.data.device_id }}'
           message: 'The device has a battery level of {{ trigger.event.data.battery_level
-            }}% {{ ''\n'' -}} You need {{ trigger.event.data.battery_quantity }}x
-            {{ trigger.event.data.battery_type }}
+            | int(0) }}% {{ ''\n'' -}} You need {{ trigger.event.data.battery_quantity
+            }}x {{ trigger.event.data.battery_type }}
 
             '
       - service: telegram_bot.send_message
@@ -2565,9 +2566,9 @@
           target:
           - 116325704
           message: "\U0001FAAB Батарейка устройства {{ trigger.event.data.device_name
-            }} разрядилась до {{ trigger.event.data.battery_level }}% {{ '\\n' -}}
-            Нужно заменить {{ trigger.event.data.battery_quantity }}x {{ trigger.event.data.battery_type
-            }}\n"
+            }} разрядилась до {{ trigger.event.data.battery_level | int(0) }}% {{
+            '\\n' -}} Нужно заменить {{ trigger.event.data.battery_quantity }}x {{
+            trigger.event.data.battery_type }}\n"
     - conditions:
       - condition: trigger
         id:

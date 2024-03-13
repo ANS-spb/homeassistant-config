@@ -311,9 +311,19 @@
                   "type": "custom:weather-chart-card",
                   "entity": "weather.openweathermap",
                   "units": {
-                    "speed": "m/s"
+                    "speed": "m/s",
+                    "pressure": ""
                   },
-                  "icons": "/local/weather-icons/"
+                  "icons": "",
+                  "forecast": {
+                    "precipitation_type": "",
+                    "type": "hourly",
+                    "style": "style2"
+                  },
+                  "show_main": true,
+                  "animated_icons": true,
+                  "icon_style": "style1",
+                  "show_feels_like": true
                 },
                 {
                   "type": "entities",
@@ -430,33 +440,28 @@
                       "state": "off"
                     },
                     {
-                      "entity": "input_boolean.wakeup_homeoffice",
-                      "state": "off"
+                      "entity": "input_select.wakeup_time",
+                      "state": "Метро"
                     }
                   ],
                   "card": {
-                    "type": "vertical-stack",
-                    "cards": [
-                      {
-                        "type": "custom:time-picker-card",
-                        "entity": "input_datetime.wakeup_office_time",
-                        "hour_mode": 24,
-                        "hour_step": 1,
-                        "minute_step": 5,
-                        "second_step": 5,
-                        "name": "",
-                        "layout": {
-                          "embedded": false,
-                          "align_controls": "right",
-                          "name": "inside",
-                          "thin": true
-                        },
-                        "hide": {
-                          "name": false
-                        },
-                        "link_values": false
-                      }
-                    ]
+                    "type": "custom:time-picker-card",
+                    "entity": "input_datetime.wakeup_office_time",
+                    "hour_mode": 24,
+                    "hour_step": 1,
+                    "minute_step": 5,
+                    "second_step": 5,
+                    "name": "",
+                    "layout": {
+                      "embedded": false,
+                      "align_controls": "right",
+                      "name": "inside",
+                      "thin": true
+                    },
+                    "hide": {
+                      "name": false
+                    },
+                    "link_values": false
                   }
                 },
                 {
@@ -471,31 +476,127 @@
                       "state": "off"
                     },
                     {
-                      "entity": "input_boolean.wakeup_homeoffice",
+                      "entity": "input_select.wakeup_time",
+                      "state": "Машина"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:time-picker-card",
+                    "entity": "input_datetime.wakeup_office_car_time",
+                    "hour_mode": 24,
+                    "hour_step": 1,
+                    "minute_step": 5,
+                    "second_step": 5,
+                    "name": "",
+                    "layout": {
+                      "embedded": false,
+                      "align_controls": "right",
+                      "name": "inside",
+                      "thin": true
+                    },
+                    "hide": {
+                      "name": false
+                    },
+                    "link_values": false
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "input_boolean.wakeup_enabled",
+                      "state": "on"
+                    },
+                    {
+                      "entity": "input_boolean.wakeup_disabled",
+                      "state": "off"
+                    },
+                    {
+                      "entity": "input_select.wakeup_time",
+                      "state": "Сидим дома"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:time-picker-card",
+                    "entity": "input_datetime.wakeup_homeoffice_time",
+                    "hour_mode": 24,
+                    "hour_step": 1,
+                    "minute_step": 5,
+                    "second_step": 5,
+                    "name": "",
+                    "layout": {
+                      "embedded": false,
+                      "align_controls": "right",
+                      "name": "inside",
+                      "thin": true
+                    },
+                    "hide": {
+                      "name": false
+                    },
+                    "link_values": false
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "input_boolean.wakeup_enabled",
                       "state": "on"
                     }
                   ],
                   "card": {
-                    "type": "vertical-stack",
+                    "type": "horizontal-stack",
                     "cards": [
                       {
-                        "type": "custom:time-picker-card",
-                        "entity": "input_datetime.wakeup_homeoffice_time",
-                        "hour_mode": 24,
-                        "hour_step": 1,
-                        "minute_step": 5,
-                        "second_step": 5,
-                        "name": "",
-                        "layout": {
-                          "embedded": false,
-                          "align_controls": "right",
-                          "name": "inside",
-                          "thin": true
-                        },
-                        "hide": {
-                          "name": false
-                        },
-                        "link_values": false
+                        "type": "custom:mushroom-template-card",
+                        "entity": "input_select.wakeup_time",
+                        "icon": "mdi:train",
+                        "icon_color": "{{iif(states(entity) == 'Метро', 'yellow', 'gray')}}",
+                        "primary": "Метро",
+                        "tap_action": {
+                          "action": "call-service",
+                          "service": "input_select.select_option",
+                          "service_data": {
+                            "option": "Метро"
+                          },
+                          "target": {
+                            "entity_id": "input_select.wakeup_time"
+                          }
+                        }
+                      },
+                      {
+                        "type": "custom:mushroom-template-card",
+                        "entity": "input_select.wakeup_time",
+                        "icon": "mdi:car",
+                        "icon_color": "{{iif(states(entity) == 'Машина', 'yellow', 'gray')}}",
+                        "primary": "Машина",
+                        "tap_action": {
+                          "action": "call-service",
+                          "service": "input_select.select_option",
+                          "service_data": {
+                            "option": "Машина"
+                          },
+                          "target": {
+                            "entity_id": "input_select.wakeup_time"
+                          }
+                        }
+                      },
+                      {
+                        "type": "custom:mushroom-template-card",
+                        "entity": "input_select.wakeup_time",
+                        "icon": "mdi:home",
+                        "icon_color": "{{iif(states(entity) == 'Сидим дома', 'yellow', 'gray')}}",
+                        "primary": "Дома",
+                        "tap_action": {
+                          "action": "call-service",
+                          "service": "input_select.select_option",
+                          "service_data": {
+                            "option": "Сидим дома"
+                          },
+                          "target": {
+                            "entity_id": "input_select.wakeup_time"
+                          }
+                        }
                       }
                     ]
                   }
@@ -533,9 +634,6 @@
                   "entities": [
                     {
                       "entity": "input_boolean.wakeup_enabled"
-                    },
-                    {
-                      "entity": "input_boolean.wakeup_homeoffice"
                     },
                     {
                       "entity": "input_boolean.wakeup_weekend"
@@ -610,23 +708,34 @@
                           "entity": "light.torsher_2",
                           "slider": {
                             "direction": "left-right",
-                            "background": "solid",
+                            "background": "gradient",
                             "force_square": false,
-                            "show_track": false
+                            "show_track": false,
+                            "use_state_color": false,
+                            "use_percentage_bg_opacity": true
                           },
                           "action_button": {
                             "mode": "toggle",
                             "show": true
                           },
-                          "compact": false
+                          "compact": false,
+                          "show_state": true,
+                          "show_name": true,
+                          "icon": {
+                            "use_state_color": true,
+                            "show": true
+                          }
                         },
                         {
                           "type": "custom:slider-button-card",
                           "entity": "light.torsherchik",
                           "slider": {
                             "direction": "left-right",
-                            "background": "solid",
-                            "force_square": false
+                            "background": "gradient",
+                            "force_square": false,
+                            "use_percentage_bg_opacity": true,
+                            "use_state_color": false,
+                            "show_track": false
                           },
                           "action_button": {
                             "mode": "toggle",
@@ -640,7 +749,17 @@
                             "show": true,
                             "mode": "toggle"
                           },
-                          "compact": false
+                          "compact": false,
+                          "slider": {
+                            "use_percentage_bg_opacity": true,
+                            "use_state_color": false,
+                            "direction": "left-right",
+                            "background": "gradient"
+                          },
+                          "icon": {
+                            "use_state_color": true,
+                            "show": true
+                          }
                         }
                       ]
                     },
@@ -654,7 +773,8 @@
                           "entity": "light.liustra",
                           "slider": {
                             "direction": "left-right",
-                            "background": "solid"
+                            "background": "gradient",
+                            "use_percentage_bg_opacity": true
                           },
                           "action_button": {
                             "mode": "toggle",
@@ -666,7 +786,8 @@
                           "entity": "light.wled",
                           "slider": {
                             "direction": "left-right",
-                            "background": "solid"
+                            "background": "gradient",
+                            "use_percentage_bg_opacity": true
                           },
                           "action_button": {
                             "mode": "toggle",
@@ -678,7 +799,8 @@
                           "entity": "light.wled_2",
                           "slider": {
                             "direction": "left-right",
-                            "background": "solid"
+                            "background": "gradient",
+                            "use_percentage_bg_opacity": true
                           },
                           "action_button": {
                             "mode": "toggle",
@@ -2324,6 +2446,51 @@
               "cards": [
                 {
                   "type": "markdown",
+                  "content": "### <center> Batteries </center>"
+                },
+                {
+                  "type": "custom:flex-table-card",
+                  "clickable": false,
+                  "entities": {
+                    "include": [
+                      "sensor.*_battery_plus"
+                    ]
+                  },
+                  "sort_by": "friendly_name",
+                  "columns": [
+                    {
+                      "data": "icon",
+                      "name": " ",
+                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:battery-medium\" + \"\\\"></ha-icon>\""
+                    },
+                    {
+                      "data": "friendly_name",
+                      "name": "Friendly Name",
+                      "modify": "x.replace(\"Battery+\",\"\").replace(\"+\",\"\")"
+                    },
+                    {
+                      "data": "state",
+                      "name": "Battery Level",
+                      "modify": "parseInt(x) + \"%\""
+                    },
+                    {
+                      "data": "battery_type_and_quantity",
+                      "name": "Battery Type"
+                    },
+                    {
+                      "data": "battery_last_replaced",
+                      "name": "Battery Life",
+                      "modify": "var dt = new Date(x); var m = parseInt(((Date.now()-Date.parse(x)) / 2635200000)); var d = parseInt(((Date.now()-Date.parse(x)) / 86400000) %30); m = (m < 1) ? \"\" + m : m; isFinite(dt) ? m + \" mon \" + d + \" day(s)\" : \"\";\n"
+                    },
+                    {
+                      "data": "voltage",
+                      "name": "Voltage",
+                      "modify": "isNaN(parseInt(x, 10)) ? \"--\" : parseInt(x, 10)/1000"
+                    }
+                  ]
+                },
+                {
+                  "type": "markdown",
                   "content": "### <center> ZigBee2MQTT </center>"
                 },
                 {
@@ -2459,36 +2626,6 @@
                       "data": "state",
                       "name": "State",
                       "modify": "x.replace(/connectivity_issue$/,\"⚠️\")"
-                    }
-                  ]
-                },
-                {
-                  "type": "custom:flex-table-card",
-                  "clickable": false,
-                  "entities": {
-                    "include": [
-                      "sensor.hue_*_battery_level"
-                    ]
-                  },
-                  "sort_by": "friendly_name-",
-                  "columns": [
-                    {
-                      "data": "icon",
-                      "name": " ",
-                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:zigbee\" + \"\\\"></ha-icon>\""
-                    },
-                    {
-                      "data": "friendly_name",
-                      "name": "Friendly Name",
-                      "modify": "x.replace(/ Battery$/,\"\")"
-                    },
-                    {
-                      "data": "battery_state",
-                      "name": "Battery state"
-                    },
-                    {
-                      "data": "state",
-                      "name": "Battery level"
                     }
                   ]
                 }

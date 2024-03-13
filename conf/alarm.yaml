@@ -15,26 +15,41 @@ input_boolean:
 
   sleep_enabled:
     name: "Вечерний свет"
-    initial: on
+#    initial: on
     icon: mdi:weather-night
 
   wakeup_disabled:
     name: "У меня отпуск"
     icon: mdi:emoticon-cool-outline
 
-  wakeup_homeoffice:
-    name: "На удалёнке"
-    icon: mdi:home-map-marker
+#  wakeup_homeoffice:
+#    name: "На удалёнке"
+#    icon: mdi:home-map-marker
+
+input_select:
+
+  wakeup_time:
+    name: "Как едем на работу?"
+    options:
+      - Метро
+      - Машина
+      - Сидим дома
+    icon: mdi:bus
 
 input_datetime:
 
   wakeup_office_time:
-    name: "Время пробуждения на работу"
+    name: "На работу в офис (метро)"
+    has_time: true
+    has_date: false
+
+  wakeup_office_car_time:
+    name: "На работу в офис (прицепом)"
     has_time: true
     has_date: false
 
   wakeup_homeoffice_time:
-    name: "Время пробуждения на удалёнку"
+    name: "На удалёнке"
     has_time: true
     has_date: false
 
@@ -65,9 +80,42 @@ automation:
       - condition: state
         entity_id: binary_sensor.workday
         state: "on"
+#      - condition: state
+#        entity_id: input_boolean.wakeup_homeoffice
+#        state: "off"
       - condition: state
-        entity_id: input_boolean.wakeup_homeoffice
+        entity_id: input_select.wakeup_time
+        state: "Метро"
+    action:
+      - choose:
+          - conditions:
+              - condition: numeric_state
+                entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+                below: "10"
+            sequence:
+              - service: script.wakeup_bedroom
+                data: {}
+        default: []
+    mode: single
+
+  - id: light_wakeup_office_car
+    alias: Световой будильник на работу прицепом
+    trigger:
+      - platform: time
+        at: input_datetime.wakeup_office_car_time
+    condition:
+      - condition: state
+        entity_id: input_boolean.wakeup_enabled
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.wakeup_disabled
         state: "off"
+      - condition: state
+        entity_id: binary_sensor.workday
+        state: "on"
+      - condition: state
+        entity_id: input_select.wakeup_time
+        state: "Машина"
     action:
       - choose:
           - conditions:
@@ -95,9 +143,12 @@ automation:
       - condition: state
         entity_id: binary_sensor.workday
         state: "on"
+#      - condition: state
+#        entity_id: input_boolean.wakeup_homeoffice
+#        state: "on"
       - condition: state
-        entity_id: input_boolean.wakeup_homeoffice
-        state: "on"
+        entity_id: input_select.wakeup_time
+        state: "Сидим дома"
     action:
       - choose:
           - conditions:
