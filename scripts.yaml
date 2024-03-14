@@ -78,7 +78,7 @@ wakeup_bedroom:
     - conditions:
       - condition: numeric_state
         entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
-        above: 15
+        above: 0
       sequence:
       - condition: numeric_state
         entity_id: cover.shtora

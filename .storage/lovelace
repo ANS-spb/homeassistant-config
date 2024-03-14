@@ -553,6 +553,7 @@
                         "icon": "mdi:train",
                         "icon_color": "{{iif(states(entity) == 'Метро', 'yellow', 'gray')}}",
                         "primary": "Метро",
+                        "fill_container": true,
                         "tap_action": {
                           "action": "call-service",
                           "service": "input_select.select_option",
@@ -570,6 +571,7 @@
                         "icon": "mdi:car",
                         "icon_color": "{{iif(states(entity) == 'Машина', 'yellow', 'gray')}}",
                         "primary": "Машина",
+                        "fill_container": true,
                         "tap_action": {
                           "action": "call-service",
                           "service": "input_select.select_option",
@@ -587,6 +589,7 @@
                         "icon": "mdi:home",
                         "icon_color": "{{iif(states(entity) == 'Сидим дома', 'yellow', 'gray')}}",
                         "primary": "Дома",
+                        "fill_container": true,
                         "tap_action": {
                           "action": "call-service",
                           "service": "input_select.select_option",
@@ -639,7 +642,7 @@
                       "entity": "input_boolean.wakeup_weekend"
                     },
                     {
-                      "entity": "sensor.daytime"
+                      "entity": "binary_sensor.dnevnoe_vremia"
                     },
                     {
                       "entity": "binary_sensor.workday"

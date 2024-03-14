@@ -1,0 +1,30 @@
+#######################################
+# Сенсор дня и ночи для автоматизаций #
+#######################################
+
+- binary_sensor:
+    - name: "Дневное время"
+      icon: mdi:sun-clock-outline
+      state: >-
+        {% set state = states('sensor.time') %}
+        {% if states('binary_sensor.workday_sensor') %}
+          {% if states('input_select.wakeup_time') == 'Метро' %}
+            {% set morning = states('input_datetime.wakeup_office_time') [0:5] %}
+          {% elif states('input_select.wakeup_time') == 'Машина' %}
+            {% set morning = states('input_datetime.wakeup_office_car_time_time') [0:5] %}
+          {% elif states('input_select.wakeup_time') == 'Сидим дома' %}
+            {% set morning = states('input_datetime.wakeup_homeoffice_time') [0:5] %}
+          {% endif %}
+        {% else %}
+          {% set morning = '12:00' %}
+        {% endif %}
+        {% if states('input_datetime.sleep_time') [0:5] < '12:00' %}
+          {% set evening = '24:00' %}
+        {% else %}
+          {% set evening = states('input_datetime.sleep_time') [0:5] %}
+        {% endif %}
+        {% if morning < state < evening %}
+          on
+        {% else %}
+          off
+        {% endif %}

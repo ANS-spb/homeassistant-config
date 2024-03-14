@@ -1,0 +1,19 @@
+#######################################
+#  Сенсоры дня и ночи (для графиков)  #
+#######################################
+
+- platform: template
+
+  sensors:
+
+    mini_graph_day_pct:
+      friendly_name: "День (Процент)"
+      value_template: "{{ 100 if is_state('sun.sun', 'above_horizon') else 0 }}"
+      availability_template: "{{ states('sun.sun') not in ['unknown', 'unavailable'] }}"
+      icon_template: mdi:theme-light-dar
+
+    mini_graph_night_pct:
+      friendly_name: "Ночь (Процент)"
+      value_template: "{{ 0 if is_state('sun.sun', 'above_horizon') else 100 }}"
+      availability_template: "{{ states('sun.sun') not in ['unknown', 'unavailable'] }}"
+      icon_template: mdi:theme-light-dark
