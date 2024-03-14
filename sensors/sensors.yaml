@@ -1,6 +1,6 @@
-###################################
-# Вспомогательные сенсоры разные  #
-###################################
+#######################################
+#   Вспомогательные сенсоры разные    #
+#######################################
 
 - platform: min_max
   type: mean
@@ -25,27 +25,3 @@
   state_characteristic: value_min
   max_age:
     hours: 24
-
-- platform: statistics
-  entity_id: sensor.pressure_average
-  name: pressure
-  state_characteristic: mean
-  max_age:
-    minutes: 10
-  sampling_size: 200
-
-- platform: statistics
-  entity_id: sensor.pressure_average
-  name: pressure_change_3h
-  state_characteristic: change
-  max_age:
-    hours: 3
-  sampling_size: 200
-
-- platform: statistics
-  entity_id: sensor.pressure_average
-  name: pressure_change_6h
-  state_characteristic: change
-  max_age:
-    hours: 6
-  sampling_size: 200

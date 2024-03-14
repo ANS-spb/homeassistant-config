@@ -91,7 +91,7 @@ button:
           command: 0x00
   
   - platform: template
-    name: "Azur VOL+"
+    name: "Azur VOL UP"
     on_press:
       - remote_transmitter.transmit_rc5:
           transmitter_id: azur
@@ -99,7 +99,7 @@ button:
           command: 0x10
   
   - platform: template
-    name: "Azur VOL-"
+    name: "Azur VOL DOWN"
     on_press:
       - remote_transmitter.transmit_rc5:
           transmitter_id: azur

@@ -1,0 +1,205 @@
+#######################################
+#    Сенсор погоды барометрический    #
+#            (спёр у Димы)            #
+#######################################
+
+binary_sensor:
+
+  - platform: trend
+    sensors:
+
+      pressure_rising_fast:
+        entity_id: sensor.pressure_average
+        friendly_name: Pressure Rising Fast
+        sample_duration: 3600
+        max_samples: 10
+        min_gradient: 0.00027777777778
+        
+      pressure_rising_slow:
+        entity_id: sensor.pressure_average
+        friendly_name: Pressure Rising Slow
+        sample_duration: 3600
+        max_samples: 10
+        min_gradient: 0.00013888888889
+        
+      pressure_falling_fast:
+        entity_id: sensor.pressure_average
+        friendly_name: Pressure Falling Fast
+        sample_duration: 3600
+        max_samples: 10
+        min_gradient: -0.00027777777778
+        
+      pressure_falling_slow:
+        entity_id: sensor.pressure_average
+        friendly_name: Pressure Falling Slow
+        sample_duration: 3600
+        max_samples: 10
+        min_gradient: -0.00013888888889
+      
+      temp_falling:
+        entity_id: sensor.lodzhiia_temperature
+        sample_duration: 7200
+        min_gradient: -0.0008
+        max_samples: 10
+        device_class: cold
+
+      temp_rising:
+        entity_id: sensor.lodzhiia_temperature
+        sample_duration: 7200
+        min_gradient: 0.0008
+        max_samples: 10
+        device_class: heat
+
+sensor:
+
+  - platform: statistics
+    entity_id: sensor.pressure_average
+    name: pressure
+    state_characteristic: mean
+    max_age:
+      minutes: 10
+    sampling_size: 200
+
+  - platform: statistics
+    entity_id: sensor.pressure_average
+    name: pressure_change_3h
+    state_characteristic: change
+    max_age:
+      hours: 3
+    sampling_size: 200
+
+  - platform: statistics
+    entity_id: sensor.pressure_average
+    name: pressure_change_6h
+    state_characteristic: change
+    max_age:
+      hours: 6
+    sampling_size: 200
+
+template:
+
+  - sensor:
+
+      - name: Pressure Gradient
+        state: >-
+          {% set result = ((state_attr('binary_sensor.pressure_falling_fast','gradient')|float(0) * 3600*100)|float(0))|round(1, 'common') %}
+          {% if result > 500 %}500
+          {% elif result < -500 %}-500
+          {%else%}{{result}}
+          {%endif%}
+        icon: mdi:chart-line-variant
+        unit_of_measurement: "Pah"
+
+      - name: Pressure Indicator
+        state: >
+          {% if is_state('binary_sensor.pressure_falling_fast','on')%} Falling Fast
+          {% elif is_state('binary_sensor.pressure_falling_slow','on') and is_state('binary_sensor.pressure_falling_slow','off')%} Falling Slow
+          {% elif is_state('binary_sensor.pressure_rising_fast','on')%} Rising Fast
+          {% elif is_state('binary_sensor.pressure_rising_slow','on') and is_state('binary_sensor.pressure_rising_fast','off') %} Rising Slow
+          {% else %} Stable
+          {% endif %}
+        icon: >
+          {% if is_state('binary_sensor.pressure_falling_fast','on')%} mdi:chevron-triple-down
+          {% elif is_state('binary_sensor.pressure_falling_slow','on') and is_state('binary_sensor.pressure_falling_slow','off') %} mdi:chevron-down
+          {% elif is_state('binary_sensor.pressure_rising_fast','on')%} mdi:chevron-triple-up
+          {% elif is_state('binary_sensor.pressure_rising_slow','on') and is_state('binary_sensor.pressure_rising_fast','off') %} mdi:chevron-up
+          {% else %} mdi:checkbox-blank-circle-outline
+          {% endif %}
+      # 0 Rising Very Rapidly = 3 hPa change or more per hour.
+      # 1 Rising Rapidly = 1.4 hPa change or more per hour.
+      # 2 Rising Slowly = 0.7 to less than 1.4 hPa change per hour.
+      # 3 Normal (Steady) = Between 0.7 and -0.7 hPa change per hour.
+      # 4 Falling Slowly = -0.7 up to -1.4 hPa change per hour.
+      # 5 Falling Rapidly = -1.4 hPa change or more per hour.
+      # 6 Falling Very Rapidly = -3 hPa change or more per hour.
+      - name: Pressure Weather Forecast
+        state: >-
+          {% set diff = states('sensor.pressure_change_3h') | float(0) %}
+          {% set press = states('sensor.pressure_average') | float(0) %}
+          {% set tempr = state_attr('weather.openweathermap','temperature') | int(0) %}
+          {% if press > 1022.689 %}
+            {% if diff <= -1.4 %}
+              Пасмурно
+            {% else %}
+              Ясно
+            {% endif %}
+          {% elif press < 1009.144 %}
+            {% if diff <= -5 %}
+              Шторм
+            {% elif diff <= -0.7 %}
+              {% if tempr | int(0) < -5 %}
+                Снег
+              {% else %}
+                Осадки
+              {% endif %}
+            {% else %}
+              {% if tempr | int(0) < -10 %}
+                Ясно, очень холодно
+              {% elif tempr | int(0) < 0 %}
+                Ясно, холодно
+              {% elif tempr | int(0) < 20 %}
+                Ясно, прохладно
+              {% else %}
+                Ясно
+              {% endif %}
+            {% endif %}
+          {% else %}
+            {% if diff <= -1.4 %}
+              {% if tempr | int(0) < -5 %}
+                Снег
+              {% else %}
+                Осадки
+              {% endif %}
+            {% elif diff <= -0.7 %}
+              Пасмурно
+            {% else %}
+              Без перемен
+            {% endif %}
+          {% endif %}
+        icon: >-
+          {% set diff = states('sensor.pressure_change_3h') | float(0) %}
+          {% set press = states('sensor.pressure_average') | float(0) %}
+          {% set tempr = state_attr('weather.openweathermap','temperature') | int(0) %}
+          {%- if press > 1022.689 -%}
+            {%- if diff <= -1.4 -%}
+              mdi:weather-partly-cloudy
+            {%- else -%}
+              mdi:weather-sunny
+            {%- endif -%}
+          {%- elif press < 1009.144 -%}
+            {%- if diff <= -5 -%}
+              mdi:weather-tornado
+            {%- elif diff <= -0.7 -%}
+              {% if tempr | int(0) < -5 %}
+                mdi:weather-snowy
+              {% elif tempr | int(0) < 0 %}
+                mdi:weather-snowy-rainy
+              {% else %}
+                mdi:weather-pouring
+              {% endif %}
+            {%- else -%}
+              {% if tempr | int(0) < -10 %}
+                mdi:thermometer-alert
+              {% elif tempr | int(0) < 0 %}
+                mdi:thermometer-low
+              {% elif tempr | int(0) < 20 %}
+                mdi:weather-sunny
+              {% else %}
+                mdi:weather-sunny
+              {% endif %}
+            {%- endif -%}
+          {%- else -%}
+            {%- if diff <= -1.4 -%}
+              {% if tempr | int(0) < -5 %}
+                mdi:weather-snowy
+              {% elif tempr | int(0) < 0 %}
+                mdi:weather-snowy-rainy
+              {% else %}
+                mdi:weather-pouring
+              {% endif %}
+            {%- elif diff <= -0.7 -%}
+              mdi:weather-partly-cloudy
+            {%- else -%}
+              mdi:ship-wheel
+            {%- endif -%}
+          {%- endif -%}

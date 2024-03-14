@@ -1,6 +1,6 @@
-###################################
-#     MQTT Sensors Discovery      #
-###################################
+#######################################
+#       MQTT Sensors Discovery        #
+#######################################
 
 - id: mqtt_sensors_discovery  
   alias: mqtt_sensors_discovery
