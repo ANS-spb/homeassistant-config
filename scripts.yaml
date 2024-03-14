@@ -98,6 +98,18 @@ wakeup_bedroom:
         target:
           entity_id: cover.shtora
     default: []
+    alias: Открыть штору, если есть свет снаружи
+  - alias: Проверяем, не дома ли просыпаемся
+    condition: not
+    conditions:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: input_select.wakeup_time
+        state: Сидим дома
+      - condition: state
+        entity_id: binary_sensor.workday
+        state: 'off'
   - delay:
       hours: 0
       minutes: 0
