@@ -61,8 +61,8 @@
                       "tap_action": {
                         "action": "toggle"
                       },
-                      "entity": "script.1638995744105",
-                      "name": "Эффект"
+                      "entity": "script.light_tosleep",
+                      "name": "Ночной"
                     }
                   ]
                 },
@@ -689,227 +689,210 @@
           ]
         },
         {
-          "theme": "macOS Theme",
+          "type": "sections",
           "title": "Свет",
           "path": "light",
-          "icon": "mdi:lightbulb-on-outline",
-          "badges": [],
-          "cards": [
+          "sections": [
             {
-              "type": "vertical-stack",
+              "type": "grid",
               "cards": [
                 {
-                  "type": "vertical-stack",
+                  "square": false,
+                  "columns": 3,
+                  "type": "grid",
                   "cards": [
                     {
-                      "square": false,
-                      "columns": 3,
-                      "type": "grid",
-                      "cards": [
-                        {
-                          "type": "custom:slider-button-card",
-                          "entity": "light.torsher_2",
-                          "slider": {
-                            "direction": "left-right",
-                            "background": "gradient",
-                            "force_square": false,
-                            "show_track": false,
-                            "use_state_color": false,
-                            "use_percentage_bg_opacity": true
-                          },
-                          "action_button": {
-                            "mode": "toggle",
-                            "show": true
-                          },
-                          "compact": false,
-                          "show_state": true,
-                          "show_name": true,
-                          "icon": {
-                            "use_state_color": true,
-                            "show": true
-                          }
-                        },
-                        {
-                          "type": "custom:slider-button-card",
-                          "entity": "light.torsherchik",
-                          "slider": {
-                            "direction": "left-right",
-                            "background": "gradient",
-                            "force_square": false,
-                            "use_percentage_bg_opacity": true,
-                            "use_state_color": false,
-                            "show_track": false
-                          },
-                          "action_button": {
-                            "mode": "toggle",
-                            "show": true
-                          }
-                        },
-                        {
-                          "type": "custom:slider-button-card",
-                          "entity": "light.living_room",
-                          "action_button": {
-                            "show": true,
-                            "mode": "toggle"
-                          },
-                          "compact": false,
-                          "slider": {
-                            "use_percentage_bg_opacity": true,
-                            "use_state_color": false,
-                            "direction": "left-right",
-                            "background": "gradient"
-                          },
-                          "icon": {
-                            "use_state_color": true,
-                            "show": true
-                          }
-                        }
-                      ]
+                      "type": "custom:slider-button-card",
+                      "entity": "light.torsher_2",
+                      "slider": {
+                        "direction": "left-right",
+                        "background": "gradient",
+                        "force_square": false,
+                        "show_track": false,
+                        "use_state_color": false,
+                        "use_percentage_bg_opacity": true
+                      },
+                      "action_button": {
+                        "mode": "toggle",
+                        "show": true
+                      },
+                      "compact": false,
+                      "show_state": true,
+                      "show_name": true,
+                      "icon": {
+                        "use_state_color": true,
+                        "show": true
+                      }
                     },
                     {
-                      "square": false,
-                      "columns": 3,
-                      "type": "grid",
-                      "cards": [
-                        {
-                          "type": "custom:slider-button-card",
-                          "entity": "light.liustra",
-                          "slider": {
-                            "direction": "left-right",
-                            "background": "gradient",
-                            "use_percentage_bg_opacity": true
-                          },
-                          "action_button": {
-                            "mode": "toggle",
-                            "show": true
-                          }
-                        },
-                        {
-                          "type": "custom:slider-button-card",
-                          "entity": "light.wled",
-                          "slider": {
-                            "direction": "left-right",
-                            "background": "gradient",
-                            "use_percentage_bg_opacity": true
-                          },
-                          "action_button": {
-                            "mode": "toggle",
-                            "show": true
-                          }
-                        },
-                        {
-                          "type": "custom:slider-button-card",
-                          "entity": "light.wled_2",
-                          "slider": {
-                            "direction": "left-right",
-                            "background": "gradient",
-                            "use_percentage_bg_opacity": true
-                          },
-                          "action_button": {
-                            "mode": "toggle",
-                            "show": true
-                          }
-                        }
-                      ]
+                      "type": "custom:slider-button-card",
+                      "entity": "light.torsherchik",
+                      "slider": {
+                        "direction": "left-right",
+                        "background": "gradient",
+                        "force_square": false,
+                        "use_percentage_bg_opacity": true,
+                        "use_state_color": false,
+                        "show_track": false
+                      },
+                      "action_button": {
+                        "mode": "toggle",
+                        "show": true
+                      }
                     },
                     {
-                      "square": false,
-                      "columns": 4,
-                      "type": "grid",
-                      "cards": [
-                        {
-                          "show_name": false,
-                          "show_icon": true,
-                          "type": "button",
-                          "tap_action": {
-                            "action": "toggle"
-                          },
-                          "entity": "script.1599944056170"
-                        },
-                        {
-                          "show_name": false,
-                          "show_icon": true,
-                          "type": "button",
-                          "tap_action": {
-                            "action": "toggle"
-                          },
-                          "entity": "script.light_tosleep",
-                          "name": "Вечерний свет "
-                        },
-                        {
-                          "show_name": false,
-                          "show_icon": true,
-                          "type": "button",
-                          "tap_action": {
-                            "action": "toggle"
-                          },
-                          "entity": "script.1638995744105",
-                          "name": "Эффект ленты"
-                        },
-                        {
-                          "show_name": false,
-                          "show_icon": true,
-                          "icon": "mdi:led-strip-variant-off",
-                          "type": "button",
-                          "tap_action": {
-                            "action": "toggle"
-                          },
-                          "entity": "script.wled_static_effect",
-                          "name": "Гирлянда, не моргай"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "entities",
-                      "entities": [
-                        {
-                          "entity": "input_boolean.manual_light_off"
-                        },
-                        {
-                          "entity": "switch.rozetka"
-                        },
-                        {
-                          "entity": "input_button.rassvet"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "vertical-stack",
-              "cards": [
-                {
-                  "type": "vertical-stack",
-                  "cards": [
-                    {
-                      "type": "conditional",
-                      "conditions": [
-                        {
-                          "entity": "light.prikhozhaia",
-                          "state_not": "unavailable"
-                        }
-                      ],
-                      "card": {
-                        "type": "custom:slider-button-card",
-                        "entity": "light.prikhozhaia",
-                        "slider": {
-                          "direction": "left-right",
-                          "background": "solid"
-                        },
-                        "action_button": {
-                          "mode": "toggle"
-                        }
+                      "type": "custom:slider-button-card",
+                      "entity": "light.living_room",
+                      "action_button": {
+                        "show": true,
+                        "mode": "toggle"
+                      },
+                      "compact": false,
+                      "slider": {
+                        "use_percentage_bg_opacity": true,
+                        "use_state_color": false,
+                        "direction": "left-right",
+                        "background": "gradient"
+                      },
+                      "icon": {
+                        "use_state_color": true,
+                        "show": true
                       }
                     }
                   ]
+                },
+                {
+                  "square": false,
+                  "columns": 3,
+                  "type": "grid",
+                  "cards": [
+                    {
+                      "type": "custom:slider-button-card",
+                      "entity": "light.liustra",
+                      "slider": {
+                        "direction": "left-right",
+                        "background": "gradient",
+                        "use_percentage_bg_opacity": true
+                      },
+                      "action_button": {
+                        "mode": "toggle",
+                        "show": true
+                      }
+                    },
+                    {
+                      "type": "custom:slider-button-card",
+                      "entity": "light.wled",
+                      "slider": {
+                        "direction": "left-right",
+                        "background": "gradient",
+                        "use_percentage_bg_opacity": true
+                      },
+                      "action_button": {
+                        "mode": "toggle",
+                        "show": true
+                      }
+                    },
+                    {
+                      "type": "custom:slider-button-card",
+                      "entity": "light.wled_2",
+                      "slider": {
+                        "direction": "left-right",
+                        "background": "gradient",
+                        "use_percentage_bg_opacity": true
+                      },
+                      "action_button": {
+                        "mode": "toggle",
+                        "show": true
+                      }
+                    }
+                  ]
+                },
+                {
+                  "square": false,
+                  "columns": 4,
+                  "type": "grid",
+                  "cards": [
+                    {
+                      "show_name": false,
+                      "show_icon": true,
+                      "type": "button",
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "entity": "script.1599944056170"
+                    },
+                    {
+                      "show_name": false,
+                      "show_icon": true,
+                      "type": "button",
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "entity": "script.light_tosleep",
+                      "name": "Вечерний свет "
+                    },
+                    {
+                      "show_name": false,
+                      "show_icon": true,
+                      "type": "button",
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "entity": "script.1638995744105",
+                      "name": "Эффект ленты"
+                    },
+                    {
+                      "show_name": false,
+                      "show_icon": true,
+                      "icon": "mdi:led-strip-variant-off",
+                      "type": "button",
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "entity": "script.wled_static_effect",
+                      "name": "Гирлянда, не моргай"
+                    }
+                  ]
+                },
+                {
+                  "type": "entities",
+                  "entities": [
+                    {
+                      "entity": "input_boolean.manual_light_off"
+                    },
+                    {
+                      "entity": "switch.rozetka"
+                    },
+                    {
+                      "entity": "input_button.rassvet"
+                    }
+                  ]
                 }
               ]
             },
             {
-              "type": "vertical-stack",
+              "type": "grid",
               "cards": [
+                {
+                  "type": "conditional",
+                  "conditions": [
+                    {
+                      "entity": "light.prikhozhaia",
+                      "state_not": "unavailable"
+                    }
+                  ],
+                  "card": {
+                    "type": "custom:slider-button-card",
+                    "entity": "light.prikhozhaia",
+                    "slider": {
+                      "direction": "left-right",
+                      "background": "solid"
+                    },
+                    "action_button": {
+                      "mode": "toggle"
+                    }
+                  }
+                },
                 {
                   "type": "horizontal-stack",
                   "cards": [
@@ -945,12 +928,7 @@
                       }
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "vertical-stack",
-              "cards": [
+                },
                 {
                   "type": "tile",
                   "entity": "group.dyn_all_lights",
@@ -962,7 +940,9 @@
                 }
               ]
             }
-          ]
+          ],
+          "icon": "mdi:lightbulb-on-outline",
+          "cards": []
         },
         {
           "theme": "macOS Theme",
@@ -3022,6 +3002,283 @@
               ]
             }
           ]
+        },
+        {
+          "title": "Графики",
+          "path": "charts-new",
+          "cards": [],
+          "type": "sections",
+          "sections": [
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:mini-graph-card",
+                  "name": "Температура",
+                  "hour24": true,
+                  "hours_to_show": 24,
+                  "group_by": "hour",
+                  "line_width": 2,
+                  "entities": [
+                    {
+                      "entity": "sensor.ble_datchik_v_spalne_temperature",
+                      "name": "Спальня"
+                    },
+                    {
+                      "entity": "sensor.ble_temperature_datchik_na_kukhne",
+                      "name": "Кухня"
+                    }
+                  ],
+                  "show": {
+                    "labels": true,
+                    "labels_secondary": true,
+                    "average": true,
+                    "extrema": true,
+                    "fill": "fade"
+                  },
+                  "animate": true,
+                  "height": 130
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:mini-graph-card",
+                  "name": "Внешняя температура",
+                  "hours_to_show": 48,
+                  "hour24": true,
+                  "group_by": "hour",
+                  "line_width": 2,
+                  "entities": [
+                    {
+                      "entity": "sensor.openweathermap_temperature",
+                      "name": "Текущая OWM"
+                    },
+                    {
+                      "entity": "sensor.ulitsa_temperature",
+                      "name": "Текущая по датчику"
+                    },
+                    {
+                      "entity": "sensor.lodzhiia_temperature",
+                      "name": "Лоджия"
+                    },
+                    {
+                      "entity": "sensor.outside_temperature_min_value",
+                      "name": "Мин. за 24 часа"
+                    },
+                    {
+                      "entity": "sensor.pressure_average",
+                      "name": "Давление",
+                      "y_axis": "secondary"
+                    }
+                  ],
+                  "show": {
+                    "labels": true,
+                    "labels_secondary": true,
+                    "average": false,
+                    "extrema": false,
+                    "fill": "fade"
+                  },
+                  "animate": true,
+                  "height": 195
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:mini-graph-card",
+                  "name": "Облачность и освещённость",
+                  "hour24": true,
+                  "hours_to_show": 48,
+                  "line_width": 3,
+                  "group_by": "hour",
+                  "lower_bound_secondary": 0,
+                  "lower_bound": 0,
+                  "show": {
+                    "labels": false,
+                    "fill": "fade",
+                    "labels_secondary": false
+                  },
+                  "animate": true,
+                  "entities": [
+                    {
+                      "entity": "sensor.openweathermap_cloud_coverage",
+                      "name": "Облака",
+                      "color": "rgb(52, 152, 219)",
+                      "show_line": false,
+                      "show_legend": true,
+                      "show_points": false,
+                      "show_indicator": true,
+                      "show_fill": true,
+                      "state_adaptive_color": false
+                    },
+                    {
+                      "entity": "sensor.mini_graph_day_pct",
+                      "color": "white",
+                      "show_line": false,
+                      "show_legend": false,
+                      "show_points": false,
+                      "show_indicator": false,
+                      "show_fill": true,
+                      "state_adaptive_color": false
+                    },
+                    {
+                      "entity": "sensor.mini_graph_night_pct",
+                      "color": "dark-grey",
+                      "show_line": false,
+                      "show_legend": false,
+                      "show_points": false,
+                      "show_indicator": false,
+                      "show_fill": true,
+                      "state_adaptive_color": false
+                    },
+                    {
+                      "entity": "sensor.osveshchionnost_na_kukhne_illuminance_lux",
+                      "name": "Кухня",
+                      "show_state": true,
+                      "show_legend": true,
+                      "show_indicator": true,
+                      "show_fill": false,
+                      "state_adaptive_color": false,
+                      "color": "var(--accent-color)",
+                      "y_axis": "secondary"
+                    },
+                    {
+                      "entity": "sensor.osveshchionnost_snaruzhi_illuminance_lux",
+                      "name": "Снаружи",
+                      "show_state": true,
+                      "show_legend": true,
+                      "show_indicator": true,
+                      "show_fill": false,
+                      "state_adaptive_color": false,
+                      "color": "rgb(231, 76, 60)",
+                      "y_axis": "secondary"
+                    },
+                    {
+                      "entity": "sensor.osveshchionnost_v_spalne_illuminance_lux",
+                      "name": "В комнате",
+                      "show_state": true,
+                      "show_legend": true,
+                      "show_indicator": true,
+                      "show_fill": false,
+                      "state_adaptive_color": false,
+                      "color": "green",
+                      "y_axis": "secondary"
+                    }
+                  ],
+                  "style": "ha-card {\n  height: 350px !important;\n}\n",
+                  "height": 175
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:mini-graph-card",
+                  "name": "Влажность",
+                  "hour24": true,
+                  "hours_to_show": 24,
+                  "group_by": "hour",
+                  "line_width": 2,
+                  "entities": [
+                    {
+                      "entity": "sensor.ble_datchik_v_spalne_humidity",
+                      "name": "Спальня"
+                    },
+                    {
+                      "entity": "sensor.ble_humidity_datchik_na_kukhne",
+                      "name": "Кухня"
+                    }
+                  ],
+                  "show": {
+                    "labels": true,
+                    "labels_secondary": true,
+                    "average": true,
+                    "extrema": true,
+                    "fill": "fade"
+                  },
+                  "animate": true,
+                  "height": 140
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:mini-graph-card",
+                  "name": "Воздух",
+                  "icon": "mdi:molecule-co2",
+                  "smoothing": true,
+                  "hour24": true,
+                  "hours_to_show": 24,
+                  "group_by": "hour",
+                  "line_width": 2,
+                  "entities": [
+                    {
+                      "entity": "sensor.co2_sensor_air_monitor_lite",
+                      "name": "CO2"
+                    },
+                    {
+                      "entity": "sensor.pm2_5_sensor_air_monitor_lite",
+                      "name": "PM2.5",
+                      "y-axis": "secondary"
+                    },
+                    {
+                      "entity": "sensor.pm10_sensor_air_monitor_lite",
+                      "name": "PM10",
+                      "y-axis": "secondary"
+                    }
+                  ],
+                  "show": {
+                    "labels": true,
+                    "labels_secondary": true,
+                    "average": true,
+                    "extrema": true,
+                    "fill": "fade"
+                  },
+                  "animate": true,
+                  "style": "ha-card {\n  height: 350px !important;\n}\n",
+                  "height": 130
+                }
+              ]
+            },
+            {
+              "type": "grid",
+              "cards": [
+                {
+                  "type": "custom:mini-graph-card",
+                  "name": "Радиация",
+                  "hours_to_show": 48,
+                  "hour24": true,
+                  "group_by": "hour",
+                  "line_width": 2,
+                  "entities": [
+                    {
+                      "entity": "sensor.geiger_dose_rate",
+                      "name": "Гейгер"
+                    }
+                  ],
+                  "show": {
+                    "labels": false,
+                    "labels_secondary": true,
+                    "average": true,
+                    "extrema": true,
+                    "fill": "fade"
+                  },
+                  "animate": true,
+                  "style": "ha-card {\n  height: 350px !important;\n}\n",
+                  "height": 185
+                }
+              ]
+            }
+          ],
+          "icon": "mdi:chart-line"
         }
       ]
     }

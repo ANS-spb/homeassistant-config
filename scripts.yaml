@@ -20,7 +20,7 @@
         dynamic: true
       target:
         entity_id: '{{ [''scene.torsher_tuman_na_ozere'',''scene.torsher_gornyi_briz'',
-          ''scene.torsher_under_the_tree'',''scene.torsher_tsvetenie'', ''scene.torsher_dragotsennyi'',''scene.torsher_voskresnoe_utro'',
+          ''scene.torsher_tsvetenie'', ''scene.torsher_dragotsennyi'',''scene.torsher_voskresnoe_utro'',
           ''scene.torsher_vesennee_ozero''] | random }}'
     - data:
         effect: Stop
@@ -154,42 +154,8 @@ light_tosleep:
     - service: hue.activate_scene
       data:
         transition: 10
-        dynamic: true
-      target:
-        entity_id: '{{[''scene.torsher_galaktika'',''scene.torsher_svet_zvezd'',''scene.torsher_otdykh_na_zakate'',''scene.torsher_tumannost'']
-          | random }}'
-      enabled: false
-    - service: hue.activate_scene
-      data:
-        transition: 10
       target:
         entity_id: scene.torsher_chtenie
-    - service: light.turn_off
-      data:
-        transition: 10
-      target:
-        entity_id:
-        - light.wled_2
-      enabled: false
-    - service: input_boolean.turn_off
-      data: {}
-      target:
-        entity_id: input_boolean.manual_effects_on
-      enabled: false
-    - choose:
-      - conditions:
-        - condition: device
-          type: is_on
-          device_id: d9631ea87a6b46b5e7e5fadb00518bb8
-          entity_id: light.wled
-          domain: light
-        sequence:
-        - service: script.turn_on
-          data: {}
-          target:
-            entity_id: script.wled_static_effect
-      default: []
-      enabled: false
     - if:
       - condition: state
         entity_id: light.wled_2
@@ -203,14 +169,9 @@ light_tosleep:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 30
+      seconds: 40
       milliseconds: 0
   - parallel:
-    - service: light.turn_off
-      data: {}
-      target:
-        entity_id: light.wled_table
-      enabled: false
     - choose:
       - conditions:
         - condition: device
@@ -224,11 +185,6 @@ light_tosleep:
           target:
             entity_id: script.wled_static_effect
       default: []
-    - service: switch.turn_off
-      data: {}
-      target:
-        entity_id: switch.rozetka
-      enabled: false
   mode: single
   icon: mdi:sleep
 power_off_all:
