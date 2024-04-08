@@ -2571,3 +2571,17 @@
         data:
           notification_id: '{{ trigger.event.data.device_id }}'
   mode: queued
+- id: '1712556021640'
+  alias: Костыль для Command Line сенсоров
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /30
+  condition:
+  - condition: state
+    entity_id: binary_sensor.workday
+    state: unavailable
+  action:
+  - service: command_line.reload
+    data: {}
+  mode: single

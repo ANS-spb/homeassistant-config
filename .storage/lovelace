@@ -865,6 +865,9 @@
                     },
                     {
                       "entity": "input_button.rassvet"
+                    },
+                    {
+                      "entity": "switch.adaptive_lighting_sleep_mode_room"
                     }
                   ]
                 }
@@ -1373,7 +1376,8 @@
                       "url": "domru_domofon",
                       "media": "audio"
                     }
-                  ]
+                  ],
+                  "style": "video {aspect-ratio: 16/9; object-fit: fill;}"
                 },
                 {
                   "type": "custom:mushroom-entity-card",
@@ -3278,7 +3282,9 @@
               ]
             }
           ],
-          "icon": "mdi:chart-line"
+          "icon": "mdi:chart-line",
+          "max_columns": 4,
+          "theme": "macOS Theme"
         }
       ]
     }
