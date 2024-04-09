@@ -22,10 +22,6 @@ input_boolean:
     name: "У меня отпуск"
     icon: mdi:emoticon-cool-outline
 
-#  wakeup_homeoffice:
-#    name: "На удалёнке"
-#    icon: mdi:home-map-marker
-
 input_select:
 
   wakeup_time:
@@ -80,9 +76,6 @@ automation:
       - condition: state
         entity_id: binary_sensor.workday
         state: "on"
-#      - condition: state
-#        entity_id: input_boolean.wakeup_homeoffice
-#        state: "off"
       - condition: state
         entity_id: input_select.wakeup_time
         state: "Метро"
@@ -143,9 +136,6 @@ automation:
       - condition: state
         entity_id: binary_sensor.workday
         state: "on"
-#      - condition: state
-#        entity_id: input_boolean.wakeup_homeoffice
-#        state: "on"
       - condition: state
         entity_id: input_select.wakeup_time
         state: "Сидим дома"

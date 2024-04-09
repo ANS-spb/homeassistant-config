@@ -2,12 +2,9 @@
 #   Сенсоры рабочих и выходных дней   #
 #######################################
 
-#- platform: workday
-#  country: RU
-
 command_line:
   - binary_sensor:
-      name: Workday
+      name: "Workday raw"
       command: >-
         curl https://isdayoff.ru/{{ now().date().strftime("%Y%m%d") }}
       command_timeout: 300
@@ -16,10 +13,29 @@ command_line:
       payload_off: '1'
 
   - binary_sensor:
-      name: Workday Tomorrow
+      name: "Workday Tomorrow raw"
       command: >-
         curl https://isdayoff.ru/{{ (now().date() + timedelta(days=1)).strftime("%Y%m%d") }}
       command_timeout: 300
       scan_interval: 3600
       payload_on: '0'
       payload_off: '1'
+
+template:
+  - binary_sensor:
+      - name: "Workday"
+        state: >
+          {% if states('binary_sensor.workday_raw') in ['unavailable,unknown']  %} 
+          {{ states('sensor.me') }}
+          {% else %}
+          {{ states('binary_sensor.workday_raw') }}
+          {% endif %}
+
+  - binary_sensor:
+      - name: "Workday Tomorrow"
+        state: >
+          {% if states('binary_sensor.workday_tomorrow_raw') in ['unavailable,unknown']  %} 
+          {{ states('sensor.me') }}
+          {% else %}
+          {{ states('binary_sensor.workday_tomorrow_raw') }}
+          {% endif %}
