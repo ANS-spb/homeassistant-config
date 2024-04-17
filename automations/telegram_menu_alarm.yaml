@@ -1,0 +1,140 @@
+#######################################
+#     Меню в Telegram: Будильник      #
+#######################################
+
+- alias: Telegram Menu Wakeup
+  id: telegram_menu_wakeup
+  description: "Настройка будильника"
+  trigger:
+    - platform: event
+      event_type: telegram_callback
+      event_data:
+        data: /wakeup
+  action:
+    - service: telegram_bot.answer_callback_query
+      data_template:
+        callback_query_id: "{{ trigger.event.data.id }}"
+        message: Будильник
+    - service: telegram_bot.edit_message
+      data_template:
+        message_id: last
+        chat_id: "{{ trigger.event.data.chat_id }}"
+        message: &msg |-
+          Завтра
+          {%- if now().weekday() in (0,) %} вторник 
+          {%- elif now().weekday() in (1,) %} среда 
+          {%- elif now().weekday() in (2,) %} четверг 
+          {%- elif now().weekday() in (3,) %} пятница 
+          {%- elif now().weekday() in (4,) %} суббота 
+          {%- elif now().weekday() in (5,) %} воскресенье 
+          {%- elif now().weekday() in (6,) %} понедельник 
+          {%- endif -%},
+          {%- if is_state('binary_sensor.workday_tomorrow','on') and is_state('input_boolean.wakeup_disabled','off') %} рабочий день, {{ states('input_select.wakeup_time') | lower }}, 
+          {%- else %} выходной день,
+          {%- endif %} будильник
+          {%- if is_state('input_boolean.wakeup_enabled','on') %} 
+            {%- if is_state('binary_sensor.workday_tomorrow','on') and is_state('input_boolean.wakeup_disabled','off') %} сработает в
+              {%- if is_state('input_select.wakeup_time','Метро') %} {{ state_attr('input_datetime.wakeup_office_time', 'timestamp') | timestamp_custom('%H:%M', false) }}.
+              {%- elif is_state('input_select.wakeup_time','Машина') %} {{ state_attr('input_datetime.wakeup_office_car_time', 'timestamp') | timestamp_custom('%H:%M', false) }}.
+              {%- elif is_state('input_select.wakeup_time','Сидим дома') %} {{ state_attr('input_datetime.wakeup_homeoffice_time', 'timestamp') | timestamp_custom('%H:%M', false) }}.
+              {%- endif -%}
+            {%- elif is_state('input_boolean.wakeup_weekend','on') and is_state('input_boolean.wakeup_disabled','on') %} сработает в {{ state_attr('input_datetime.wakeup_weekend_time', 'timestamp') | timestamp_custom('%H:%M', false) }}
+            {%- else %} выключен.
+            {%- endif -%}
+          {%- else %} выключен.
+          {%- endif %}
+        inline_keyboard: &keyb
+          - 🚇 Едем на метро:/wakeup_office_time
+          - 🚘 Прицепом на машине:/wakeup_office_car_time
+          - 🏠 Чилим дома:/wakeup_homeoffice_time
+          - ⏰ {% if is_state('input_boolean.wakeup_enabled', 'on')%}{{'Выключить будильник 🚫'}}{% else %}{{'Включить будильник ✅'}}{% endif %}:/wakeup_toggle
+          - 🔙 Назад:/back
+  mode: single
+
+- alias: Telegram Menu Wakeup Set Time
+  id: telegram_menu_wakeup_set_time
+  description: "Настройка будильника"
+  trigger:
+    - id: wakeup_office_time
+      platform: event
+      event_type: telegram_callback
+      event_data:
+        data: /wakeup_office_time
+    - id: wakeup_office_car_time
+      platform: event
+      event_type: telegram_callback
+      event_data:
+        data: /wakeup_office_car_time
+    - id: wakeup_homeoffice_time
+      platform: event
+      event_type: telegram_callback
+      event_data:
+        data: /wakeup_homeoffice_time
+    - id: wakeup_toggle
+      platform: event
+      event_type: telegram_callback
+      event_data:
+        data: /wakeup_toggle
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id:
+                - wakeup_office_time
+          sequence:
+            - service: input_select.select_option
+              target:
+                entity_id: input_select.wakeup_time
+              data:
+                option: 'Метро'
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: Изменено
+        - conditions:
+            - condition: trigger
+              id:
+                - wakeup_office_car_time
+          sequence:
+            - service: input_select.select_option
+              target:
+                entity_id: input_select.wakeup_time
+              data:
+                option: 'Машина'
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: Изменено
+        - conditions:
+            - condition: trigger
+              id:
+                - wakeup_homeoffice_time
+          sequence:
+            - service: input_select.select_option
+              target:
+                entity_id: input_select.wakeup_time
+              data:
+                option: 'Сидим дома'
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: Изменено
+        - conditions:
+            - condition: trigger
+              id:
+                - wakeup_toggle
+          sequence:
+            - service: input_boolean.toggle
+              target:
+                entity_id: input_boolean.wakeup_enabled
+            - service: telegram_bot.answer_callback_query
+              data_template:
+                callback_query_id: "{{ trigger.event.data.id }}"
+                message: Изменено
+    - service: telegram_bot.edit_message
+      data:
+        message_id: "{{ trigger.event.data.message.message_id }}"
+        chat_id: "{{ trigger.event.data.chat_id }}"
+        callback_query_id: "{{ trigger.event.data.id }}"
+        message: *msg
+        inline_keyboard: *keyb

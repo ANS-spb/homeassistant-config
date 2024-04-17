@@ -38,8 +38,8 @@
                     {% if is_state("light.torsherchik", "off") %}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Настольная:/torsherchik_toggle'
                   - '{% if is_state("light.living_room", "off") %}{{"🔴"}}{%else %}{{"🟢"}}{% endif %} Лампа:/living_toggle,
                     {% if is_state("light.liustra", "off") %}{{"🔴"}}{% else %}{{"🟢"}}{%endif %} Люстра:/liustra_toggle'
-                  - Выключить ВСË:/lightoff
-                  - Назад:/back
+                  - 🛑 Выключить ВСË:/lightoff
+                  - 🔙 Назад:/back
         - conditions:
             - condition: template
               value_template: '{{ trigger.event.data.command == "/lighton" }}'

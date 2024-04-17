@@ -35,7 +35,6 @@
         Home Assistant занял {{ states('sensor.start_time') | format(morph='секунда',
         as_text=false) }}.\n"
       title: ⚒️ Системное уведомление
-      target: 116325704
   mode: single
 - id: '1601827285752'
   alias: Hass Shutdown Notification
@@ -55,7 +54,6 @@
 
         '
       title: ⚒️ Системное уведомление
-      target: 116325704
   mode: single
 - id: '1601829228272'
   alias: Notify away
@@ -895,8 +893,6 @@
         \"Опять припёрлись\", \"Дзинь-дзинь\", \"Тук-тук\", \"Гости на пороге\", \"Живые
         наступают!\", \"Это случайно не доставка пиццы?\", \"Кожаный мешок у ворот\"]
         | random }}"
-      target:
-      - 116325704
       parse_mode: html
       timeout: 1000
       inline_keyboard:
@@ -914,8 +910,6 @@
         \"Опять припёрлись\", \"Дзинь-дзинь\", \"Тук-тук\", \"Гости на пороге\", \"Живые
         наступают!\", \"Это случайно не доставка пиццы?\", \"Кожаный мешок у ворот\"]
         | random }}"
-      target:
-      - 116325704
       parse_mode: html
       timeout: 1000
       inline_keyboard:
@@ -985,8 +979,6 @@
           title: Домофон
       - service: telegram_bot.send_message
         data:
-          target:
-          - 116325704
           parse_mode: html
           disable_notification: true
           title: Домофон
@@ -1080,8 +1072,6 @@
     default:
     - service: telegram_bot.send_message
       data:
-        target:
-        - 116325704
         parse_mode: html
         disable_notification: true
         message: Звонок в домофон пропущен или неактуален, домофон (уже) не звонит.
@@ -1125,8 +1115,6 @@
     data:
       message: А вот и видосик
       parse_mode: html
-      target:
-      - 116325704
       inline_keyboard:
       - "\U0001F4F9 Получить видео :/getevent {{ states('input_text.it_hall_event')
         }}"
@@ -1160,8 +1148,6 @@
       service: notify.mobile_app_iphone_ans
     - service: telegram_bot.send_message
       data:
-        target:
-        - 116325704
         parse_mode: markdown
         message: "\U0001F514 *Звонят в дверь!* \U0001F514"
     - if:
@@ -1261,8 +1247,6 @@
               interruption-level: time-sensitive
       - service: telegram_bot.send_message
         data:
-          target:
-          - 116325704
           parse_mode: html
           disable_notification: true
           message: Дверь открыта
@@ -1280,8 +1264,6 @@
               interruption-level: time-sensitive
       - service: telegram_bot.send_message
         data:
-          target:
-          - 116325704
           parse_mode: html
           disable_notification: true
           message: Звонок домофона сброшен
@@ -1385,8 +1367,6 @@
     data:
       file: /media/domofon.jpg
       caption: Домофон открыт из приложения
-      target:
-      - 116325704
       parse_mode: html
       timeout: 1000
       message_tag: msg_to_edit
@@ -1548,8 +1528,6 @@
     data:
       file: /media/domofon.jpg
       caption: Домофон открыт из Telegram
-      target:
-      - 116325704
       parse_mode: html
       timeout: 1000
       message_tag: msg_to_edit
@@ -2342,7 +2320,6 @@
     data:
       message: ⚠️ Проверь Frigate! {{ trigger.entity_id }}
       title: ⚒️ Системное уведомление
-      target: 116325704
       parse_mode: html
   mode: single
 - id: '1702614000258'
@@ -2379,8 +2356,6 @@
   action:
   - service: telegram_bot.send_message
     data:
-      target:
-      - 116325704
       parse_mode: markdown
       message: "\U0001F3E0 ANS дома"
   - service: notify.mobile_app_iphone_ans
@@ -2411,8 +2386,6 @@
   action:
   - service: telegram_bot.send_message
     data:
-      target:
-      - 116325704
       parse_mode: markdown
       message: "\U0001F3E0 ANS дома"
   - service: notify.mobile_app_iphone_ans
@@ -2481,8 +2454,6 @@
           inline_keyboard:
           - ✅ Батарея заменена:/battery_replaced {{ trigger.event.data.device_id }},
             ❌ Я ничего не трогал:/do_nothing
-          target:
-          - 116325704
     - conditions:
       - condition: trigger
         id:
@@ -2556,8 +2527,6 @@
       - service: telegram_bot.send_message
         metadata: {}
         data:
-          target:
-          - 116325704
           message: "\U0001FAAB Батарейка устройства {{ trigger.event.data.device_name
             }} разрядилась до {{ trigger.event.data.battery_level | int(0) }}% {{
             '\\n' -}} Нужно заменить {{ trigger.event.data.battery_quantity }}x {{
@@ -2571,17 +2540,3 @@
         data:
           notification_id: '{{ trigger.event.data.device_id }}'
   mode: queued
-- id: '1712556021640'
-  alias: Костыль для Command Line сенсоров
-  description: ''
-  trigger:
-  - platform: time_pattern
-    minutes: /30
-  condition:
-  - condition: state
-    entity_id: binary_sensor.workday
-    state: unavailable
-  action:
-  - service: command_line.reload
-    data: {}
-  mode: single

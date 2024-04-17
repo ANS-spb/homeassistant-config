@@ -521,3 +521,11 @@ welcome_home:
       entity_id: cover.shtora
   mode: single
   icon: mdi:home-import-outline
+test_this:
+  alias: Test this
+  sequence:
+  - service: notify.telegram
+    metadata: {}
+    data:
+      message: '{{ state_attr(this.entity_id, ''current'') }}'
+  mode: single

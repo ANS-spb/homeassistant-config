@@ -33,6 +33,6 @@
           *LAN IP Address:*   {{ states.sensor.local_ip.state }}
           *WAN IP Address:*   {{ states.sensor.d7160cc8a60d_sn_mynetname_net.state }}
         inline_keyboard:
-          - Назад:/back
+          - 🔙 Назад:/back
 
   mode: single

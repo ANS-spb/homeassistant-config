@@ -48,6 +48,6 @@
           | map(attribute  = "name") | join(", ") }}.
           {% endif %}
         inline_keyboard:
-          - Назад:/back
+          - 🔙 Назад:/back
 
   mode: single

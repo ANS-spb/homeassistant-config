@@ -179,3 +179,63 @@ automation:
                 data: {}
         default: []
     mode: single
+
+  - id: light_wakeup_auto_time
+    alias: Световой будильник автоматическое время
+    description: "Авто настройка будильника по дням недели"
+    trigger:
+      - platform: time
+        at: "22:00:00"
+    condition:
+      - condition: state
+        entity_id: binary_sensor.workday_tomorrow
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.wakeup_enabled
+        state: "on"
+      - condition: state
+        entity_id: input_boolean.wakeup_disabled
+        state: "off"
+      - condition: template
+        value_template: "{{ now().day != this.attributes.last_triggered.day | default(0) }}"
+      - condition: template
+        value_template: "{{ now().day != states.input_select.wakeup_time.last_changed.day | default(0) }}"
+    action:
+      - if:
+          - condition: template
+            value_template: "{{ now().weekday() in (0,) }}" # Если сегодня понедельник, то завтра во вторник на машине
+        then:
+          - service: input_select.select_option
+            target:
+              entity_id: input_select.wakeup_time
+            data:
+              option: 'Машина'
+      - if:
+          - condition: template
+            value_template: "{{ now().weekday() in (1,) }}" # Если сегодня вторник, то завтра в среду дома
+        then:
+          - service: input_select.select_option
+            target:
+              entity_id: input_select.wakeup_time
+            data:
+              option: 'Сидим дома'
+      - if:
+          - condition: template
+            value_template: "{{ now().weekday() in (6,) }}" # Если сегодня воскресенье, то завтра в понедельник на метро
+        then:
+          - service: input_select.select_option
+            target:
+              entity_id: input_select.wakeup_time
+            data:
+              option: 'Метро'
+          - service: telegram_bot.send_message
+            data:
+              message: >
+                ⏰ Будильник автоматически установлен как "{{states('input_select.wakeup_time')}}".
+              parse_mode: html
+              disable_notification: true
+              disable_web_page_preview: true
+              timeout: 500
+              inline_keyboard:
+                - ⏰ Изменить выбор:/wakeup
+    mode: single

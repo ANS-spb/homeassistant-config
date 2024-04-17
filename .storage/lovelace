@@ -2404,6 +2404,10 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "markdown",
+              "content": "[diagnostics](/config/integrations/integration/hass_diagnostics) | [log](/config/logs) | total: {{ states('sensor.smart_log') }} items\n\n{% for i in state_attr('sensor.smart_log', 'records') -%}\n---\n<details>\n<summary>\n  <b>{{i.get('domain') or i.get('package') or i.name}}</b> ({{i.count}}) {{i.get('category','')}} {{i.get('host','')}}\n  <br>&nbsp; &nbsp;<i>{{i.short}}</i>\n</summary>\n<table>\n  <tr><td><b>{{i.name}}</b></td></tr>\n  <tr><td>{{i.message|replace('\\n',' ')}}</td></tr>\n  <tr><td>{{i.source|join(', ')}}{{', <a href=\"%s\">github</a>'%i.github if 'github' in i}}</td></tr>\n</table>\n{{'<pre>'+i.exception+'</pre>' if 'exception' in i}}\n</details>\n\n{% endfor %}"
             }
           ]
         },

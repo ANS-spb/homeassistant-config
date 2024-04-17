@@ -24,15 +24,48 @@
           sequence:
             - service: telegram_bot.send_message
               data:
-                message: &stmsg >
+                message: &stmsg |
                   {{ [ "Что желаете, Повелитель?", "Что я могу для Вас сделать?", "Внимаю!", "Хорошего дня" ] | random }}
-                parse_mode: html
+
+                  {% if is_state("sun.sun", "above_horizon") -%} Солнце уже встало. 
+                  {%- else -%} Солнце встанет в {{ as_timestamp(state_attr("sun.sun", "next_rising")) | timestamp_custom('%H:%M') }}. {%- endif %}
+                  Сейчас за бортом {{ state_attr('weather.yandex_weather','yandex_condition') | lower }} {%- set current = states('sensor.openweathermap_weather_code') | int () %} 
+                  {%- set conditions = { '\U0001F32B': [701, 741], '\U0001F329': [210, 211, 212, 221], '\U000026C8': [200, 201, 202, 230, 231, 232], '\U000026C5': [801, 802, 803, 804], '\U00002614': [504, 314, 502, 503, 522, 300, 301, 302, 310, 311, 312, 313, 500, 501, 520, 521, 906], '\U00002744': [600, 601, 602, 611, 612, 620, 621, 622], '\U00002614\U00002744': [511, 615, 616], '\U00002600': [800], '\U0001F4A8': [905, 951, 952, 953, 954, 955, 956, 957, 958, 959, 960, 961], '\U000026A0': [711, 721, 731, 751, 761, 762, 771, 900, 901, 962, 903, 904] } %} {%- for condition, value in conditions.items() %} {%- if current in value %} {{- " " + condition}} {%- endif %} {%- endfor %}
+                  Температура {{states('sensor.openweathermap_temperature') | int(0) }}°C, ощущается {% if states('sensor.openweathermap_temperature') | int(0) == states('sensor.openweathermap_feels_like_temperature') | int(0) %}так же. {% else %}как {{states('sensor.openweathermap_feels_like_temperature') | int(0) }}°C{% endif %}. Влажность {{states('sensor.openweathermap_humidity')}} %.
+                  Скорость ветра {{ states('sensor.openweathermap_wind_speed') | int(0) }} м/с.
+                  {%if states.light | selectattr('entity_id') |
+                  selectattr('state','eq','on') | map(attribute='entity_id') | list | count == 0 %}Свет везде выключен.
+                  {% else %}Свет включен.{% endif %}
+                  Завтра
+                  {%- if now().weekday() in (0,) %} вторник 
+                  {%- elif now().weekday() in (1,) %} среда 
+                  {%- elif now().weekday() in (2,) %} четверг 
+                  {%- elif now().weekday() in (3,) %} пятница 
+                  {%- elif now().weekday() in (4,) %} суббота 
+                  {%- elif now().weekday() in (5,) %} воскресенье 
+                  {%- elif now().weekday() in (6,) %} понедельник 
+                  {%- endif -%},
+                  {%- if is_state('binary_sensor.workday_tomorrow','on') and is_state('input_boolean.wakeup_disabled','off') %} рабочий день, {{ states('input_select.wakeup_time') | lower }}, 
+                  {%- else %} выходной день,
+                  {%- endif %} будильник
+                  {%- if is_state('input_boolean.wakeup_enabled','on') %} 
+                    {%- if is_state('binary_sensor.workday_tomorrow','on') and is_state('input_boolean.wakeup_disabled','off') %} сработает в
+                      {%- if is_state('input_select.wakeup_time','Метро') %} {{ state_attr('input_datetime.wakeup_office_time', 'timestamp') | timestamp_custom('%H:%M', false) }}.
+                      {%- elif is_state('input_select.wakeup_time','Машина') %} {{ state_attr('input_datetime.wakeup_office_car_time', 'timestamp') | timestamp_custom('%H:%M', false) }}.
+                      {%- elif is_state('input_select.wakeup_time','Сидим дома') %} {{ state_attr('input_datetime.wakeup_homeoffice_time', 'timestamp') | timestamp_custom('%H:%M', false) }}.
+                      {%- endif -%}
+                    {%- elif is_state('input_boolean.wakeup_weekend','on') and is_state('input_boolean.wakeup_disabled','on') %} сработает в {{ state_attr('input_datetime.wakeup_weekend_time', 'timestamp') | timestamp_custom('%H:%M', false) }}
+                    {%- else %} выключен.
+                    {%- endif -%}
+                  {%- else %} выключен.
+                  {%- endif %}
+                parse_mode: markdown
                 disable_notification: true
                 disable_web_page_preview: true
                 timeout: 500
                 inline_keyboard: &mainkeyb
-                  - 💡 Свет:/lights, ℹ Датчики:/status
-                  - ☀ Погода:/weather, 💻 Система:/system
+                  - 💡 Свет:/lights, ⏰ Будильник:/wakeup
+                  - ℹ Датчики:/status, 💻 Система:/system
                   - 🦾 Запустить уборку:/vacuum_start
                   - ☢️ Радиация:/radiation, 📸 Фото с домофона:/photo_entrance
                 target: "{{ trigger.event.data.chat_id }}"
@@ -47,5 +80,4 @@
                 message: *stmsg
                 inline_keyboard: *mainkeyb
                 target: "{{ trigger.event.data.chat_id }}"
-
   mode: single
