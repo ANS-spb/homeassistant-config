@@ -22,6 +22,10 @@ input_boolean:
     name: "У меня отпуск"
     icon: mdi:emoticon-cool-outline
 
+  wakeup_auto_time_enabled:
+    name: "Автопереключение"
+    icon: mdi:clock-star-four-points
+
 input_select:
 
   wakeup_time:
@@ -188,7 +192,7 @@ automation:
         at: "22:00:00"
     condition:
       - condition: state
-        entity_id: binary_sensor.workday_tomorrow
+        entity_id: input_boolean.wakeup_auto_time_enabled
         state: "on"
       - condition: state
         entity_id: input_boolean.wakeup_enabled
@@ -196,6 +200,9 @@ automation:
       - condition: state
         entity_id: input_boolean.wakeup_disabled
         state: "off"
+      - condition: state
+        entity_id: binary_sensor.workday_tomorrow
+        state: "on"
       - condition: template
         value_template: "{{ now().day != this.attributes.last_triggered.day | default(0) }}"
       - condition: template

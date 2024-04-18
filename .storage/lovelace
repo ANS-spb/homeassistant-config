@@ -655,6 +655,9 @@
                     },
                     {
                       "entity": "input_boolean.wakeup_disabled"
+                    },
+                    {
+                      "entity": "input_boolean.wakeup_auto_time_enabled"
                     }
                   ],
                   "show_header_toggle": false,
