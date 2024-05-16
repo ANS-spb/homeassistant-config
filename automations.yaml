@@ -2518,7 +2518,8 @@
           title: '{{ trigger.event.data.device_name }} Battery Low
 
             '
-          notification_id: '{{ trigger.event.data.device_id }}'
+          notification_id: '{{ trigger.event.data.device_id }}-{{ trigger.event.data.source_entity_id
+            }}'
           message: 'The device has a battery level of {{ trigger.event.data.battery_level
             | int(0) }}% {{ ''\n'' -}} You need {{ trigger.event.data.battery_quantity
             }}x {{ trigger.event.data.battery_type }}
@@ -2538,5 +2539,6 @@
       sequence:
       - service: persistent_notification.dismiss
         data:
-          notification_id: '{{ trigger.event.data.device_id }}'
+          notification_id: '{{ trigger.event.data.device_id }}-{{ trigger.event.data.source_entity_id
+            }}'
   mode: queued

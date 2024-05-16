@@ -34,7 +34,7 @@ homeassistant:
     - /share/smartctl
 
 morph_numbers:
-start_time:
+#start_time:
 powercalc:
 python_script:
 battery_notes:
@@ -89,11 +89,11 @@ input_boolean:
 #    name: ANS phone number
 #    initial: !secret sms_ans
 
-folder_watcher:
-  - folder: /media
-    patterns:
-      - '*.mp4'
-      - '*.jpg'
+#folder_watcher:
+#  - folder: /media
+#    patterns:
+#      - '*.mp4'
+#      - '*.jpg'
 
 stream:
   ll_hls: true
