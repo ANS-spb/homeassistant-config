@@ -1413,28 +1413,13 @@
                   "content": "### Напряжение сети:\n"
                 },
                 {
-                  "type": "custom:history-explorer-card",
-                  "cardName": "historycard-29547654",
-                  "header": "hide",
-                  "uiLayout": {
-                    "toolbar": "top",
-                    "selector": "hide"
-                  },
-                  "legendVisible": false,
-                  "defaultTimeRange": "2d",
-                  "graphs": [
+                  "type": "history-graph",
+                  "hours_to_show": 48,
+                  "entities": [
                     {
-                      "type": "line",
-                      "entities": [
-                        {
-                          "entity": "sensor.prikhozhaia_voltage"
-                        }
-                      ]
+                      "entity": "sensor.prikhozhaia_voltage"
                     }
-                  ],
-                  "refresh": {
-                    "interval": 30
-                  }
+                  ]
                 }
               ]
             },
@@ -2814,153 +2799,113 @@
               "mode": "vertical",
               "cards": [
                 {
-                  "type": "custom:history-explorer-card",
-                  "cardName": "historycard-presence",
-                  "header": "hide",
-                  "uiLayout": {
-                    "toolbar": "top",
-                    "selector": "hide"
-                  },
-                  "graphs": [
+                  "type": "horizontal-stack",
+                  "cards": [
                     {
-                      "type": "timeline",
+                      "type": "history-graph",
                       "entities": [
                         {
-                          "entity": "person.ans"
-                        },
-                        {
-                          "entity": "device_tracker.iphone_ans"
-                        },
-                        {
-                          "entity": "device_tracker.iphone_ans_ble"
-                        },
-                        {
-                          "entity": "device_tracker.aw_ans_ble"
-                        },
-                        {
-                          "entity": "person.lisitsa"
-                        },
-                        {
-                          "entity": "device_tracker.ble_tracker_nut"
-                        },
-                        {
-                          "entity": "group.devices"
-                        },
-                        {
-                          "entity": "light.prikhozhaia"
+                          "entity": "sensor.niukhach_pm25"
                         }
-                      ]
+                      ],
+                      "hours_to_show": 2
+                    },
+                    {
+                      "type": "history-graph",
+                      "entities": [
+                        {
+                          "entity": "sensor.vytiazhka_temperature"
+                        }
+                      ],
+                      "hours_to_show": 2
                     }
                   ]
                 },
                 {
-                  "type": "custom:history-explorer-card",
-                  "cardName": "historycard-motion",
-                  "header": "hide",
-                  "uiLayout": {
-                    "toolbar": "top",
-                    "selector": "hide"
-                  },
-                  "graphs": [
+                  "type": "history-graph",
+                  "entities": [
                     {
-                      "type": "timeline",
-                      "entities": [
-                        {
-                          "entity": "binary_sensor.dd_na_kukhne_occupancy",
-                          "name": "ДД ZB"
-                        },
-                        {
-                          "entity": "binary_sensor.ble_dd_motion",
-                          "name": "ДД BLE"
-                        },
-                        {
-                          "entity": "binary_sensor.prisutstvie_na_kukhne",
-                          "name": "Группа"
-                        },
-                        {
-                          "entity": "binary_sensor.autooffkitchen",
-                          "name": "Шаблонный 3 мин"
-                        },
-                        {
-                          "entity": "light.kukhnia_potolok"
-                        }
-                      ]
+                      "entity": "person.ans"
+                    },
+                    {
+                      "entity": "device_tracker.iphone_ans"
+                    },
+                    {
+                      "entity": "device_tracker.iphone_ans_ble"
+                    },
+                    {
+                      "entity": "device_tracker.aw_ans_ble"
+                    },
+                    {
+                      "entity": "person.lisitsa"
+                    },
+                    {
+                      "entity": "device_tracker.ble_tracker_nut"
+                    },
+                    {
+                      "entity": "group.devices"
+                    },
+                    {
+                      "entity": "light.prikhozhaia"
                     }
-                  ],
-                  "refresh": {
-                    "automatic": true
-                  }
+                  ]
                 },
                 {
-                  "type": "custom:history-explorer-card",
-                  "cardName": "historycard-frigate",
-                  "header": "hide",
-                  "uiLayout": {
-                    "toolbar": "top",
-                    "selector": "hide"
-                  },
-                  "graphs": [
+                  "type": "history-graph",
+                  "hours_to_show": 1,
+                  "entities": [
                     {
-                      "type": "timeline",
-                      "entities": [
-                        {
-                          "entity": "input_text.frigate_event_new"
-                        },
-                        {
-                          "entity": "input_text.frigate_event_end"
-                        }
-                      ]
+                      "entity": "binary_sensor.dd_na_kukhne_occupancy",
+                      "name": "ДД ZB"
+                    },
+                    {
+                      "entity": "binary_sensor.ble_dd_motion",
+                      "name": "ДД BLE"
+                    },
+                    {
+                      "entity": "binary_sensor.prisutstvie_na_kukhne",
+                      "name": "Группа"
+                    },
+                    {
+                      "entity": "binary_sensor.autooffkitchen",
+                      "name": "Шаблонный 3 мин"
+                    },
+                    {
+                      "entity": "light.kukhnia_potolok"
                     }
-                  ],
-                  "refresh": {
-                    "automatic": true
-                  }
+                  ]
                 },
                 {
-                  "type": "custom:history-explorer-card",
-                  "cardName": "historycard-connectivity",
-                  "header": "hide",
-                  "uiLayout": {
-                    "toolbar": "top",
-                    "selector": "hide"
-                  },
-                  "graphs": [
+                  "type": "history-graph",
+                  "entities": [
                     {
-                      "type": "timeline",
-                      "entities": [
-                        {
-                          "entity": "binary_sensor.gateway"
-                        },
-                        {
-                          "entity": "binary_sensor.google"
-                        },
-                        {
-                          "entity": "binary_sensor.yandex"
-                        },
-                        {
-                          "entity": "binary_sensor.internet"
-                        },
-                        {
-                          "entity": "binary_sensor.yeelight"
-                        },
-                        {
-                          "entity": "binary_sensor.wled_strip"
-                        },
-                        {
-                          "entity": "binary_sensor.wled_garland"
-                        },
-                        {
-                          "entity": "binary_sensor.wled_table"
-                        },
-                        {
-                          "entity": "binary_sensor.espdisplay"
-                        }
-                      ]
+                      "entity": "binary_sensor.gateway"
+                    },
+                    {
+                      "entity": "binary_sensor.google"
+                    },
+                    {
+                      "entity": "binary_sensor.yandex"
+                    },
+                    {
+                      "entity": "binary_sensor.internet"
+                    },
+                    {
+                      "entity": "binary_sensor.yeelight"
+                    },
+                    {
+                      "entity": "binary_sensor.wled_strip"
+                    },
+                    {
+                      "entity": "binary_sensor.wled_garland"
+                    },
+                    {
+                      "entity": "binary_sensor.wled_table"
+                    },
+                    {
+                      "entity": "binary_sensor.espdisplay"
                     }
-                  ],
-                  "refresh": {
-                    "automatic": true
-                  }
+                  ]
                 }
               ]
             }
