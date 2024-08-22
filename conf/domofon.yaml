@@ -4,18 +4,18 @@
 
 rest_command:
   domru_open_door:
-    url: http://192.168.1.252:18000/door?placeID=2511029&accessControlID=36857
-
-#  domru_open_door_2:
-#    url: http://192.168.1.252:18000/door?placeID=5332945&accessControlID=36857
+    url: http://192.168.1.252:18000/rest/v1/places/2511029/accesscontrols/36857/actions
+    method: post
+    headers:
+        accept: "application/json"
+    content_type:  'application/json; charset=utf-8'
+    payload: '{"name":"accessControlOpen"}'
+#    url: http://192.168.1.252:18000/door?placeID=2511029&accessControlID=36857
 
 script:
   domru_open_door:
     sequence:
       - service: rest_command.domru_open_door
-#  domru_open_door_test:
-#    sequence:
-#      - service: rest_command.domru_open_door_2
 
 shell_command:
   check_clip: bash /config/check_clip.sh {{id}}

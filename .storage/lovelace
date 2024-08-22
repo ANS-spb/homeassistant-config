@@ -304,12 +304,21 @@
               "mode": "vertical",
               "cards": [
                 {
-                  "type": "markdown",
-                  "content": "### Погода:\n"
+                  "type": "custom:mushroom-template-card",
+                  "primary": "Weather alerts",
+                  "secondary": "{% set alerts_cnt = states('sensor.weather_alerts_o_any') | int + states('sensor.weather_alerts_w_any') | int %}\n{% if alerts_cnt > 0 %}\n  {{ alerts_cnt }} alert{{ 's' if alerts_cnt > 1 }} {# within the last {{ as_datetime((states.sensor.weather_alerts_any.attributes | list)[-5]) | time_since }}#}\n{% else %}\n  No weather alerts\n{% endif %}",
+                  "icon": "mdi:weather-cloudy-alert",
+                  "multiline_secondary": false,
+                  "tap_action": {
+                    "action": "more-info"
+                  },
+                  "icon_color": "{% if (states('sensor.weather_alerts_o_any') | int + states('sensor.weather_alerts_w_any') | int) > 0 %}\n  var(--rgb-red)\n{% else %}\n  var(--rgb-disabled)\n{% endif %}",
+                  "fill_container": true,
+                  "entity": "sensor.weather_alerts_o_any"
                 },
                 {
                   "type": "custom:weather-chart-card",
-                  "entity": "weather.openweathermap",
+                  "entity": "weather.home_assistant",
                   "units": {
                     "speed": "m/s",
                     "pressure": ""
@@ -413,6 +422,52 @@
                       "styles": {
                         "width": "100px"
                       }
+                    }
+                  ]
+                },
+                {
+                  "type": "vertical-stack",
+                  "cards": [
+                    {
+                      "type": "horizontal-stack",
+                      "cards": [
+                        {
+                          "type": "custom:mushroom-template-card",
+                          "primary": "{{states.sensor.local_forecast.attributes.forecast_short_term[0]}}",
+                          "secondary": "- {%if states.sensor.local_forecast.attributes.forecast_temp_short[1] >= 0%}{{states.sensor.local_forecast.attributes.temperature}}°C{%endif%}",
+                          "icon": "mdi:weather-cloudy-clock",
+                          "icon_color": "none",
+                          "layout": "vertical",
+                          "multiline_secondary": true
+                        },
+                        {
+                          "type": "custom:mushroom-template-card",
+                          "primary": "~ {{states.sensor.local_forecast_zambretti_detail.attributes.first_time[0]}} h",
+                          "secondary": "Rain: {{states.sensor.local_forecast_zambretti_detail.attributes.rain_prob[0]}}%\n{%if states.sensor.local_forecast.attributes.forecast_temp_short[1] == 0%}{{states.sensor.local_forecast.attributes.forecast_temp_short[0]}}°C{%endif%}",
+                          "icon": "{{states.sensor.local_forecast_zambretti_detail.attributes.icons[0]}}",
+                          "icon_color": "none",
+                          "layout": "vertical",
+                          "multiline_secondary": true
+                        },
+                        {
+                          "type": "custom:mushroom-template-card",
+                          "primary": "~ {{states.sensor.local_forecast_zambretti_detail.attributes.second_time[0]}}",
+                          "secondary": "Rain: {{states.sensor.local_forecast_zambretti_detail.attributes.rain_prob[1]}}%\n{%if states.sensor.local_forecast.attributes.forecast_temp_short[1] == 1%}{{states.sensor.local_forecast.attributes.forecast_temp_short[0]}}°C{%endif%}",
+                          "icon": "{{states.sensor.local_forecast_zambretti_detail.attributes.icons[1]}}",
+                          "icon_color": "none",
+                          "layout": "vertical",
+                          "multiline_secondary": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "custom:mushroom-template-card",
+                      "primary": "Forecast: {{states.sensor.local_forecast.attributes.forecast_zambretti[0]}}",
+                      "secondary": "Pressure: {{states.sensor.local_forecast.attributes.forecast_pressure_trend[0]}}, {{states.sensor.local_forecast_pressurechange.state}} hPa in 3h",
+                      "icon": "mdi:weather-cloudy-arrow-right",
+                      "multiline_secondary": true,
+                      "icon_color": "grey",
+                      "fill_container": false
                     }
                   ]
                 }
@@ -1024,8 +1079,10 @@
               "line_width": 2,
               "entities": [
                 {
-                  "entity": "sensor.openweathermap_temperature",
-                  "name": "Текущая OWM"
+                  "entity": "weather.yandex_weather",
+                  "attribute": "temperature",
+                  "unit": "℃",
+                  "name": "Текущая Yandex"
                 },
                 {
                   "entity": "sensor.ulitsa_temperature",
@@ -1109,8 +1166,10 @@
               "animate": true,
               "entities": [
                 {
-                  "entity": "sensor.openweathermap_cloud_coverage",
+                  "entity": "weather.home_assistant",
                   "name": "Облака",
+                  "attribute": "cloud_coverage",
+                  "unit": "%",
                   "color": "rgb(52, 152, 219)",
                   "show_line": false,
                   "show_legend": true,
@@ -1370,6 +1429,8 @@
               "cards": [
                 {
                   "type": "custom:webrtc-camera",
+                  "server": "http://192.168.1.252:1984/",
+                  "poster": "http://192.168.1.252:18000/rest/v1/places/2511029/accesscontrols/36857/videosnapshots",
                   "streams": [
                     {
                       "url": "domru_domofon",
@@ -1384,7 +1445,7 @@
                 },
                 {
                   "type": "custom:mushroom-entity-card",
-                  "entity": "script.domru_open_door_657617",
+                  "entity": "script.domru_open_door",
                   "name": "Открыть дверь",
                   "icon": "mdi:home-lock-open",
                   "icon_color": "red",
@@ -1964,41 +2025,6 @@
               "type": "vertical-stack",
               "cards": [
                 {
-                  "type": "custom:history-explorer-card",
-                  "cardName": "historycard-13807521",
-                  "showCurrentValues": true,
-                  "header": "hide",
-                  "uiLayout": {
-                    "toolbar": "top",
-                    "selector": "hide"
-                  },
-                  "graphs": [
-                    {
-                      "type": "line",
-                      "options": {
-                        "ymax": 100,
-                        "showTimeLabels": true
-                      },
-                      "entities": [
-                        {
-                          "entity": "sensor.adaptive_brt"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "line",
-                      "options": {
-                        "showTimeLabels": true
-                      },
-                      "entities": [
-                        {
-                          "entity": "sensor.adaptive_ct"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "type": "entities",
                   "entities": [
                     {
@@ -2170,17 +2196,6 @@
                     }
                   ],
                   "columns": 2
-                },
-                {
-                  "type": "entities",
-                  "entities": [
-                    {
-                      "entity": "binary_sensor.smartctl_sda"
-                    },
-                    {
-                      "entity": "binary_sensor.smartctl_sdb"
-                    }
-                  ]
                 }
               ]
             },
@@ -2307,39 +2322,6 @@
               }
             },
             {
-              "type": "entities",
-              "entities": [
-                {
-                  "entity": "update.zigbee2mqtt_update"
-                },
-                {
-                  "entity": "sensor.zigbee2mqtt_version_2"
-                },
-                {
-                  "entity": "sensor.zigbee2mqtt_bridge_status"
-                },
-                {
-                  "entity": "sensor.zigbee2mqtt_coordinator_type"
-                },
-                {
-                  "entity": "sensor.zigbee2mqtt_coordinator_firmware"
-                },
-                {
-                  "entity": "sensor.zigbee2mqtt_coordinator_version"
-                },
-                {
-                  "entity": "sensor.zigbee2mqtt_coordinator_zigbee_channel"
-                },
-                {
-                  "entity": "sensor.zigbee2mqtt_defined_groups"
-                },
-                {
-                  "entity": "sensor.zigbee2mqtt_device_count"
-                }
-              ],
-              "show_header_toggle": false
-            },
-            {
               "type": "custom:stack-in-card",
               "mode": "vertical",
               "cards": [
@@ -2392,10 +2374,6 @@
                   ]
                 }
               ]
-            },
-            {
-              "type": "markdown",
-              "content": "[diagnostics](/config/integrations/integration/hass_diagnostics) | [log](/config/logs) | total: {{ states('sensor.smart_log') }} items\n\n{% for i in state_attr('sensor.smart_log', 'records') -%}\n---\n<details>\n<summary>\n  <b>{{i.get('domain') or i.get('package') or i.name}}</b> ({{i.count}}) {{i.get('category','')}} {{i.get('host','')}}\n  <br>&nbsp; &nbsp;<i>{{i.short}}</i>\n</summary>\n<table>\n  <tr><td><b>{{i.name}}</b></td></tr>\n  <tr><td>{{i.message|replace('\\n',' ')}}</td></tr>\n  <tr><td>{{i.source|join(', ')}}{{', <a href=\"%s\">github</a>'%i.github if 'github' in i}}</td></tr>\n</table>\n{{'<pre>'+i.exception+'</pre>' if 'exception' in i}}\n</details>\n\n{% endfor %}"
             }
           ]
         },
@@ -2958,285 +2936,6 @@
               ]
             }
           ]
-        },
-        {
-          "title": "Графики",
-          "path": "charts-new",
-          "cards": [],
-          "type": "sections",
-          "sections": [
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:mini-graph-card",
-                  "name": "Температура",
-                  "hour24": true,
-                  "hours_to_show": 24,
-                  "group_by": "hour",
-                  "line_width": 2,
-                  "entities": [
-                    {
-                      "entity": "sensor.ble_datchik_v_spalne_temperature",
-                      "name": "Спальня"
-                    },
-                    {
-                      "entity": "sensor.ble_temperature_datchik_na_kukhne",
-                      "name": "Кухня"
-                    }
-                  ],
-                  "show": {
-                    "labels": true,
-                    "labels_secondary": true,
-                    "average": true,
-                    "extrema": true,
-                    "fill": "fade"
-                  },
-                  "animate": true,
-                  "height": 130
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:mini-graph-card",
-                  "name": "Внешняя температура",
-                  "hours_to_show": 48,
-                  "hour24": true,
-                  "group_by": "hour",
-                  "line_width": 2,
-                  "entities": [
-                    {
-                      "entity": "sensor.openweathermap_temperature",
-                      "name": "Текущая OWM"
-                    },
-                    {
-                      "entity": "sensor.ulitsa_temperature",
-                      "name": "Текущая по датчику"
-                    },
-                    {
-                      "entity": "sensor.lodzhiia_temperature",
-                      "name": "Лоджия"
-                    },
-                    {
-                      "entity": "sensor.outside_temperature_min_value",
-                      "name": "Мин. за 24 часа"
-                    },
-                    {
-                      "entity": "sensor.pressure_average",
-                      "name": "Давление",
-                      "y_axis": "secondary"
-                    }
-                  ],
-                  "show": {
-                    "labels": true,
-                    "labels_secondary": true,
-                    "average": false,
-                    "extrema": false,
-                    "fill": "fade"
-                  },
-                  "animate": true,
-                  "height": 195
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:mini-graph-card",
-                  "name": "Облачность и освещённость",
-                  "hour24": true,
-                  "hours_to_show": 48,
-                  "line_width": 3,
-                  "group_by": "hour",
-                  "lower_bound_secondary": 0,
-                  "lower_bound": 0,
-                  "show": {
-                    "labels": false,
-                    "fill": "fade",
-                    "labels_secondary": false
-                  },
-                  "animate": true,
-                  "entities": [
-                    {
-                      "entity": "sensor.openweathermap_cloud_coverage",
-                      "name": "Облака",
-                      "color": "rgb(52, 152, 219)",
-                      "show_line": false,
-                      "show_legend": true,
-                      "show_points": false,
-                      "show_indicator": true,
-                      "show_fill": true,
-                      "state_adaptive_color": false
-                    },
-                    {
-                      "entity": "sensor.mini_graph_day_pct",
-                      "color": "white",
-                      "show_line": false,
-                      "show_legend": false,
-                      "show_points": false,
-                      "show_indicator": false,
-                      "show_fill": true,
-                      "state_adaptive_color": false
-                    },
-                    {
-                      "entity": "sensor.mini_graph_night_pct",
-                      "color": "dark-grey",
-                      "show_line": false,
-                      "show_legend": false,
-                      "show_points": false,
-                      "show_indicator": false,
-                      "show_fill": true,
-                      "state_adaptive_color": false
-                    },
-                    {
-                      "entity": "sensor.osveshchionnost_na_kukhne_illuminance_lux",
-                      "name": "Кухня",
-                      "show_state": true,
-                      "show_legend": true,
-                      "show_indicator": true,
-                      "show_fill": false,
-                      "state_adaptive_color": false,
-                      "color": "var(--accent-color)",
-                      "y_axis": "secondary"
-                    },
-                    {
-                      "entity": "sensor.osveshchionnost_snaruzhi_illuminance_lux",
-                      "name": "Снаружи",
-                      "show_state": true,
-                      "show_legend": true,
-                      "show_indicator": true,
-                      "show_fill": false,
-                      "state_adaptive_color": false,
-                      "color": "rgb(231, 76, 60)",
-                      "y_axis": "secondary"
-                    },
-                    {
-                      "entity": "sensor.osveshchionnost_v_spalne_illuminance_lux",
-                      "name": "В комнате",
-                      "show_state": true,
-                      "show_legend": true,
-                      "show_indicator": true,
-                      "show_fill": false,
-                      "state_adaptive_color": false,
-                      "color": "green",
-                      "y_axis": "secondary"
-                    }
-                  ],
-                  "style": "ha-card {\n  height: 350px !important;\n}\n",
-                  "height": 175
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:mini-graph-card",
-                  "name": "Влажность",
-                  "hour24": true,
-                  "hours_to_show": 24,
-                  "group_by": "hour",
-                  "line_width": 2,
-                  "entities": [
-                    {
-                      "entity": "sensor.ble_datchik_v_spalne_humidity",
-                      "name": "Спальня"
-                    },
-                    {
-                      "entity": "sensor.ble_humidity_datchik_na_kukhne",
-                      "name": "Кухня"
-                    }
-                  ],
-                  "show": {
-                    "labels": true,
-                    "labels_secondary": true,
-                    "average": true,
-                    "extrema": true,
-                    "fill": "fade"
-                  },
-                  "animate": true,
-                  "height": 140
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:mini-graph-card",
-                  "name": "Воздух",
-                  "icon": "mdi:molecule-co2",
-                  "smoothing": true,
-                  "hour24": true,
-                  "hours_to_show": 24,
-                  "group_by": "hour",
-                  "line_width": 2,
-                  "entities": [
-                    {
-                      "entity": "sensor.co2_sensor_air_monitor_lite",
-                      "name": "CO2"
-                    },
-                    {
-                      "entity": "sensor.pm2_5_sensor_air_monitor_lite",
-                      "name": "PM2.5",
-                      "y-axis": "secondary"
-                    },
-                    {
-                      "entity": "sensor.pm10_sensor_air_monitor_lite",
-                      "name": "PM10",
-                      "y-axis": "secondary"
-                    }
-                  ],
-                  "show": {
-                    "labels": true,
-                    "labels_secondary": true,
-                    "average": true,
-                    "extrema": true,
-                    "fill": "fade"
-                  },
-                  "animate": true,
-                  "style": "ha-card {\n  height: 350px !important;\n}\n",
-                  "height": 130
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "custom:mini-graph-card",
-                  "name": "Радиация",
-                  "hours_to_show": 48,
-                  "hour24": true,
-                  "group_by": "hour",
-                  "line_width": 2,
-                  "entities": [
-                    {
-                      "entity": "sensor.geiger_dose_rate",
-                      "name": "Гейгер"
-                    }
-                  ],
-                  "show": {
-                    "labels": false,
-                    "labels_secondary": true,
-                    "average": true,
-                    "extrema": true,
-                    "fill": "fade"
-                  },
-                  "animate": true,
-                  "style": "ha-card {\n  height: 350px !important;\n}\n",
-                  "height": 185
-                }
-              ]
-            }
-          ],
-          "icon": "mdi:chart-line",
-          "max_columns": 4,
-          "theme": "macOS Theme"
         }
       ]
     }

@@ -204,22 +204,25 @@ automation:
         entity_id: binary_sensor.workday_tomorrow
         state: "on"
       - condition: template
-        value_template: "{{ now().day != this.attributes.last_triggered.day | default(0) }}"
+#        value_template: "{{ now().day != this.attributes.last_triggered.day | default(0) }}"
+        value_template: "{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered, 0) > 21600 }}"
       - condition: template
-        value_template: "{{ now().day != states.input_select.wakeup_time.last_changed.day | default(0) }}"
+#        value_template: "{{ now().day != states.input_select.wakeup_time.last_changed.day | default(0) }}"
+        value_template: "{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_changed, 0) > 21600 }}"
     action:
+#      - if:
+#          - condition: template
+#            value_template: "{{ now().weekday() in (0,) }}" # Если сегодня понедельник, то завтра во вторник на машине
+#        then:
+#          - service: input_select.select_option
+#            target:
+#              entity_id: input_select.wakeup_time
+#            data:
+#              option: 'Машина'
       - if:
           - condition: template
-            value_template: "{{ now().weekday() in (0,) }}" # Если сегодня понедельник, то завтра во вторник на машине
-        then:
-          - service: input_select.select_option
-            target:
-              entity_id: input_select.wakeup_time
-            data:
-              option: 'Машина'
-      - if:
-          - condition: template
-            value_template: "{{ now().weekday() in (1,) }}" # Если сегодня вторник, то завтра в среду дома
+#            value_template: "{{ now().weekday() in (1,) }}" # Если сегодня вторник, то завтра в среду дома
+            value_template: "{{ now().weekday() in (2,) }}" # Если сегодня понедельник, то завтра во вторник дома
         then:
           - service: input_select.select_option
             target:

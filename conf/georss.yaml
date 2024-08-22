@@ -1,0 +1,66 @@
+#######################################
+#  Сенсоры штормовых предупреждений   #
+#######################################
+
+# Источник: https://mansmarthome.info/posts/climate/shtormovyie-priedupriezhdieniia-v-home-assistant/
+
+# Код карточки:
+
+# type: custom:mushroom-template-card
+# primary: Weather alerts
+# secondary: >-
+#   {% set alerts_cnt = states('sensor.weather_alerts_o_any') | int +
+#   states('sensor.weather_alerts_w_any') | int %}
+#   {% if alerts_cnt > 0 %}
+#     {{ alerts_cnt }} alert{{ 's' if alerts_cnt > 1 }}{# within the last {{ as_datetime((states.sensor.weather_alerts_any.attributes | list)[-5]) | time_since }}#}
+#   {% else %}
+#     No weather alerts
+#   {% endif %}
+# icon: mdi:weather-cloudy-alert
+# multiline_secondary: false
+# tap_action:
+#   action: more-info
+# icon_color: >-
+#   {% if (states('sensor.weather_alerts_o_any') | int +
+#   states('sensor.weather_alerts_w_any') | int) > 0 %}
+#     var(--rgb-red)
+#   {% else %}
+#     var(--rgb-disabled)
+#   {% endif %}
+# fill_container: true
+# entity: sensor.weather_alerts_o_any
+
+sensor:
+  - platform: geo_rss_events
+    name: 'Weather alerts (O)'
+    url: 'http://portal.esimo.ru/dataview/viewrss?resourceId=RU_RIHMI-WDC_487'
+    unit_of_measurement: 'alerts'
+    radius: 120
+  - platform: geo_rss_events
+    name: 'Weather alerts (W)'
+    url: 'http://portal.esimo.ru/dataview/viewrss?resourceId=RU_RIHMI-WDC_227'
+    unit_of_measurement: 'alerts'
+    radius: 120
+
+automation:
+  - alias: "Weather alerts to Telegram"
+    trigger:
+      platform: state
+      entity_id:
+        - sensor.weather_alerts_o_any
+        - sensor.weather_alerts_w_any
+    condition:
+      condition: template
+      value_template: "{{ trigger.from_state.state | int < trigger.to_state.state | int }}"
+    action:
+      service: telegram_bot.send_message
+      data:
+        parse_mode: markdown
+        message:  >
+          {% set alert_sensors = [
+            states.sensor.weather_alerts_w_any,
+            states.sensor.weather_alerts_o_any,
+          ] %}
+          {% set alerts = alert_sensors | map(attribute='attributes') | map('items') | map('selectattr', 1, 'contains', 'km') %}
+          {% set latest = alerts | map('list') | select() | map('max', attribute=0) | max(attribute=0) %}
+          ⛈️ Действует предупреждение об опасных погодных явлениях от {{ as_local(as_datetime(latest[0] + 'Z')).strftime('%H:%M') }} в {{ latest[1] | replace('km', ' км') }} от вашего дома. Подробности [на портале ЕСИМО](http://portal.esimo.ru/dataview/viewresource?resourceId=ru_rihmi-wdc_2772).

@@ -34,7 +34,7 @@ homeassistant:
     - /share/smartctl
 
 morph_numbers:
-#start_time:
+start_time:
 powercalc:
 python_script:
 battery_notes:

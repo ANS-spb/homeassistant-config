@@ -16,19 +16,6 @@
     data: {}
   - service: script.dynamic_update_all_light_group
     data: {}
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.dnevnoe_vremia
-        state: 'off'
-      sequence:
-      - service: light.turn_off
-        data: {}
-        entity_id: all
-    - conditions: []
-      sequence: []
-    default: []
-    enabled: false
   - service: telegram_bot.send_message
     data:
       message: "\U0001F3C1 Cервер запущен в {{ states('sensor.time') }}.\n⏱ Запуск
@@ -1343,7 +1330,7 @@
       triggerSource: preview
   condition: []
   action:
-  - service: script.domru_open_door_657617
+  - service: script.domru_open_door
     data: {}
   - service: notify.mobile_app_iphone_ans
     data:
@@ -1355,6 +1342,7 @@
     target:
       entity_id:
       - camera.domofon
+    enabled: false
   - wait_for_trigger:
     - platform: event
       event_type: folder_watcher
@@ -1363,6 +1351,7 @@
         file: domofon.jpg
     continue_on_timeout: true
     timeout: 00:00:10
+    enabled: false
   - service: telegram_bot.send_photo
     data:
       file: /media/domofon.jpg
@@ -1370,6 +1359,7 @@
       parse_mode: html
       timeout: 1000
       message_tag: msg_to_edit
+    enabled: false
   mode: restart
 - id: '1648212086564'
   alias: Radiacode отвалился, перезапуск
@@ -1506,7 +1496,7 @@
       data: /open_door
   condition: []
   action:
-  - service: script.domru_open_door_657617
+  - service: script.domru_open_door
     data: {}
   - service: camera.snapshot
     data:
@@ -1540,7 +1530,7 @@
       parse_mode: html
       disable_notification: true
       timeout: 1000
-    enabled: true
+    enabled: false
   mode: restart
 - id: '1656081010980'
   alias: Просмотр ТВ
@@ -1574,6 +1564,7 @@
         entity_id: cover.shtora
         type: set_position
         position: 45
+      enabled: false
     - if:
       - condition: device
         type: is_on
@@ -2399,6 +2390,7 @@
         - action: LIGHTSON
           title: Включить свет
           destructive: false
+    enabled: false
   mode: single
 - id: '1706769848719'
   alias: Push Notify Lights On
@@ -2542,3 +2534,39 @@
           notification_id: '{{ trigger.event.data.device_id }}-{{ trigger.event.data.source_entity_id
             }}'
   mode: queued
+- id: '1720417582684'
+  alias: Battery Not Reported
+  description: Battery not reported
+  trigger:
+  - platform: event
+    event_type: battery_notes_battery_not_reported
+  condition: []
+  action:
+  - service: persistent_notification.create
+    data:
+      title: '{{ trigger.event.data.device_name }} Battery Not Reported
+
+        '
+      message: 'The device has not reported its battery level for {{ trigger.event.data.battery_last_reported_days
+        }} days {{ ''\n'' -}} Its last reported level was {{ trigger.event.data.battery_last_reported_level
+        }}% {{ ''\n'' -}} You need {{ trigger.event.data.battery_quantity }}× {{ trigger.event.data.battery_type
+        }}
+
+        '
+  - service: telegram_bot.send_message
+    metadata: {}
+    data:
+      message: "⚠️ \U0001FAAB Устройство {{ trigger.event.data.device_name }} не сообщало
+        свой уровень заряда в течение  {{ trigger.event.data.battery_last_reported_days
+        }} дней {{ '\\n' -}} Нужно заменить {{ trigger.event.data.battery_quantity
+        }}x  {{ trigger.event.data.battery_type }}\n"
+  mode: queued
+  max: 30
+- id: '1721631255756'
+  alias: Certificate Expiration
+  description: ''
+  use_blueprint:
+    path: bkbilly/certificate-expiration.yaml
+    input:
+      certificate_input: sensor.cert_expiry_timestamp_d7160cc8a60d_sn_mynetname_net_8123
+      notify_device: 58f9cf55e5a2b8fc6fac9e5055cf3d21
