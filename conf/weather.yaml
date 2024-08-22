@@ -116,7 +116,7 @@ template:
         state: >-
           {% set diff = states('sensor.pressure_change_3h') | float(0) %}
           {% set press = states('sensor.pressure_average') | float(0) %}
-          {% set tempr = state_attr('weather.openweathermap','temperature') | int(0) %}
+          {% set tempr = state_attr('weather.yandex_weather','temperature') | int(0) %}
           {% if press > 1022.689 %}
             {% if diff <= -1.4 %}
               Пасмурно
@@ -159,7 +159,7 @@ template:
         icon: >-
           {% set diff = states('sensor.pressure_change_3h') | float(0) %}
           {% set press = states('sensor.pressure_average') | float(0) %}
-          {% set tempr = state_attr('weather.openweathermap','temperature') | int(0) %}
+          {% set tempr = state_attr('weather.yandex_weather','temperature') | int(0) %}
           {%- if press > 1022.689 -%}
             {%- if diff <= -1.4 -%}
               mdi:weather-partly-cloudy

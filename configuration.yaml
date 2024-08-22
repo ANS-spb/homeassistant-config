@@ -11,10 +11,8 @@ http:
   login_attempts_threshold: 5
   use_x_forwarded_for: true
   trusted_proxies:
-    - 192.168.1.252
     - 172.20.0.0/24
     - 172.30.32.0/23
-    - 127.0.0.1
 
 group: !include groups.yaml
 automation ui: !include automations.yaml
@@ -28,7 +26,6 @@ template: !include_dir_merge_list template
 homeassistant:
   packages: !include_dir_named conf
   customize: !include customize.yaml
-#  customize_glob: !include customize_glob.yaml
   allowlist_external_dirs:
     - /config
     - /share/smartctl
@@ -41,19 +38,9 @@ battery_notes:
 
 yeelight: !include yeelight.yaml
 
-#homekit:
-#  - filter:
-#      include_entities:
-#        - switch.0x04cf8cdf3c76548d_plug
-#    entity_config:
-#      switch.0x04cf8cdf3c76548d_plug:
-#        type: outlet
-
 logger:
   default: info
   #logs:
-    #custom_components.openweathermap: debug
-    #pysqueezebox.server: fatal
     #homeassistant.components.zha: debug
     #zigpy: debug
 
@@ -84,17 +71,6 @@ input_boolean:
     name: "Эффекты гирлянды"
     initial: on
 
-#input_text:
-#  ans_phone_number:
-#    name: ANS phone number
-#    initial: !secret sms_ans
-
-#folder_watcher:
-#  - folder: /media
-#    patterns:
-#      - '*.mp4'
-#      - '*.jpg'
-
 stream:
   ll_hls: true
   part_duration: 0.75
@@ -106,17 +82,3 @@ frontend:
     - /hacsfiles/lovelace-card-mod/card-mod.js
 
 config_editor:
-
-#zha_toolkit:
-
-  #weather:
-#  - platform: yandex_weather
-#    api_key: !secret yandex_weather_key
-
-#zha:
-#  zigpy_config:
-#    ota:
-#      otau_directory: /config/zigpy_ota
-#      ikea_provider: true
-#      ikea_update_url: http://fw.test.ota.homesmart.ikea.net/feed/version_info.json
-#      ledvance_provider: true
