@@ -5,7 +5,7 @@
 
 shell_command:
   radiacode_kill: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux kill-session -t radiacode || exit 0'
-  radiacode_start: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux new -d -s radiacode "python3 /home/ans/homeassistant.py --bluetooth-mac 52:43:06:50:01:54 --interval 1"'
+  radiacode_start: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux new -d -s radiacode "python3 /home/ans/homeassistant.py --connection bluetooth --bluetooth-mac 52:43:06:50:01:54 --interval 1"'
   nut_battery_parse: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 /usr/share/hassio/homeassistant/nutbattery.sh'
 
 template:
@@ -23,6 +23,24 @@ template:
         state: "{% set drmr = trigger.to_state.state | float(0) / 114.025 %} {{ drmr | round(2) }}"
         unit_of_measurement: "μSv/h"
         icon: mdi:radioactive
+
+  - trigger:
+    - platform: webhook
+      webhook_id: radiacode
+      local_only: false
+      allowed_methods:
+        - POST
+        - GET
+    sensor:
+      - name: "Radiacode dose rate"
+        state: "{{ trigger.json.dose_rate }}"
+        unit_of_measurement: "μSv/h"
+        icon: mdi:radioactive
+        attributes:
+          count_rate: "{{ trigger.json.count_rate }}"
+          dose_rate_err: "{{ trigger.json.dose_rate_err }}"
+          count_rate_err: "{{ trigger.json.count_rate_err }}"
+          charge_level: "{{ trigger.json.charge_level }}"
 
 #   - trigger:
 #       - platform: state
