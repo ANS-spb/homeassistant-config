@@ -5,7 +5,8 @@
 
 shell_command:
   radiacode_kill: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux kill-session -t radiacode || exit 0'
-  radiacode_start: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux new -d -s radiacode "python3 /home/ans/homeassistant.py --connection bluetooth --bluetooth-mac 52:43:06:50:01:54 --interval 1"'
+  radiacode_start: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux new -d -s radiacode "python3 /home/ans/homeassistant.py --connection bluetooth --bluetooth-mac 52:43:06:50:01:54 --interval 5"'
+  radiacode_usb_start: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux new -d -s radiacode "python3 /home/ans/homeassistant.py --connection usb --interval 5"'
   nut_battery_parse: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 /usr/share/hassio/homeassistant/nutbattery.sh'
 
 template:
@@ -27,7 +28,7 @@ template:
   - trigger:
     - platform: webhook
       webhook_id: radiacode
-      local_only: false
+      local_only: true
       allowed_methods:
         - POST
         - GET
@@ -42,63 +43,18 @@ template:
           count_rate_err: "{{ trigger.json.count_rate_err }}"
           charge_level: "{{ trigger.json.charge_level }}"
 
-#   - trigger:
-#       - platform: state
-#         entity_id:
-#           - sensor.radiacode
-#         not_to:
-#           - "unavailable"
-#           - "unknown"
-#     sensor:
-#       - name: "Radiacode dose rate"
-#         unique_id: radiacode-dr
-#         state: "{{ trigger.to_state.state }}"
-#         unit_of_measurement: "μSv/h"
-#         icon: mdi:radioactive
-#       - name: "Radiacode count rate"
-#         unique_id: radiacode-cr
-#         state: "{{ trigger.to_state.attributes.cps }}"
-#         unit_of_measurement: "CPS"
-#         icon: mdi:radioactive
-
-#   - trigger:
-#       - platform: state
-#         entity_id:
-#           - sensor.radiacode_work
-#         not_to:
-#           - "unavailable"
-#           - "unknown"
-#     sensor:
-#       - name: "Radiacode (work) dose rate"
-#         unique_id: radiacode-work-dr
-#         state: "{{ trigger.to_state.state }}"
-#         unit_of_measurement: "μSv/h"
-#         icon: mdi:radioactive
-#       - name: "Radiacode (work) count rate"
-#         unique_id: radiacode-work-cr
-#         state: "{{ trigger.to_state.attributes.cps }}"
-#         unit_of_measurement: "CPS"
-#         icon: mdi:radioactive
+  - trigger:
+      - platform: webhook
+        webhook_id: radiacode-connected
+        local_only: true
+        allowed_methods:
+          - POST
+          - GET
+    binary_sensor:
+      - name: "Radiacode connected"
+        state: "{{ trigger.json.connected }}"
 
 sensor:
-
-#   - platform: statistics
-#     name: radiacode_dr_mean_value
-#     unique_id: radiacode_dr_mean_value
-#     entity_id: sensor.radiacode_dose_rate
-#     sampling_size: 100000
-#     state_characteristic: mean
-#     max_age:
-#       hours: 24
-
-#   - platform: statistics
-#     name: radiacode_cr_mean_value
-#     unique_id: radiacode_cr_mean_value
-#     entity_id: sensor.radiacode_count_rate
-#     sampling_size: 100000
-#     state_characteristic: mean
-#     max_age:
-#       hours: 24
 
   - platform: statistics
     name: geiger_dr_mean_value
@@ -117,3 +73,21 @@ sensor:
     state_characteristic: mean
     max_age:
       hours: 24
+
+#   - platform: statistics
+#     name: radiacode_dr_mean_value
+#     unique_id: radiacode_dr_mean_value
+#     entity_id: sensor.radiacode_dose_rate
+#     sampling_size: 100000
+#     state_characteristic: mean
+#     max_age:
+#       hours: 24
+
+#   - platform: statistics
+#     name: radiacode_cr_mean_value
+#     unique_id: radiacode_cr_mean_value
+#     entity_id: sensor.radiacode_count_rate
+#     sampling_size: 100000
+#     state_characteristic: mean
+#     max_age:
+#       hours: 24

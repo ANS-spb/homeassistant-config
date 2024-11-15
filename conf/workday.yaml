@@ -6,7 +6,7 @@ command_line:
   - binary_sensor:
       name: "Workday raw"
       command: >-
-        curl https://isdayoff.ru/{{ now().date().strftime("%Y%m%d") }}
+        curl https://n01.isdayoff.ru/{{ now().date().strftime("%Y%m%d") }}
       command_timeout: 300
       scan_interval: 3600
       payload_on: '0'
@@ -15,7 +15,7 @@ command_line:
   - binary_sensor:
       name: "Workday Tomorrow raw"
       command: >-
-        curl https://isdayoff.ru/{{ (now().date() + timedelta(days=1)).strftime("%Y%m%d") }}
+        curl https://n01.isdayoff.ru/{{ (now().date() + timedelta(days=1)).strftime("%Y%m%d") }}
       command_timeout: 300
       scan_interval: 3600
       payload_on: '0'

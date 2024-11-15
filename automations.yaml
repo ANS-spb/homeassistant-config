@@ -1,27 +1,29 @@
 - id: '1599947443054'
   alias: Hass Startup Notification
   description: ''
-  trigger:
+  triggers:
   - event: start
-    platform: homeassistant
-  condition: []
-  action:
+    trigger: homeassistant
+  conditions: []
+  actions:
   - data:
       message: "\U0001F3C1 Cервер запущен в {{ states('sensor.time') }}"
       title: ⚒️ Системное уведомление
-    service: notify.mobile_app_iphone_ans
-  - service: input_boolean.turn_off
-    target:
+    action: notify.mobile_app_iphone_ans
+  - target:
       entity_id: input_boolean.manual_light_off
     data: {}
-  - service: script.dynamic_update_all_light_group
-    data: {}
-  - service: telegram_bot.send_message
-    data:
+    action: input_boolean.turn_off
+  - data: {}
+    action: script.dynamic_update_all_light_group
+  - data:
       message: "\U0001F3C1 Cервер запущен в {{ states('sensor.time') }}.\n⏱ Запуск
         Home Assistant занял {{ states('sensor.start_time') | format(morph='секунда',
         as_text=false) }}.\n"
       title: ⚒️ Системное уведомление
+    action: telegram_bot.send_message
+  - action: shell_command.radiacode_usb_start
+    data: {}
   mode: single
 - id: '1601827285752'
   alias: Hass Shutdown Notification
@@ -342,32 +344,33 @@
 - id: '1607706912213'
   alias: Кнопка в комнате выключает всё
   description: ''
-  trigger:
-  - platform: state
-    entity_id: sensor.knopka_aqara_komnata_action
+  triggers:
+  - entity_id: sensor.knopka_aqara_komnata_action
     to: single
-  condition: []
-  action:
-  - service: script.turn_on
-    data: {}
+    trigger: state
+  conditions: []
+  actions:
+  - data: {}
     target:
       entity_id:
       - script.1644819849093
+    action: script.turn_on
   - choose:
     - conditions:
       - condition: state
         entity_id: binary_sensor.dnevnoe_vremia
         state: 'off'
       sequence:
-      - service: switch.turn_on
-        target:
+      - target:
           entity_id: switch.adaptive_lighting_sleep_mode_room
         data: {}
+        action: switch.turn_on
     default: []
-  - service: switch.turn_off
-    data: {}
+    enabled: false
+  - data: {}
     target:
       entity_id: switch.power_off_sockets
+    action: switch.turn_off
   mode: single
 - id: '1607707032964'
   alias: Кнопка в комнате управляет светом
@@ -764,35 +767,34 @@
 - id: '1643463448231'
   alias: Opple управляет шторой
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - sensor.upravlenie_shtoroi_action
     to: button_1_single
-  - platform: state
-    entity_id:
+    trigger: state
+  - entity_id:
     - sensor.upravlenie_shtoroi_action
     to: button_2_single
-  condition:
+    trigger: state
+  conditions:
   - condition: template
-    value_template: '{{ trigger.from_state.state != "unavailable" and trigger.from_state.state
-      != "unknown" }}'
-  action:
+    value_template: '{{ trigger.from_state.state != "unavailable" }}'
+  actions:
   - delay:
       hours: 0
       minutes: 0
       seconds: 2
       milliseconds: 0
   - wait_for_trigger:
-    - platform: state
-      entity_id:
+    - entity_id:
       - sensor.upravlenie_shtoroi_action
+      trigger: state
     continue_on_timeout: false
     timeout: 00:00:30
-  - service: cover.stop_cover
-    target:
+  - target:
       entity_id: cover.shtora
     data: {}
+    action: cover.stop_cover
   mode: single
 - id: '1645027916506'
   alias: Звонок в домофон
@@ -1281,39 +1283,58 @@
   description: ''
   trigger:
   - platform: numeric_state
-    entity_id: sensor.geiger_dose_rate
+    entity_id:
+    - sensor.geiger_dose_rate
+    - sensor.radiacode_dose_rate
     above: '0.5'
   - platform: numeric_state
-    entity_id: sensor.geiger_dose_rate
+    entity_id:
+    - sensor.geiger_dose_rate
+    - sensor.radiacode_dose_rate
     above: '1'
   condition: []
   action:
-  - service: notify.mobile_app_iphone_ans
+  - action: graph_image.create_graph_image
+    target:
+      entity_id:
+      - sensor.geiger_dose_rate
+      - sensor.radiacode_dose_rate
     data:
+      in_folderfile: /config/www/graph-radiation.png
+      in_time_start: 1
+      in_time_end: 0
+      in_size_ticks: 10
+      in_linewidth: 1
+      in_linesmooth: 1
+      in_lineinterp: linear_interp
+      in_rate_ticks: false
+      in_style: Solarize_Light2
+  - data:
       title: ☢️ Радиационный мониторинг
       message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:
         {{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n}}\nОбнаружено
         устройством {{ states[trigger.entity_id.split(\".\")[0]][\ntrigger.entity_id.split(\".\")[1]].name
-        }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value') }} {{\nstate_attr('sensor.geiger_dr_mean_value',
-        'unit_of_measurement') }}. \n"
+        }}\n\nСреднее значение на радиометре: {{ states('sensor.geiger_dr_mean_value')
+        }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement') }}.
+        \n"
       data:
         push:
           interruption-level: time-sensitive
-  - service: notify.telegram
-    data:
-      title: ☢️ *Радиационный мониторинг*
-      message: "*Обнаружено превышение порога радиационного фона*. Мощность дозы:
-        *{{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n}}*
+    action: notify.mobile_app_iphone_ans
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - data:
+      file: /config/www/graph-radiation.png
+      caption: "☢️ *Радиационный мониторинг*\n*Обнаружено превышение порога радиационного
+        фона*. Мощность дозы: *{{\ntrigger.to_state.state }} {{trigger.to_state.attributes.unit_of_measurement\n}}*
         \nОбнаружено устройством {{ states[trigger.entity_id.split(\".\")[0]][\ntrigger.entity_id.split(\".\")[1]].name
-        }}\n\nСреднее значение СП: {{ states('sensor.geiger_dr_mean_value') }} {{\nstate_attr('sensor.geiger_dr_mean_value',
-        'unit_of_measurement') }}. \n"
-  - service: telegram_bot.send_photo
-    data:
-      url: https://localhost:3000/api/hassio_ingress/AtPG8gEipnIQEga1FJuzQktnNVhQ7LRDYX1ZFDAxy4I/render/d-solo/J_EkXzk4z/for-sending?orgId=1&from=now-5m&to=now&panelId=2&width=1000&height=500&tz=Europe%2FMoscow
-      username: admin
-      password: hassio
-      verify_ssl: false
-      timeout: 10
+        }}\n\nСреднее значение на радиометре: {{ states('sensor.geiger_dr_mean_value')
+        }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement') }}.
+        \n"
+    action: telegram_bot.send_photo
   mode: parallel
 - id: '1648154272024'
   alias: Открыть домофон с приложения
@@ -1366,10 +1387,11 @@
   description: ''
   trigger:
   - platform: time_pattern
-    minutes: /2
+    minutes: /1
   - platform: state
     entity_id: device_tracker.ble_tracker_radiacode
     to: home
+    enabled: false
   condition:
   - condition: or
     conditions:
@@ -1383,13 +1405,14 @@
         hours: 0
         minutes: 10
         seconds: 0
+    enabled: false
   - condition: template
-    value_template: '{% if states(''sensor.radiacode'') != "unknown" %}
+    value_template: '{% if states(''sensor.radiacode_dose_rate'') != "unknown" %}
 
-      {{ (as_timestamp(now()) - as_timestamp(states.sensor.radiacode.last_updated))
-      > 60 }}
+      {{ (as_timestamp(now()) - as_timestamp(states.sensor.radiacode_dose_rate.last_updated))
+      > 10 }}
 
-      {% elif states(''sensor.radiacode'') == "unknown" %}
+      {% elif states(''sensor.radiacode_dose_rate'') == "unknown" %}
 
       true
 
@@ -1399,15 +1422,15 @@
 
       {% endif %}'
   action:
-  - service: shell_command.radiacode_kill
-    data: {}
+  - data: {}
+    action: shell_command.radiacode_kill
   - delay:
       hours: 0
       minutes: 0
       seconds: 2
       milliseconds: 0
-  - service: shell_command.radiacode_start
-    data: {}
+  - data: {}
+    action: shell_command.radiacode_start
   mode: single
 - id: '1648396428257'
   alias: Гейгер - информация по запросу в Telegram
@@ -1429,45 +1452,89 @@
     - condition: trigger
       id: command
     then:
-    - service: telegram_bot.send_message
+    - action: graph_image.create_graph_image
+      target:
+        entity_id:
+        - sensor.geiger_dose_rate
+        - sensor.radiacode_dose_rate
       data:
-        title: ☢️ *Радиационный мониторинг*
-        message: "Значение радиационного фона на текущий момент: \n\nСтационарный
-          пост: *{{ states('sensor.geiger_dose_rate') }} {{\nstate_attr('sensor.geiger_dose_rate',
-          'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')
-          }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')
-          }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)
-          }} назад.\n"
+        in_folderfile: /config/www/graph-radiation.png
+        in_time_start: 1
+        in_time_end: 0
+        in_size_ticks: 10
+        in_linewidth: 1
+        in_linesmooth: 1
+        in_lineinterp: linear_interp
+        in_rate_ticks: false
+        in_style: Solarize_Light2
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 2
+        milliseconds: 0
+    - data:
+        file: /config/www/graph-radiation.png
+        caption: '☢️ *Радиационный мониторинг*
+
+
+          {% from ''relative_time_plus.jinja'' import relative_time_plus %} Стационарный
+          радиометр: *{{ states(''sensor.geiger_dose_rate'') }} {{
+
+          state_attr(''sensor.geiger_dose_rate'', ''unit_of_measurement'') }}* при
+          среднем {{
+
+          states(''sensor.geiger_dr_mean_value'') }} {{
+
+          state_attr(''sensor.geiger_dr_mean_value'', ''unit_of_measurement'') }}.
+
+          ({{relative_time_plus(states.sensor.geiger_dose_rate.last_updated, language=''ru'')
+          }} назад)
+
+
+          Сцинтиллятор: *{{ states(''sensor.radiacode_dose_rate'') }} {{
+
+          state_attr(''sensor.radiacode_dose_rate'', ''unit_of_measurement'') }}*.
+
+          ({{relative_time_plus(states.sensor.radiacode_dose_rate.last_updated, language=''ru'')
+          }} назад)
+
+          '
         target: '{{ trigger.event.data.chat_id }}'
         parse_mode: markdown
         disable_notification: true
-    - service: telegram_bot.send_photo
-      data:
-        url: https://localhost:3000/api/hassio_ingress/AtPG8gEipnIQEga1FJuzQktnNVhQ7LRDYX1ZFDAxy4I/render/d-solo/J_EkXzk4z/for-sending?orgId=1&from=now-1h&to=now&panelId=2&width=1000&height=500&tz=Europe%2FMoscow
-        username: admin
-        password: hassio
-        verify_ssl: false
-        timeout: 10
-        target: '{{ trigger.event.data.chat_id }}'
-        disable_notification: true
+      action: telegram_bot.send_photo
     else: []
   - if:
     - condition: trigger
       id: callback
     then:
-    - service: telegram_bot.edit_message
-      data:
+    - data:
         title: ☢️ *Радиационный мониторинг*
-        message: "Значение радиационного фона на текущий момент: \n\nСтационарный
-          пост: *{{ states('sensor.geiger_dose_rate') }} {{\nstate_attr('sensor.geiger_dose_rate',
-          'unit_of_measurement') }}* при среднем {{\nstates('sensor.geiger_dr_mean_value')
-          }} {{\nstate_attr('sensor.geiger_dr_mean_value', 'unit_of_measurement')
-          }}.\n\nОбновление данных СП было {{relative_time(states.sensor.geiger_dose_rate.last_updated)
-          }} назад.\n"
+        message: '{% from ''relative_time_plus.jinja'' import relative_time_plus %}
+          Стационарный радиометр: *{{ states(''sensor.geiger_dose_rate'') }} {{
+
+          state_attr(''sensor.geiger_dose_rate'', ''unit_of_measurement'') }}* при
+          среднем {{
+
+          states(''sensor.geiger_dr_mean_value'') }} {{
+
+          state_attr(''sensor.geiger_dr_mean_value'', ''unit_of_measurement'') }}.
+
+          ({{relative_time_plus(states.sensor.geiger_dose_rate.last_updated, language=''ru'')
+          }} назад)
+
+          {% if (as_timestamp(now()) - as_timestamp(states.sensor.radiacode_dose_rate.last_updated))
+          < 60 %} Сцинтиллятор: *{{ states(''sensor.radiacode_dose_rate'') }} {{ state_attr(''sensor.radiacode_dose_rate'',
+          ''unit_of_measurement'') }}*. ({{relative_time_plus(states.sensor.radiacode_dose_rate.last_updated,
+          language=''ru'') }} назад) {% else %} Сцинтиллятор отключен. {% endif %}
+
+          '
+        target: '{{ trigger.event.data.chat_id }}'
         message_id: last
         chat_id: '{{ trigger.event.data.chat_id }}'
         inline_keyboard:
         - Назад:/back
+      action: telegram_bot.edit_message
   mode: single
 - id: '1654280445528'
   alias: 'Read Nut Mini battery '
@@ -2411,31 +2478,36 @@
 - id: '1707224574081'
   alias: Battery Replaced
   description: Battery Replaced
-  trigger:
-  - platform: event
-    event_type: battery_notes_battery_increased
+  triggers:
+  - event_type: battery_notes_battery_increased
     event_data: {}
     id: battery_increased
-  - platform: event
-    event_type: telegram_callback
+    trigger: event
+    enabled: false
+  - event_type: telegram_callback
     event_data:
       command: /battery_replaced
     id: battery_replaced
-  - platform: event
-    event_type: telegram_callback
+    trigger: event
+  - event_type: telegram_callback
     event_data:
       command: /do_nothing
     id: do_nothing
-  condition: []
-  action:
+    trigger: event
+  - event_type: battery_notes_battery_replaced
+    event_data: {}
+    id: battery_notes_battery_replaced
+    trigger: event
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: trigger
         id:
         - battery_increased
+        - battery_notes_battery_replaced
       sequence:
-      - service: telegram_bot.send_message
-        data:
+      - data:
           message: "\U0001F50B Процент батареи устройства {{ trigger.event.data.device_name
             }} увеличился до {{ trigger.event.data.battery_level | int(0) }}% {{ '\\n'
             -}} Была ли замена батареи в этом устройстве?\n"
@@ -2446,40 +2518,41 @@
           inline_keyboard:
           - ✅ Батарея заменена:/battery_replaced {{ trigger.event.data.device_id }},
             ❌ Я ничего не трогал:/do_nothing
+        action: telegram_bot.send_message
     - conditions:
       - condition: trigger
         id:
         - battery_replaced
       sequence:
-      - service: telegram_bot.answer_callback_query
-        data:
+      - data:
           callback_query_id: '{{ trigger.event.data.id }}'
           message: OK
           show_alert: false
-      - service: telegram_bot.edit_message
-        data:
+        action: telegram_bot.answer_callback_query
+      - data:
           message_id: '{{ trigger.event.data.message.message_id }}'
           chat_id: '{{ trigger.event.data.chat_id }}'
           message: "\U0001F44C Записываем замену батарейки\n"
           inline_keyboard:
           - ✅ OK:/do_nothing
-      - service: battery_notes.set_battery_replaced
-        data:
+        action: telegram_bot.edit_message
+      - data:
           device_id: '{{ trigger.event.data.args[0] }}'
+        action: battery_notes.set_battery_replaced
     - conditions:
       - condition: trigger
         id:
         - do_nothing
       sequence:
-      - service: telegram_bot.answer_callback_query
-        data:
+      - data:
           callback_query_id: '{{ trigger.event.data.id }}'
           message: OK
           show_alert: false
-      - service: telegram_bot.delete_message
-        data:
+        action: telegram_bot.answer_callback_query
+      - data:
           message_id: '{{ trigger.event.data.message.message_id }}'
           chat_id: '{{ trigger.event.data.chat_id }}'
+        action: telegram_bot.delete_message
   mode: queued
 - id: '1707224788505'
   alias: Battery Low Notification

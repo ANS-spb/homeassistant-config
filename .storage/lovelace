@@ -175,6 +175,33 @@
                 {
                   "type": "custom:auto-entities",
                   "show_empty": false,
+                  "filter": {
+                    "include": [
+                      {
+                        "entity_id": "sensor.radiacode_dose_rate"
+                      }
+                    ],
+                    "exclude": [
+                      {
+                        "state": "unavailable"
+                      },
+                      {
+                        "state": "unknown"
+                      },
+                      {
+                        "last_updated": "> 5"
+                      }
+                    ]
+                  },
+                  "card": {
+                    "type": "entity",
+                    "entity": "sensor.radiacode_dose_rate",
+                    "name": "Radiacode Doserate"
+                  }
+                },
+                {
+                  "type": "custom:auto-entities",
+                  "show_empty": false,
                   "card": {
                     "type": "entities",
                     "show_header_toggle": false,
@@ -399,7 +426,7 @@
                     },
                     {
                       "type": "custom:multiple-entity-row",
-                      "entity": "sensor.ulitsa_owm_perception",
+                      "entity": "sensor.ulitsa_datchik_perception",
                       "name": "Улица",
                       "icon": "tc:thermal-perception",
                       "styles": {
@@ -409,7 +436,7 @@
                       "entities": [
                         {
                           "name": "Температура",
-                          "entity": "sensor.ulitsa_owm_simmerzone",
+                          "entity": "sensor.ulitsa_datchik_simmerzone",
                           "styles": {
                             "width": "100px"
                           }
@@ -1246,6 +1273,10 @@
                 {
                   "entity": "sensor.geiger_dose_rate",
                   "name": "Гейгер"
+                },
+                {
+                  "entity": "sensor.radiacode_dose_rate",
+                  "name": "Сцинтиллятор"
                 }
               ],
               "show": {
@@ -2783,7 +2814,10 @@
                       "type": "history-graph",
                       "entities": [
                         {
-                          "entity": "sensor.niukhach_pm25"
+                          "entity": "sensor.geiger_dose_rate"
+                        },
+                        {
+                          "entity": "sensor.radiacode_dose_rate"
                         }
                       ],
                       "hours_to_show": 2
