@@ -4,9 +4,9 @@
 #######################################
 
 shell_command:
-  radiacode_kill: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux kill-session -t radiacode || exit 0'
-  radiacode_start: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux new -d -s radiacode "python3 /home/ans/homeassistant.py --connection bluetooth --bluetooth-mac 52:43:06:50:01:54 --interval 5"'
-  radiacode_usb_start: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 tmux new -d -s radiacode "python3 /home/ans/homeassistant.py --connection usb --interval 5"'
+  radiacode_kill: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 pkill -9 -f /home/ans/homeassistant.py || exit 0'
+  radiacode_start: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 python3 /home/ans/homeassistant.py --connection bluetooth --bluetooth-mac 52:43:06:50:01:54 --interval 5  > /dev/null &'
+  radiacode_usb_start: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 python3 /home/ans/homeassistant.py --connection usb --interval 5 > /dev/null &'
   nut_battery_parse: 'ssh -o StrictHostKeyChecking=no -i /config/.ssh/id_rsa ans@192.168.1.252 /usr/share/hassio/homeassistant/nutbattery.sh'
 
 template:
