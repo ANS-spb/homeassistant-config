@@ -2394,36 +2394,6 @@
   - service: script.wakeup_bedroom
     data: {}
   mode: single
-- id: '1705859570879'
-  alias: Тестовая - приход домой
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - device_tracker.iphone_ans_ble
-    from: not_home
-    to: home
-  condition:
-  - condition: template
-    value_template: '{{ this.attributes.last_triggered | default(as_datetime(0), true)
-      < today_at() }}'
-    enabled: false
-  - condition: state
-    entity_id: binary_sensor.dnevnoe_vremia
-    state: 'on'
-  action:
-  - service: telegram_bot.send_message
-    data:
-      parse_mode: markdown
-      message: "\U0001F3E0 ANS дома"
-  - service: notify.mobile_app_iphone_ans
-    data:
-      title: Тестовая
-      message: ANS дома
-      data:
-        push:
-          interruption-level: time-sensitive
-  mode: single
 - id: '1706767679578'
   alias: Notify - включение света по приходу домой
   description: ANS iPhone BLE
