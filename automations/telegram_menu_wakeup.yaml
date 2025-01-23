@@ -20,25 +20,14 @@
         message_id: last
         chat_id: "{{ trigger.event.data.chat_id }}"
         message: &msg |-
-          Завтра
-          {%- if now().weekday() in (0,) %} вторник 
-          {%- elif now().weekday() in (1,) %} среда 
-          {%- elif now().weekday() in (2,) %} четверг 
-          {%- elif now().weekday() in (3,) %} пятница 
-          {%- elif now().weekday() in (4,) %} суббота 
-          {%- elif now().weekday() in (5,) %} воскресенье 
-          {%- elif now().weekday() in (6,) %} понедельник 
-          {%- endif -%},
-          {%- if is_state('binary_sensor.workday_tomorrow','on') and is_state('input_boolean.wakeup_disabled','off') %} рабочий день, {{ states('input_select.wakeup_time') | lower }}, 
-          {%- else %} выходной день,
-          {%- endif %} будильник
+          Будильник
           {%- if is_state('input_boolean.wakeup_enabled','on') %} 
-            {%- if is_state('binary_sensor.workday_tomorrow','on') and is_state('input_boolean.wakeup_disabled','off') %} сработает в
+            {%- if is_state('input_boolean.wakeup_disabled','off') %} установлен на
               {%- if is_state('input_select.wakeup_time','Метро') %} {{ state_attr('input_datetime.wakeup_office_time', 'timestamp') | timestamp_custom('%H:%M', false) }}.
               {%- elif is_state('input_select.wakeup_time','Машина') %} {{ state_attr('input_datetime.wakeup_office_car_time', 'timestamp') | timestamp_custom('%H:%M', false) }}.
               {%- elif is_state('input_select.wakeup_time','Сидим дома') %} {{ state_attr('input_datetime.wakeup_homeoffice_time', 'timestamp') | timestamp_custom('%H:%M', false) }}.
               {%- endif -%}
-            {%- elif is_state('input_boolean.wakeup_weekend','on') and is_state('input_boolean.wakeup_disabled','on') %} сработает в {{ state_attr('input_datetime.wakeup_weekend_time', 'timestamp') | timestamp_custom('%H:%M', false) }}
+            {%- elif is_state('input_boolean.wakeup_weekend','on') and is_state('input_boolean.wakeup_disabled','on') %} установлен на {{ state_attr('input_datetime.wakeup_weekend_time', 'timestamp') | timestamp_custom('%H:%M', false) }}
             {%- else %} выключен.
             {%- endif -%}
           {%- else %} выключен.

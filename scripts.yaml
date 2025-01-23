@@ -14,44 +14,46 @@
       entity_id: switch.rozetka
       domain: switch
   - parallel:
-    - service: hue.activate_scene
-      data:
+    - data:
         transition: 5
         dynamic: true
       target:
         entity_id: '{{ [''scene.torsher_tuman_na_ozere'',''scene.torsher_gornyi_briz'',
           ''scene.torsher_tsvetenie'', ''scene.torsher_dragotsennyi'',''scene.torsher_voskresnoe_utro'',
           ''scene.torsher_vesennee_ozero''] | random }}'
+      action: hue.activate_scene
+      enabled: false
     - data:
         effect: Stop
         transition: 5
-      service: light.turn_on
       target:
         entity_id:
         - light.living_room
         - light.torsherchik
-    - service: light.turn_on
-      data:
+        - light.torsher_2
+      action: light.turn_on
+    - data:
         transition: 5
       target:
         entity_id:
         - light.wled_table
         - light.wled
         - light.wled_2
+      action: light.turn_on
   - wait_template: '{{ states(''light.wled_2'') != ''unavailable''}}'
     continue_on_timeout: true
     timeout: 00:10:00
-  - service: script.turn_on
-    target:
+  - target:
       entity_id:
       - script.1638995744105
     data: {}
     enabled: false
-  - service: select.select_option
-    data:
+    action: script.turn_on
+  - data:
       option: Aurora
     target:
       entity_id: select.wled_preset_2
+    action: select.select_option
   - delay:
       hours: 0
       minutes: 0
@@ -59,10 +61,10 @@
       milliseconds: 0
     enabled: true
   - parallel:
-    - service: adaptive_lighting.apply
-      data:
+    - data:
         transition: 10
         entity_id: switch.adaptive_lighting_room
+      action: adaptive_lighting.apply
   icon: mdi:lamp
 '2131':
   alias: Ночной свет
@@ -74,10 +76,11 @@
 wakeup_bedroom:
   alias: Wakeup lighting, smooth transition
   sequence:
-  - choose:
+  - alias: Открыть штору, если есть свет снаружи
+    choose:
     - conditions:
       - condition: numeric_state
-        entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
+        entity_id: sensor.osveshchionnost_snaruzhi_illuminance
         above: 0
       sequence:
       - condition: numeric_state
@@ -89,16 +92,15 @@ wakeup_bedroom:
         entity_id: cover.shtora
         type: set_position
         position: 50
-      - wait_template: '{{ states(''sensor.osveshchionnost_v_spalne_illuminance_lux'')
+      - wait_template: '{{ states(''sensor.osveshchionnost_v_spalne_illuminance'')
           | int >= 10 }}'
         continue_on_timeout: false
         timeout: 00:00:30
-      - service: cover.stop_cover
-        data: {}
+      - data: {}
         target:
           entity_id: cover.shtora
+        action: cover.stop_cover
     default: []
-    alias: Открыть штору, если есть свет снаружи
   - alias: Проверяем, не дома ли просыпаемся
     condition: not
     conditions:
@@ -107,6 +109,7 @@ wakeup_bedroom:
       - condition: state
         entity_id: input_select.wakeup_time
         state: Сидим дома
+        enabled: false
       - condition: state
         entity_id: binary_sensor.workday
         state: 'off'
@@ -116,22 +119,22 @@ wakeup_bedroom:
       seconds: 30
       milliseconds: 0
   - condition: numeric_state
-    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+    entity_id: sensor.osveshchionnost_v_spalne_illuminance
     below: '10'
-  - service: adaptive_lighting.set_manual_control
-    data:
+  - data:
       entity_id: switch.adaptive_lighting_room
       manual_control: true
+    action: adaptive_lighting.set_manual_control
   - condition: template
     value_template: '{{ states(''light.torsherchik'') != ''on'' and states(''light.torsher_2'')
       != ''on'' }}'
   - data:
       brightness_pct: 1
       kelvin: 2000
-    service: light.turn_on
     target:
       entity_id:
       - light.torsherchik
+    action: light.turn_on
   - delay:
       hours: 0
       minutes: 0
@@ -141,10 +144,10 @@ wakeup_bedroom:
       brightness_pct: 100
       transition: 300
       kelvin: 4000
-    service: light.turn_on
     target:
       entity_id:
       - light.torsherchik
+    action: light.turn_on
   mode: restart
   icon: mdi:alarm
 light_tosleep:
@@ -478,10 +481,10 @@ wled_static_effect:
 welcome_home:
   alias: Welcome home
   sequence:
-  - service: light.turn_on
-    data: {}
+  - data: {}
     target:
       entity_id: light.prikhozhaia
+    action: light.turn_on
   - delay:
       hours: 0
       minutes: 0
@@ -500,13 +503,13 @@ welcome_home:
       - condition: template
         value_template: '{{ states(''light.living_room'') != ''on'' }}'
       - condition: numeric_state
-        entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+        entity_id: sensor.osveshchionnost_v_spalne_illuminance
         below: 7
     then:
-    - service: script.turn_on
-      data: {}
+    - data: {}
       target:
         entity_id: script.1599944056170
+      action: script.turn_on
   - condition: state
     entity_id: sun.sun
     state: below_horizon
@@ -515,10 +518,10 @@ welcome_home:
     device_id: 1bd084cf04eca1b2119dbe6a51092f19
     entity_id: binary_sensor.okno_v_komnate_contact
     domain: binary_sensor
-  - service: cover.close_cover
-    data: {}
+  - data: {}
     target:
       entity_id: cover.shtora
+    action: cover.close_cover
   mode: single
   icon: mdi:home-import-outline
 test_this:

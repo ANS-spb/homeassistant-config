@@ -195,11 +195,12 @@
 - id: '1603558647104'
   alias: Включить лампу, если стало темно
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+  triggers:
+  - entity_id:
+    - sensor.osveshchionnost_v_spalne_illuminance
     below: 25
-  condition:
+    trigger: numeric_state
+  conditions:
   - condition: template
     value_template: '{{ states(''light.living_room'') != ''on'' and states(''light.torsher'')
       != ''on'' }}'
@@ -220,7 +221,7 @@
   - condition: template
     value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
       0) > 60 }}'
-  action:
+  actions:
   - if:
     - condition: device
       device_id: 18b05968f19307356eb4c46ae540cbe3
@@ -228,15 +229,15 @@
       entity_id: media_player.tv
       type: is_on
     then:
-    - service: script.light_tosleep
-      data: {}
+    - data: {}
+      action: script.light_tosleep
     - stop: 'Телевизор включён '
       error: false
     else:
-    - service: script.turn_on
-      data: {}
+    - data: {}
       target:
         entity_id: script.1599944056170
+      action: script.turn_on
     - condition: and
       conditions:
       - condition: sun
@@ -244,24 +245,25 @@
       - condition: state
         entity_id: cover.shtora
         state: open
-    - service: script.turn_on
-      target:
+    - target:
         entity_id:
         - script.push_for_closing_curtain
       data: {}
+      action: script.turn_on
   mode: single
 - id: '1603558751540'
   alias: Выключить лампу, если стало светло
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+  triggers:
+  - entity_id:
+    - sensor.osveshchionnost_v_spalne_illuminance
     for:
       hours: 0
       minutes: 0
       seconds: 10
     above: 35
-  condition:
+    trigger: numeric_state
+  conditions:
   - condition: or
     conditions:
     - condition: device
@@ -279,7 +281,7 @@
     state: 'off'
   - condition: template
     value_template: '{{ states(''light.liustra'') != ''on'' }}'
-  action:
+  actions:
   - parallel:
     - type: turn_off
       device_id: 27f7e75ef92611eaa6e491c70663ffc5
@@ -289,13 +291,13 @@
       device_id: fa3818f9a75a0704698062d67b597aba
       entity_id: light.torsher_2
       domain: light
-    - service: light.turn_off
-      data: {}
+    - data: {}
       target:
         entity_id:
         - light.wled_table
         - light.wled
         - light.wled_2
+      action: light.turn_off
   mode: single
 - id: '1603735395693'
   alias: Угасание света перед сном
@@ -326,20 +328,6 @@
   action:
   - service: script.light_tosleep
     data: {}
-  mode: single
-- id: '1607099938872'
-  alias: Включение усилителя при включении плеера
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: media_player.volumio
-    to: playing
-  condition: []
-  action:
-  - service: button.press
-    data: {}
-    target:
-      entity_id: button.azur_aux_source
   mode: single
 - id: '1607706912213'
   alias: Кнопка в комнате выключает всё
@@ -642,9 +630,8 @@
 - id: '1635257248536'
   alias: Включить свет в прихожей по приходу домой
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - device_tracker.ble_tracker_nut
     from: not_home
     to: home
@@ -652,37 +639,37 @@
       hours: 0
       minutes: 0
       seconds: 0
-  condition:
+    trigger: state
+  conditions:
   - condition: template
     value_template: '{{ states(''light.prikhozhaia'') != ''on'' }}'
   - condition: numeric_state
-    entity_id: sensor.osveshchionnost_v_prikhozhei_illuminance_lux
+    entity_id: sensor.osveshchionnost_v_prikhozhei_illuminance
     below: '5'
-    attribute: illuminance_lux
   - condition: state
     entity_id: binary_sensor.dnevnoe_vremia
     state: 'on'
   - condition: template
     value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
       0) > 600 }}'
-  action:
-  - service: script.welcome_home
-    metadata: {}
+  actions:
+  - metadata: {}
     data: {}
+    action: script.welcome_home
   mode: single
 - id: '1641831168397'
   alias: Включить свет в прихожей кнопкой на двери
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - sensor.knopka_v_koridore_action
     to: single
-  action:
-  - service: light.turn_on
-    data: {}
+    trigger: state
+  actions:
+  - data: {}
     target:
       entity_id: light.prikhozhaia
+    action: light.turn_on
   - delay:
       hours: 0
       minutes: 0
@@ -693,18 +680,18 @@
   - condition: template
     value_template: '{{ states(''light.torsher'') != ''on'' }}'
   - condition: numeric_state
-    entity_id: sensor.osveshchionnost_v_spalne_illuminance_lux
+    entity_id: sensor.osveshchionnost_v_spalne_illuminance
     below: 8
   - condition: numeric_state
-    entity_id: sensor.osveshchionnost_na_kukhne_illuminance_lux
+    entity_id: sensor.osveshchionnost_na_kukhne_illuminance
     below: 10
   - condition: state
     entity_id: binary_sensor.dnevnoe_vremia
     state: 'on'
-  - service: script.turn_on
-    target:
+  - target:
       entity_id: script.1599944056170
     data: {}
+    action: script.turn_on
   - condition: state
     entity_id: sun.sun
     state: below_horizon
@@ -713,10 +700,10 @@
     device_id: 1bd084cf04eca1b2119dbe6a51092f19
     entity_id: binary_sensor.okno_v_komnate_contact
     domain: binary_sensor
-  - service: cover.close_cover
-    data: {}
+  - data: {}
     target:
       entity_id: cover.shtora
+    action: cover.close_cover
   mode: single
 - id: '1643210773948'
   alias: Push Notify Open Curtain
@@ -1112,17 +1099,17 @@
 - id: '1645168133405'
   alias: Звонок в дверь
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - binary_sensor.zvonok
     from: 'on'
     to: 'off'
-  condition:
+    trigger: state
+  conditions:
   - condition: template
     value_template: '{{ iif(this.attributes.last_triggered == none, 9999, as_timestamp(now())
       - as_timestamp(this.attributes.last_triggered) ) >= 10 }}'
-  action:
+  actions:
   - parallel:
     - data:
         message: ' '
@@ -1134,48 +1121,50 @@
               name: alarm.caf
               critical: 1
               volume: 1
-      service: notify.mobile_app_iphone_ans
-    - service: telegram_bot.send_message
-      data:
+      action: notify.mobile_app_iphone_ans
+    - data:
         parse_mode: markdown
         message: "\U0001F514 *Звонят в дверь!* \U0001F514"
+      action: telegram_bot.send_message
     - if:
       - condition: state
         entity_id: media_player.tv
         state: 'on'
       then:
-      - service: notify.tv
-        data:
+      - data:
           message: Звонок в дверь!
+        action: notify.tv
     - if:
       - condition: state
         entity_id: media_player.lg_webos_tv_tn510sg
         state: 'on'
       then:
-      - service: notify.lg_webos_tv_tn510sg
-        data:
+      - data:
           message: Звонок в дверь!
+        action: notify.lg_webos_tv_tn510sg
     - if:
       - condition: state
         entity_id: binary_sensor.dnevnoe_vremia
         state: 'on'
       then:
-      - service: media_player.play_media
-        data:
+      - data:
           media_content_type: text
           media_content_id: Кто-то звонит в дверь!
         target:
-          entity_id: media_player.yandex_station_m0023t600rr2sb
+          entity_id:
+          - media_player.yandex_station_m0023t600rr2sb
+          - media_player.yandex_station_l01b24500nweeb
+        action: media_player.play_media
     - if:
       - condition: state
         entity_id: light.living_room
         state: 'on'
       then:
-      - service: light.turn_on
-        data:
+      - data:
           effect: Twitter
         target:
           entity_id: light.living_room
+        action: light.turn_on
   mode: single
 - id: '1645189263720'
   alias: Фото персоны с домофона по команде
@@ -1339,9 +1328,8 @@
 - id: '1648154272024'
   alias: Открыть домофон с приложения
   description: ''
-  trigger:
-  - platform: event
-    event_type: ios.action_fired
+  triggers:
+  - event_type: ios.action_fired
     event_data:
       actionID: 23448B64-1AF0-498C-98D9-158B8B6F923D
       actionName: Open-door
@@ -1349,38 +1337,15 @@
       sourceDeviceName: iPhone ANS
       sourceDevicePermanentID: E589AD6D-665A-494A-88A7-B466809EB9DE
       triggerSource: preview
-  condition: []
-  action:
-  - service: script.domru_open_door
-    data: {}
-  - service: notify.mobile_app_iphone_ans
-    data:
+    trigger: event
+  conditions: []
+  actions:
+  - data: {}
+    action: script.domru_open_door
+  - data:
       message: Дверь открыта
       title: 'Домофон '
-  - service: camera.snapshot
-    data:
-      filename: /media/domofon.jpg
-    target:
-      entity_id:
-      - camera.domofon
-    enabled: false
-  - wait_for_trigger:
-    - platform: event
-      event_type: folder_watcher
-      event_data:
-        event_type: closed
-        file: domofon.jpg
-    continue_on_timeout: true
-    timeout: 00:00:10
-    enabled: false
-  - service: telegram_bot.send_photo
-    data:
-      file: /media/domofon.jpg
-      caption: Домофон открыт из приложения
-      parse_mode: html
-      timeout: 1000
-      message_tag: msg_to_edit
-    enabled: false
+    action: notify.mobile_app_iphone_ans
   mode: restart
 - id: '1648212086564'
   alias: Radiacode отвалился, перезапуск
@@ -1556,68 +1521,35 @@
 - id: '1655236746321'
   alias: Открыть домофон по команде Telegram
   description: ''
-  trigger:
-  - platform: event
-    event_type: telegram_callback
+  triggers:
+  - event_type: telegram_callback
     event_data:
       data: /open_door
-  condition: []
-  action:
-  - service: script.domru_open_door
-    data: {}
-  - service: camera.snapshot
-    data:
-      filename: /media/domofon.jpg
-    target:
-      entity_id:
-      - camera.domofon
-    enabled: false
-  - wait_for_trigger:
-    - platform: event
-      event_type: folder_watcher
-      event_data:
-        event_type: closed
-        file: domofon.jpg
-    continue_on_timeout: false
-    timeout: 00:02:00
-    enabled: false
-  - service: telegram_bot.send_photo
-    data:
-      file: /media/domofon.jpg
-      caption: Домофон открыт из Telegram
-      parse_mode: html
-      timeout: 1000
-      message_tag: msg_to_edit
-    enabled: false
-  - service: telegram_bot.send_photo
-    data:
-      file: /media/domofon_frigate.jpg
-      caption: Домофон открыт
-      target: '{{ trigger.event.data.chat_id }}'
-      parse_mode: html
-      disable_notification: true
-      timeout: 1000
-    enabled: false
+    trigger: event
+  conditions: []
+  actions:
+  - data: {}
+    action: script.domru_open_door
   mode: restart
 - id: '1656081010980'
   alias: Просмотр ТВ
   description: ''
-  trigger:
-  - platform: device
-    device_id: 18b05968f19307356eb4c46ae540cbe3
+  triggers:
+  - device_id: 18b05968f19307356eb4c46ae540cbe3
     domain: media_player
     entity_id: media_player.tv
     type: turned_on
-  condition: []
-  action:
+    trigger: device
+  conditions: []
+  actions:
   - parallel:
-    - service: input_boolean.turn_on
-      data: {}
+    - data: {}
       target:
         entity_id: input_boolean.manual_light_off
+      action: input_boolean.turn_on
     - if:
       - condition: numeric_state
-        entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
+        entity_id: sensor.osveshchionnost_snaruzhi_illuminance
         above: '50'
       - condition: device
         device_id: 00113b2b18e9fc886e10987ed5635044
@@ -1639,29 +1571,29 @@
         entity_id: light.torsher_2
         domain: light
       then:
-      - service: light.turn_off
-        data: {}
+      - data: {}
         target:
           entity_id: light.hue_ambiance_candle_1
+        action: light.turn_off
       enabled: false
   mode: restart
 - id: '1656081690599'
   alias: Просмотр ТВ закончен
   description: ''
-  trigger:
-  - platform: device
-    device_id: 18b05968f19307356eb4c46ae540cbe3
+  triggers:
+  - device_id: 18b05968f19307356eb4c46ae540cbe3
     domain: media_player
     entity_id: media_player.tv
     type: turned_off
-  condition: []
-  action:
+    trigger: device
+  conditions: []
+  actions:
   - parallel:
     - if:
       - type: is_illuminance
         condition: device
         device_id: 1e40bd2be5d00d484d8f8284528b2626
-        entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
+        entity_id: sensor.osveshchionnost_snaruzhi_illuminance
         domain: sensor
         above: 50
       - condition: state
@@ -1682,7 +1614,7 @@
       - type: is_illuminance
         condition: device
         device_id: 1e40bd2be5d00d484d8f8284528b2626
-        entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
+        entity_id: sensor.osveshchionnost_snaruzhi_illuminance
         domain: sensor
         below: 50
       - condition: state
@@ -1694,14 +1626,14 @@
         entity_id: light.torsher_2
         domain: light
       then:
-      - service: script.1599944056170
-        data: {}
+      - data: {}
+        action: script.1599944056170
       else: []
     - if:
       - type: is_illuminance
         condition: device
         device_id: 1e40bd2be5d00d484d8f8284528b2626
-        entity_id: sensor.osveshchionnost_snaruzhi_illuminance_lux
+        entity_id: sensor.osveshchionnost_snaruzhi_illuminance
         domain: sensor
         below: 50
       - condition: state
@@ -1713,25 +1645,25 @@
         entity_id: light.torsher_2
         domain: light
       then:
-      - service: script.light_tosleep
-        data: {}
+      - data: {}
+        action: script.light_tosleep
       else: []
     - wait_for_trigger:
-      - platform: device
-        device_id: 00113b2b18e9fc886e10987ed5635044
+      - device_id: 00113b2b18e9fc886e10987ed5635044
         domain: cover
         entity_id: cover.shtora
         type: opened
+        trigger: device
       continue_on_timeout: true
       timeout:
         hours: 0
         minutes: 1
         seconds: 0
         milliseconds: 0
-    - service: input_boolean.turn_off
-      data: {}
+    - data: {}
       target:
         entity_id: input_boolean.manual_light_off
+      action: input_boolean.turn_off
   mode: restart
 - id: '1659508235142'
   alias: Что-то отвалилось, послать SMS
@@ -2297,39 +2229,6 @@
     data: {}
     target:
       entity_id: switch.rozetka
-  mode: single
-- id: '1697621395541'
-  alias: Alarm SMART status
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.smartctl_sda
-    from: 'on'
-    to: 'off'
-    id: HDD
-  - platform: state
-    entity_id:
-    - binary_sensor.smartctl_sdb
-    from: 'on'
-    to: 'off'
-    id: SSD
-  condition:
-  - condition: template
-    value_template: '{{ as_timestamp(now(), 0) - as_timestamp(this.attributes.last_triggered,
-      0) > 600 }}'
-    enabled: false
-  - condition: template
-    value_template: '{{ this.attributes.last_triggered | default(as_datetime(0), true)
-      < today_at() }}'
-  action:
-  - service: notify.mobile_app_iphone_ans
-    data:
-      title: ⚠️ Внимание!
-      message: '❌ {{ trigger.id }} сменил состояние с {{ trigger.from_state.state
-        }} на {{ trigger.to_state.state }}
-
-        '
   mode: single
 - id: '1701895167970'
   alias: Notify if Frigate is not working

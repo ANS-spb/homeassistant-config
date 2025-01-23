@@ -27,7 +27,7 @@ automation:
           states('light.kukhnia_potolok') != 'on' and
           states('light.kitchen') != 'on' }}
       - condition: numeric_state
-        entity_id: sensor.osveshchionnost_na_kukhne_illuminance_lux
+        entity_id: sensor.osveshchionnost_na_kukhne_illuminance
         below: "1"
     action:
       - parallel:
