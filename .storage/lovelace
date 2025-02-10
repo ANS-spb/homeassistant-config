@@ -1188,7 +1188,7 @@
                   "state_adaptive_color": false
                 },
                 {
-                  "entity": "sensor.osveshchionnost_na_kukhne_illuminance_lux",
+                  "entity": "sensor.osveshchionnost_na_kukhne_illuminance",
                   "name": "Кухня",
                   "show_state": true,
                   "show_legend": true,
@@ -1199,7 +1199,7 @@
                   "y_axis": "secondary"
                 },
                 {
-                  "entity": "sensor.osveshchionnost_snaruzhi_illuminance_lux",
+                  "entity": "sensor.osveshchionnost_snaruzhi_illuminance",
                   "name": "Снаружи",
                   "show_state": true,
                   "show_legend": true,
@@ -1210,7 +1210,7 @@
                   "y_axis": "secondary"
                 },
                 {
-                  "entity": "sensor.osveshchionnost_v_spalne_illuminance_lux",
+                  "entity": "sensor.osveshchionnost_v_spalne_illuminance",
                   "name": "В комнате",
                   "show_state": true,
                   "show_legend": true,
@@ -2436,53 +2436,6 @@
                       "data": "voltage",
                       "name": "Voltage",
                       "modify": "isNaN(parseInt(x, 10)) ? \"--\" : parseInt(x, 10)/1000"
-                    }
-                  ]
-                },
-                {
-                  "type": "markdown",
-                  "content": "### <center> ZigBee2MQTT </center>"
-                },
-                {
-                  "type": "custom:flex-table-card",
-                  "clickable": false,
-                  "entities": {
-                    "include": [
-                      "sensor.*_linkquality"
-                    ]
-                  },
-                  "sort_by": "last_seen-",
-                  "columns": [
-                    {
-                      "data": "icon",
-                      "name": " ",
-                      "modify": "\"<ha-icon id=\\\"icon\\\" icon=\\\"\" + \"mdi:zigbee\" + \"\\\"></ha-icon>\""
-                    },
-                    {
-                      "data": "friendly_name",
-                      "name": "Friendly Name",
-                      "modify": "x.replace(/ Linkquality$/,\"\")"
-                    },
-                    {
-                      "data": "linkquality",
-                      "name": "Link quality",
-                      "modify": "isNaN(parseInt(x, 10)) ? 0 : parseInt(x, 10)"
-                    },
-                    {
-                      "data": "battery",
-                      "name": "Battery",
-                      "fmt": "number",
-                      "modify": "isNaN(parseInt(x, 10)) ? \"--\" : parseInt(x, 10) + \"%\""
-                    },
-                    {
-                      "data": "voltage",
-                      "name": "Voltage",
-                      "modify": "isNaN(parseInt(x, 10)) ? \"--\" : parseInt(x, 10)/1000"
-                    },
-                    {
-                      "data": "last_seen",
-                      "name": "Last seen",
-                      "modify": "var dt = new Date(x); var d = parseInt((Date.now()-Date.parse(x)) / 86400000); var hrs = parseInt(((Date.now()-Date.parse(x)) / 3600000) % 24); var min = parseInt(((Date.now()-Date.parse(x)) / 60000) % 60); var sec = parseInt(((Date.now()-Date.parse(x)) / 1000) % 60); hrs = (hrs < 10) ? \"0\" + hrs : hrs; min = (min < 10) ? \"0\" + min : min; sec = (sec < 10) ? \"0\" + sec : sec; isFinite(dt) ? d + \"d \" + hrs + \":\" + min + \":\" + sec : \"\";\n"
                     }
                   ]
                 },

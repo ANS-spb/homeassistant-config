@@ -2512,3 +2512,19 @@
     input:
       certificate_input: sensor.cert_expiry_timestamp_d7160cc8a60d_sn_mynetname_net_8123
       notify_device: 58f9cf55e5a2b8fc6fac9e5055cf3d21
+- id: '1739182062512'
+  alias: Убираемся в прихожей ежедневно вечером
+  description: ''
+  triggers:
+  - trigger: time
+    at: '21:00:00'
+  conditions: []
+  actions:
+  - data:
+      segments:
+      - 17
+      - 17
+    target:
+      entity_id: vacuum.roborock_s6_pure
+    action: roborock.vacuum_clean_segment
+  mode: single
