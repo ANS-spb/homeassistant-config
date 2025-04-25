@@ -2193,6 +2193,19 @@
               ]
             },
             {
+              "type": "vertical-stack",
+              "cards": [
+                {
+                  "type": "entity",
+                  "entity": "sensor.ves_sashi"
+                },
+                {
+                  "type": "entity",
+                  "entity": "sensor.ves_nasti"
+                }
+              ]
+            },
+            {
               "type": "logbook",
               "entities": [
                 "automation.zvonok_v_domofon",

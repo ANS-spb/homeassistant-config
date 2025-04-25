@@ -1,0 +1,25 @@
+template:
+  - trigger:
+      - platform: state
+        entity_id: sensor.ble_stabilized_weight_unknown
+    sensor:
+      - name: 'Вес Саши'
+        unique_id: "weight_ans"
+        unit_of_measurement: 'kg'
+        icon: mdi:weight-kilogram
+        state_class: measurement
+        state: >
+          {% set x = states('sensor.ves_sashi') | round(3, default=0) %}
+          {{ trigger.to_state.state | round(3, default=0)
+            if (x-x*0.05) < trigger.to_state.state | round(3, default=0) < (x+x*0.05) 
+            else states('sensor.ves_sashi') }}
+      - name: 'Вес Насти'
+        unique_id: "weight_liadon"
+        unit_of_measurement: 'kg'
+        icon: mdi:weight-kilogram
+        state_class: measurement
+        state: >
+          {% set x = states('sensor.ves_nasti') | round(3, default=0) %}
+          {{ trigger.to_state.state | round(3, default=0)
+            if (x-x*0.05) < trigger.to_state.state | round(3, default=0) < (x+x*0.05) 
+            else states('sensor.ves_nasti') }}

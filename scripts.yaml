@@ -17,12 +17,10 @@
     - data:
         transition: 5
         dynamic: true
-      target:
-        entity_id: '{{ [''scene.torsher_tuman_na_ozere'',''scene.torsher_gornyi_briz'',
-          ''scene.torsher_tsvetenie'', ''scene.torsher_dragotsennyi'',''scene.torsher_voskresnoe_utro'',
-          ''scene.torsher_vesennee_ozero''] | random }}'
       action: hue.activate_scene
-      enabled: false
+      enabled: true
+      target:
+        entity_id: scene.torsher_kontsentratsiia
     - data:
         effect: Stop
         transition: 5
@@ -30,7 +28,6 @@
         entity_id:
         - light.living_room
         - light.torsherchik
-        - light.torsher_2
       action: light.turn_on
     - data:
         transition: 5
